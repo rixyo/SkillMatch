@@ -12,6 +12,7 @@ interface ModalProps {
   footer?: React.ReactElement;
   actionLabel: string;
   disabled?: boolean;
+  customError?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit, title, body, actionLabel, footer, disabled }) => {
@@ -27,8 +28,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onSubmit, title, body, a
     if (disabled) {
       return;
     }
-
+   else{
     onSubmit();
+   }
+   
   }, [onSubmit, disabled]);
 
   if (!isOpen) {

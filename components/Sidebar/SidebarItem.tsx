@@ -12,12 +12,12 @@ const SidebarItem:React.FC<SidebarItemProps> = ({tab,selectedTab,setSelectedTab}
     const router=useRouter()
     const handleClick=()=>{
         setSelectedTab(tab.title)
-        router.push(tab.href)
+        router.push(tab.href!)
 
     }
     return (
-        <div className='flex lg:justify-center xl:justify-normal  items-center cursor-pointer ' onClick={handleClick}>
-            <div className='p-3
+        <div className='flex lg:justify-center xl:justify-normal  items-center cursor-pointer lg:border-2 border-solid lg:border-gray-300 lg:rounded-lg mt-2' onClick={handleClick}>
+            <div className='p-1
         
                rounded-full 
                h-14
@@ -27,13 +27,11 @@ const SidebarItem:React.FC<SidebarItemProps> = ({tab,selectedTab,setSelectedTab}
                hover:bg-slate-300 
                hover:bg-opacity-10 
                cursor-pointer 
-            
-    
             '>
                 <tab.icon className={`text-2xl ${selectedTab ? 'text-blue-500' : 'text-gray-500'} `} title={tab.title} />
             </div>
             <div>
-                <p className={`text-sm ${selectedTab ? 'text-blue-500' : 'text-gray-500'} hidden md:block font-semibold `}>{tab.title}</p>
+                <p className={`text-sm ${selectedTab ? 'text-blue-500' : 'text-gray-500'}  font-semibold `}>{tab.title}</p>
             </div>
 
         </div>

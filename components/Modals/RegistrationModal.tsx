@@ -4,34 +4,105 @@ import useToggle from '@/hooks/useToggle';
 import React, { useCallback, useState } from 'react';
 import Input from '../Input';
 import Modal from './Modal';
+import axios from 'axios';
+import {toast} from "react-hot-toast"
+import {signIn} from "next-auth/react"
 
-type LoginModalProps = {
-    
-};
 
-const RegistrationModal:React.FC<LoginModalProps> = () => {
+const RegistrationModal:React.FC = () => {
     const RegistrationModal=useRegisterModal()
     const {login,loading,setLoading}=useToggle()
-    const loginModal=useLoginModal()
     const [email,setEmail]=useState("")
     const [password,setPassword]=useState("")
     const [confirmPassword,setConfirmPassword]=useState("")
-    const [error,setError]=useState("")
+    const [name,setName]=useState("")
+    const [customTag,setCustomTag]=useState("")
+    const [customError,setError]=useState("")
+
+    const emailRegex=/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+
 
   
-    const onSubmit=useCallback(async()=>{
+    const onSubmit=(async()=>{
         setLoading(true)
         try {
-            RegistrationModal.onClose()
+          
+             if(email.length<=0 || !emailRegex.test(email)){
+                throw new Error("Email is required or invalid")
+                
+            }
+            else if(name.length<=0){
+                throw new Error("Name is required")
+            }
+            else if(customTag.length<=0){
+                throw new Error("Custom Tag is required")
+            }
             
-        } catch (error) {
-            console.log("loginError",error)
+            const isWhitespace = /^(?=.*\s)/;
+            if (isWhitespace.test(password)) {
+              throw new Error( "Password must not contain Whitespaces.")
+            }
+        
+        
+            const isContainsUppercase = /^(?=.*[A-Z])/;
+            if (!isContainsUppercase.test(password)) {
+              throw new Error( "Password must have at least one Uppercase Character.")
+            }
+        
+        
+            const isContainsLowercase = /^(?=.*[a-z])/;
+            if (!isContainsLowercase.test(password)) {
+              throw new Error( "Password must have at least one Lowercase Character.")
+            }
+        
+        
+            const isContainsNumber = /^(?=.*[0-9])/;
+            if (!isContainsNumber.test(password)) {
+              throw new Error( "Password must contain at least one Digit.")
+            }
+            const isContainsSymbol =
+            /^(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹])/;
+          if (!isContainsSymbol.test(password)) {
+            throw new Error( "Password must contain at least one Special Symbol.")
+          }
+      
+      
+          const isValidLength = /^.{6,}$/;
+          if (!isValidLength.test(password)) {
+            throw new Error( "Password must be  minimam 6 Characters Long.")
+          }
+            else if(confirmPassword!==password){
+               
+                throw new Error("Password does not match")
+               
+            }
+
+           else{
+            await axios.post("/api/register",{
+             email,
+             password,
+             name,
+             customTag
+
+         })
+        
+         toast.success("Account Successfully created")
+         signIn("credentials",{email,password})
+            RegistrationModal.onClose()
+        } 
+            
+            
+        } catch (error:any) {
+            console.log("loginError",error.message)
+            toast.error(error.message)
+            setError(error.message)
             
         } finally {
             setLoading(false)
+           
         }
 
-    },[RegistrationModal])
+    })
 
     const bodyContent=(
         <div className='flex flex-col gap-4 '>
@@ -41,19 +112,20 @@ const RegistrationModal:React.FC<LoginModalProps> = () => {
                 value={email}
                 onChange={(e)=>setEmail(e.target.value)}
                 disabled={loading}
+                data-cy="email"
             />
                <Input
                placeholder="Name"
                 type="text"
-                value={email}
-                onChange={(e)=>setEmail(e.target.value)}
+                value={name}
+                onChange={(e)=>setName(e.target.value)}
                 disabled={loading}
             />
                <Input
                placeholder="custom Tag"
                 type="text"
-                value={email}
-                onChange={(e)=>setEmail(e.target.value)}
+                value={customTag}
+                onChange={(e)=>setCustomTag(e.target.value)}
                 disabled={loading}
             />
             <Input
@@ -63,6 +135,7 @@ const RegistrationModal:React.FC<LoginModalProps> = () => {
                 onChange={(e)=>setPassword(e.target.value)}
                 disabled={loading}
             />
+            {customError && <p className='text-red-500 text-sm' >{customError}</p>}
              <Input
             placeholder="Confirm Password"
                 type="password"
@@ -70,6 +143,7 @@ const RegistrationModal:React.FC<LoginModalProps> = () => {
                 onChange={(e)=>setConfirmPassword(e.target.value)}
                 disabled={loading}
             />
+         
 
         </div>
     )
@@ -84,12 +158,13 @@ const RegistrationModal:React.FC<LoginModalProps> = () => {
         <Modal
             isOpen={RegistrationModal.isOpen}
             onClose={RegistrationModal.onClose}
+            customError={customError}
             onSubmit={onSubmit}
             title="Sign Up"
             body={bodyContent}
             footer={footerContent}
             actionLabel="Sign Up"
-            disabled={loading}
+         
         />
         </>
     )
