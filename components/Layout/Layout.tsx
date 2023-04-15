@@ -12,7 +12,7 @@ const Layout:React.FC<LayoutProps> = ({children}) => {
         <div className='container h-full mx-auto xl:px-30 max-w-6xl'>
             <div className='grid grid-cols-4  h-full xl:grid-cols-6 '>
                 <Sidebar/>
-                <div className=' col-span-2  xl:col-span-2 border-x-[1px] border-neutral-800 rounded-lg mt-2'>
+                <div className=' col-span-2   border-x-[1px] border-neutral-800 rounded-lg mt-2'>
         {children}
                 </div>
                 <FollowBar/>

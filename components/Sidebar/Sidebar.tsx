@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { AiOutlineClose, AiOutlineHome } from 'react-icons/ai';
 import { IoIosNotificationsOutline } from 'react-icons/io';
 import { AiOutlineMessage } from 'react-icons/ai';
@@ -11,6 +11,7 @@ import useCurrentUser from '@/hooks/useCurrentUser';
 import {signOut} from "next-auth/react"
 import {FiLogIn} from "react-icons/fi"
 import SidebarFooter from './sidebarFooter';
+import { useRouter } from 'next/router';
 export type Tab = {
     title: string;
     icon: IconType;
@@ -42,14 +43,17 @@ const Tabs:Tab[] = [
   
 ]
 const Sidebar:React.FC= () => {
-    const [selectedTab,setSelectedTab]=useState("")
+    const [selectedTab,setSelectedTab]=useState<string>("")
+    const router=useRouter()
     const {login,register} =useToggle()
     const {data:currentUser}=useCurrentUser()
+    
+
     
     return( 
         <>
     <div className='col-span-2  md:col-span-1 xl:col-span-2 mr-5 h-full pr-4 md:pr-6  mt-2 border-2 border-blue-500 rounded-lg sticky'>
-        <div className='flex flex-col   md:items-end  lg:items-center'>
+        <div className='flex flex-col  md:items-end  lg:items-center'>
             <div className='space-y-2 lg:w-[230px] '>
 
             { Tabs.map((tab)=>(
@@ -81,8 +85,8 @@ const Sidebar:React.FC= () => {
     
     } 
     {currentUser && 
-        <div className='flex items-center    md:mr-10 md:ml-11  border-2 border-solid border-gray-200 mb-3 rounded-lg  mt-2 w-full p-3  cursor-pointer ' onClick={()=>signOut()}>
-        <MdLogout className=' text-gray-500 text-md mr-2' title='LogOut'/>
+        <div className='flex items-center justify-start    md:mr-10 md:ml-11  border-2 border-solid border-gray-200 mb-3 rounded-lg  mt-2 w-full p-3  cursor-pointer ' onClick={()=>signOut()}>
+        <MdLogout className=' text-gray-500 text-md mr-5 md:ml-2' title='LogOut'/>
         <p className='text-md font-semibold text-gray-500' >Logout</p>
         </div>
         }
@@ -93,3 +97,5 @@ const Sidebar:React.FC= () => {
     </>
 )}
 export default Sidebar;
+
+

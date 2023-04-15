@@ -20,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({showBackArrow, label }) => {
         {showBackArrow && (
           <BiArrowBack 
             onClick={handleBack} 
-            color="white" 
+            color="black" 
             size={20} 
             className="
               cursor-pointer 

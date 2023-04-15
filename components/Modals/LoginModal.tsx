@@ -5,15 +5,17 @@ import Input from '../Input';
 import Modal from './Modal';
 import {signIn} from "next-auth/react"
 import toast from 'react-hot-toast';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 
 
 const LoginModal:React.FC = () => {
     const loginModal=useLoginModal()
     const {register,loading,setLoading}=useToggle()
-    const [email,setEmail]=useState("")
-    const [password,setPassword]=useState("")
-    const [customError,setError]=useState("")
+    const [email,setEmail]=useState<string>("")
+    const [password,setPassword]=useState<string>("")
+    const [customError,setError]=useState<string>("")
+    const [passwordType, setPasswordType] = useState<string>("password")
 
  
     const onSubmit = useCallback(async () => {
@@ -42,6 +44,16 @@ const LoginModal:React.FC = () => {
         }
       }, [email, password, loginModal]);
 
+      const togglePassword=useCallback(()=>{
+        if(passwordType==="password")
+        {
+         setPasswordType("text")
+         return;
+        }
+        setPasswordType("password")
+      },[passwordType,setPasswordType])
+    
+
     const bodyContent=(
         <div className='flex flex-col gap-4 '>
             <Input
@@ -51,16 +63,18 @@ const LoginModal:React.FC = () => {
                 onChange={(e)=>setEmail(e.target.value)}
                 disabled={loading}
             />
-            <div className='flex items-center'>
+              <div className='flex'>
             <Input
+         
             placeholder="Password"
-                type="password"
+                type={passwordType}
                 value={password}
                 onChange={(e)=>setPassword(e.target.value)}
                 disabled={loading}
-                />
-
-            </div>
+                
+            />
+            <button className='absolute mt-5 mr-2 right-10' onClick={togglePassword}>{passwordType==="password"?<AiOutlineEye className='text-2xl text-gray-400'/>:<AiOutlineEyeInvisible className='text-2xl text-gray-400'/>}</button>
+              </div>
  {customError && <p className='text-red-500 text-xl' >{customError}</p>}
 
         </div>

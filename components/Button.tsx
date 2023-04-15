@@ -32,8 +32,8 @@ interface ButtonProps {
           border-2
           ${fullWidth ? 'w-full' : 'w-fit'}
           ${secondary ? 'bg-white' : 'bg-sky-500'}
-          ${secondary ? 'text-black' : 'text-white'}
-          ${secondary ? 'border-black' : 'border-sky-500'}
+          ${secondary ? 'text-gray-500' : 'text-white'}
+          ${secondary ? 'border-gray-400' : 'border-sky-500'}
           ${large ? 'text-xl' : 'text-md'}
           ${large ? 'px-5' : 'px-4'}
           ${large ? 'py-3' : 'py-2'}
