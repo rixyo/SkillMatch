@@ -18,6 +18,7 @@ model User {
   coverImage String?
   profileImage String?
   hashedPassword String
+  isVarified Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
@@ -37,6 +38,7 @@ model Post{
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
   likesId String[] @db.ObjectId
+  viewsId String[] @db.ObjectId
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
    comments          Comment[]
 }

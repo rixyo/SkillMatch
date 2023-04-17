@@ -16,14 +16,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     id:userid
                 }
             })
-            const followersCount=await prisma.user.count({
-                where:{
-                    followingId:{
-                        has:userid
-                    }
-                }
-            })
-            res.status(StatusCodes.OK).json({...existingUser, followersCount})
+            
+            res.status(StatusCodes.OK).json({...existingUser})
             
             
         } catch (error:any) {

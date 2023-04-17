@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { MdVerified } from 'react-icons/md';
 import { useRouter } from 'next/router';
 import Avatar from '../Avatar';
+import useUser from '@/hooks/useUser';
 
 
 
@@ -22,15 +23,20 @@ const sidebarFooter:React.FC = () => {
     return (
         <>
         {currentUser &&
-        <div className='flex items-center justify-bwtween mt-60 lg:mt-96 border-2 border-solid border-gray-200 rounded-md md:p-1  md:ml-5 '>
-            <Avatar userId={currentUser.user.id}/>
-            <div className='flex flex-col md:ml-5 ml-2 '>
-            <div className='flex  items-center gap-2  ' onClick={onClick}>
-            <p className='ml-2 hover:underline hover:cursor-pointer  font-semibold text-lg' >{currentUser.user.name}</p>
-          {currentUser.user.email==="rixy253@gmail.com" && <MdVerified className='text-blue-500'/> }  
+        <div className='flex items-center sm:justify-start md:justify-bwtween mt-24 border-2 border-solid border-gray-200 rounded-md md:p-1  md:ml-5 '>
+     
+         <Avatar userId={currentUser.user.id}/>
+           
+            <div className='hidden md:flex flex-col md:ml-5 ml-2'>
+            <div className='flex  items-center' onClick={onClick}>
+            <p className='md:ml-2 hover:underline hover:cursor-pointer  font-semibold text-lg' >
+              <span className='hidden md:block'>{currentUser.user.name}</span>
+              </p>
+          {currentUser.user.isVarified && <MdVerified className='text-blue-500 hidden md:block md:ml-2'/> }  
             </div>
+            <p className='text-gray-500 text-sm hidden md:block md:ml-2 '>{currentUser.user.customTag}</p>
           
-            <p className='text-gray-500 ml-1'>{currentUser.user.customTag}</p>
+           
             </div>
 
             </div>}

@@ -19,7 +19,7 @@ if(users.length===0) return null
     return (
         <>
         {currentUser && 
-        <div className='hidden xl:block xl:col-span-2 mt-2 ml-5 rounded-lg border-2 border-red-600'>
+        <div className='hidden xl:block xl:col-span-2  mt-2 ml-5 rounded-lg border-2 border-red-600'>
         <div className='flex flex-col'>
            <div className='w-auto mt-1 p-2' >
            <BsSearch className='w-5 h-5 absolute mt-1 ml-1  text-gray-500'/>
@@ -40,7 +40,10 @@ if(users.length===0) return null
                    {currentUser.user.id!==user.id &&
                    <>
                    <div className='flex flex-col mt-3 cursor-pointer'>
-                   <p className='font-semibold text-sm hover:underline '>{user.name}</p>
+                   <div className='flex items-center'>
+                <h1 className='font-bold text-xl'>{user.name}</h1>
+                {user.isVarified && <MdVerified className='text-blue-500  md:ml-2'/> }
+                    </div>
                      <p className='text-gray-500 text-sm'>{user.customTag}</p>
                </div>
                 <button className='text-blue border-2 border-solid  w-1/3 h-1/2  my-3 mr-3 border-blue-400  text-lg font-medium rounded-lg'>Follow</button>

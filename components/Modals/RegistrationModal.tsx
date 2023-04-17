@@ -144,7 +144,7 @@ const RegistrationModal:React.FC = () => {
             <button className='absolute mt-5 mr-2 right-10' onClick={togglePassword}>{passwordType==="password"?<AiOutlineEye className='text-2xl text-gray-400'/>:<AiOutlineEyeInvisible className='text-2xl text-gray-400'/>}</button>
               </div> 
             {customError && <p className='text-red-500 text-sm' >{customError}</p>}
-            <div className='flex'>
+          
             <Input
          
             placeholder="Confirm Password"
@@ -154,8 +154,7 @@ const RegistrationModal:React.FC = () => {
                 disabled={loading}
                 
             />
-            <button className='absolute mt-5 mr-2 right-10' onClick={togglePassword}>{passwordType==="password"?<AiOutlineEye className='text-2xl text-gray-400'/>:<AiOutlineEyeInvisible className='text-2xl text-gray-400'/>}</button>
-              </div>
+           
          
 
         </div>

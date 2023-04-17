@@ -44,33 +44,43 @@ const Tabs:Tab[] = [
 ]
 const Sidebar:React.FC= () => {
     const [selectedTab,setSelectedTab]=useState<string>("")
-    const router=useRouter()
-    const {login,register} =useToggle()
+
+    const {register} =useToggle()
     const {data:currentUser}=useCurrentUser()
     
 
     
     return( 
         <>
-    <div className='col-span-2  md:col-span-1 xl:col-span-2 mr-5 h-full pr-4 md:pr-6  mt-2 border-2 border-blue-500 rounded-lg sticky'>
-        <div className='flex flex-col  md:items-end  lg:items-center'>
-            <div className='space-y-2 lg:w-[230px] '>
+    <div className='col-span-1 xl:col-span-2 mr-5 h-1/2 pr-4 md:pr-6  mt-2  rounded-lg'>
+        <div className='flex flex-col  md:items-center '>
+            <div className='space-y-2 lg:w-[230px] mx-5'>
 
             { Tabs.map((tab)=>(
                 <>
             {currentUser &&  <SidebarItem key={tab.title} tab={tab} selectedTab={tab.title===selectedTab} setSelectedTab={setSelectedTab}/> }   
                 </>
             ))}
+        
               
             </div>
-            
+     {currentUser &&        <div className='flex items-center self-start mx-6 md:p-2   cursor-pointer ' onClick={()=>signOut()}>
+        <MdLogout className=' text-gray-500 text-xl' title='LogOut'/>
+        <p className='text-md font-semibold text-gray-500 hidden md:block' >Logout</p>
+        </div>
+}
            
 
         </div>
-        <div className='flex justify-center'>
+       
+        <SidebarFooter/>
+
+       
+      
 
      {!currentUser &&  
-     <div className='ml-5 w-auto'>
+        <div className='flex justify-center'>
+     <div className='ml-5 w-auto hidden md:block'>
      <h1 className='text-center mt-2 text-2xl font-semibold'>New To MatchMass</h1>
        <div className='flex items-center mt-2 border-2   justify-center border-solid border-gray-400 mb-3 rounded-lg p-1  cursor-pointer ' onClick={register}>
         <FiLogIn className=' text-gray-500 text-md mr-2' title='SignUp/Login'/>
@@ -83,15 +93,11 @@ const Sidebar:React.FC= () => {
      
   
     
+        </div>
     } 
-    {currentUser && 
-        <div className='flex items-center justify-start    md:mr-10 md:ml-11  border-2 border-solid border-gray-200 mb-3 rounded-lg  mt-2 w-full p-3  cursor-pointer ' onClick={()=>signOut()}>
-        <MdLogout className=' text-gray-500 text-md mr-5 md:ml-2' title='LogOut'/>
-        <p className='text-md font-semibold text-gray-500' >Logout</p>
-        </div>
-        }
-        </div>
- <SidebarFooter/>
+   
+ 
+        
     </div>
           
     </>
