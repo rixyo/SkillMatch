@@ -25,13 +25,14 @@ const postId:React.FC = () => {
         try {
             await axios.delete(`/api/posts/${postId}`)
             toast.success("Post deleted successfully")
-          await  mutate({...post,deleted:true})
+          await  mutate({...post as Post})
             router.push("/")
 
 
         
         } catch (error: any) {
             console.log(error.message)
+            toast.error(error.message)
         }
     },[post?.id,router,mutate])
 
@@ -53,7 +54,7 @@ const postId:React.FC = () => {
        >
      <div className='flex items-start gap-1'>
                <Avatar
-               userId={post?.userId}
+               userId={post?.userId as string}
                />
                <div className='flex items-center md:gap-2 '  >
                    <p className='hidden md:block text-md  font-bold hover:underline' >{post?.user?.name}</p>
@@ -80,9 +81,9 @@ const postId:React.FC = () => {
                <AiOutlineComment className='text-2xl text-gray-500 hover:text-blue-300' title='comment'/>
                <p className='text-gray-500'>{post?.comments?.length}</p>
                <IoAnalyticsOutline className='text-2xl text-gray-500 hover:text-blue-300' title='Views'/>
-               <p className='text-gray-500'>{post?.viewsId?.length || 0}</p> 
+               <p className='text-gray-500'>{post?.viewsIds?.length || 0}</p> 
                <GoHeart className='text-2xl text-gray-400 hover:text-red-200'  title='like'/>
-               <p className='text-gray-500'>{post?.likesId?.length}</p>
+               <p className='text-gray-500'>{post?.likesIds?.length}</p>
              
 
            </div>

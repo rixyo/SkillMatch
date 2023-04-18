@@ -1,7 +1,7 @@
 import useCurrentUser from '@/hooks/useCurrentUser';
 import useToggle from '@/hooks/useToggle';
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback,  useMemo} from 'react';
 import {formatDistanceToNowStrict } from  "date-fns"
 import Avatar from '../Avatar';
 import { MdVerified } from 'react-icons/md';
@@ -14,14 +14,14 @@ import usePostEditModal from '@/hooks/useEditPostModal';
 
 
 type PostIteamProps = {
-    post: Record<string,any>
+    post: Post;
     userId?: string
     mutate?:any
 
 };
 
 const PostIteam:React.FC<PostIteamProps> = ({post,mutate}) => {
-    const {isOpen,onOpen}=usePostEditModal()
+    const {onOpen}=usePostEditModal()
     
 
     const router=useRouter()
@@ -30,12 +30,20 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate}) => {
 
     const gotoProfile = useCallback((event:any) => {
         event.stopPropagation();
+        if(!currentUser){
+            login()
+            return
+        }
         router.push(`/users/${post.userId}`)
       
 
     }, [router, post.userId]);
     const gotoPost = useCallback((event:any) => {
         event.stopPropagation();
+        if(!currentUser){
+            login()
+            return
+        }
         router.push( `/posts/${post.id}`)
     }, [router, post.id]);
     const onLike = useCallback((event:React.MouseEvent<SVGElement,MouseEvent>) => {
@@ -53,11 +61,11 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate}) => {
         }
     },[post.createdAt])
   
-    const deletePost=useCallback(async(e:any)=>{
-        e.stopPropagation()
+    const deletePost=useCallback(async(event:React.MouseEvent<SVGElement,MouseEvent>)=>{
+        event.stopPropagation()
         try {
             await axios.delete(`/api/posts/${post.id}`)
-            mutate()
+            mutate({...post as Post})
             
 
         
@@ -68,6 +76,7 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate}) => {
         }
 
     },[post?.id,router])
+
     
     return(
         <div
@@ -86,7 +95,7 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate}) => {
                    <p className='truncate w-10 md:hidden text-gray-500'>{post.user.customTag}</p>
                    <p className='text-gray-500 hidden md:block'>{createdAt}</p>
                    <p className='truncate w-10 md:hidden text-gray-500'>{createdAt}</p>
-                {currentUser?.user?.id===post?.userId &&  <AiOutlineEdit size={20} className='text-gray-500 ' title='Delete' onClick={onOpen} /> }   
+                {currentUser?.user?.id===post?.userId &&  <AiOutlineEdit size={20} className='text-gray-500 ' title='Edit' onClick={onOpen} /> }   
                 {currentUser?.user?.id===post?.userId &&  <AiOutlineDelete size={20} className='text-gray-500 ' title='Delete' onClick={deletePost} /> } 
                   
                 </div>
@@ -101,12 +110,12 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate}) => {
             </div>
             <div className='flex items-center w-full gap-5 ml-2' >
                 <AiOutlineComment className='text-2xl text-gray-500 hover:text-blue-300' title='comment'/>
-                <p className='text-gray-500'>{post.comments.length}</p>
+             
+                <p className='text-gray-500'>{post.comments?.length}</p>
                 <IoAnalyticsOutline className='text-2xl text-gray-500 hover:text-blue-300' title='Views'/>
-                <p className='text-gray-500'>{post.viewsId?.length || 0}</p> 
+                <p className='text-gray-500'>{post.viewsIds?.length || 0}</p> 
                 <GoHeart className='text-2xl text-gray-400 hover:text-red-200' onClick={onLike} title='like'/>
-                <p className='text-gray-500'>{post.likesId.length}</p>
-              
+                <p className='text-gray-500'>{post.likesIds?.length}</p>
 
             </div>
 

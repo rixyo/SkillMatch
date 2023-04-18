@@ -12,7 +12,9 @@ import { RingLoader,CircleLoader} from "react-spinners"
 const userView:React.FC = () => {
     const router = useRouter();
     const { userId } = router.query;
+    
     const {data: fetchUser,isLoading} = useUser(userId as string);
+   
     const {isLoading:loading}=usePosts(userId as string)
 
     if(isLoading || !fetchUser) return(
@@ -24,9 +26,13 @@ const userView:React.FC = () => {
     
     return (
         <>
-        <Header showBackArrow label={fetchUser.name} />
-        <UserHero userId={fetchUser.id as string}/>
-        <UserBio userId={fetchUser.id as string}/>
+        <Header showBackArrow label={fetchUser.name as string} />
+    
+      <UserHero userId={userId as string}/>
+      
+     
+    <UserBio userId={userId as string}/>
+       
        
         {loading?<div className="flex justify-center items-center h-full">
   <CircleLoader color="#3B82F6"  size={50} />

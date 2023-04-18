@@ -22,12 +22,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
-  followerId String[] @db.ObjectId
+  followerId String[]  @db.ObjectId
   followingId String [] @db.ObjectId
   hasNotifications Boolean @default(false)
   notifications Notification[]
   posts Post[]
   comments Comment[]
+
 }
 model Post{
   id String @id @default(auto()) @map("_id") @db.ObjectId
@@ -42,6 +43,7 @@ model Post{
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
    comments          Comment[]
 }
+
 model Comment {
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
   body               String

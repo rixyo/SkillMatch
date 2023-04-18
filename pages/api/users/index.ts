@@ -12,7 +12,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                },
                take:10
             })
-            res.status(StatusCodes.OK).json({users})
+            res.status(StatusCodes.OK).json(users)
             
         } catch (error:any) {
             console.log("geting user error",error)

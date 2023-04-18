@@ -47,25 +47,26 @@ const Sidebar:React.FC= () => {
 
     const {register} =useToggle()
     const {data:currentUser}=useCurrentUser()
+
     
 
     
     return( 
         <>
-    <div className='col-span-1 xl:col-span-2 mr-5 h-1/2 pr-4 md:pr-6  mt-2  rounded-lg'>
-        <div className='flex flex-col  md:items-center '>
-            <div className='space-y-2 lg:w-[230px] mx-5'>
+    <div className='col-span-1 xl:col-span-2 mr-5 h-1/2 pr-4 md:pr-6  mt-2  rounded-lg' key="main-contain">
+        <div className='flex flex-col  md:items-center ' key={"SideBarItems"}>
+            <div className='space-y-2 lg:w-[230px] mx-5' key={"SideBarChild"}>
 
             { Tabs.map((tab)=>(
                 <>
-            {currentUser &&  <SidebarItem key={tab.title} tab={tab} selectedTab={tab.title===selectedTab} setSelectedTab={setSelectedTab}/> }   
+            {currentUser &&  <SidebarItem key={tab.title+tab.icon} tab={tab} selectedTab={tab.title===selectedTab} setSelectedTab={setSelectedTab}/> }   
                 </>
             ))}
         
               
             </div>
-     {currentUser &&        <div className='flex items-center self-start mx-6 md:p-2   cursor-pointer ' onClick={()=>signOut()}>
-        <MdLogout className=' text-gray-500 text-xl' title='LogOut'/>
+     {currentUser &&        <div className='flex items-center self-start mx-6 md:p-2  gap-4  cursor-pointer ' key={"Logout"} onClick={()=>signOut()}>
+        <MdLogout className=' text-gray-500 text-xl ' title='LogOut'/>
         <p className='text-md font-semibold text-gray-500 hidden md:block' >Logout</p>
         </div>
 }
@@ -79,7 +80,7 @@ const Sidebar:React.FC= () => {
       
 
      {!currentUser &&  
-        <div className='flex justify-center'>
+        <div className='flex justify-center' key="new user">
      <div className='ml-5 w-auto hidden md:block'>
      <h1 className='text-center mt-2 text-2xl font-semibold'>New To MatchMass</h1>
        <div className='flex items-center mt-2 border-2   justify-center border-solid border-gray-400 mb-3 rounded-lg p-1  cursor-pointer ' onClick={register}>

@@ -5,9 +5,10 @@ import { BiArrowBack } from "react-icons/bi";
 interface HeaderProps {
   showBackArrow?: boolean;
   label: string;
+  sublebel?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({showBackArrow, label }) => {
+const Header: React.FC<HeaderProps> = ({showBackArrow, label,sublebel }) => {
   const router = useRouter();
 
   const handleBack = useCallback(() => {
@@ -28,9 +29,13 @@ const Header: React.FC<HeaderProps> = ({showBackArrow, label }) => {
               transition
           "/>
         )}
+        <div className="flex flex-col gap-1 items-center">
         <h1 className="text-black text-xl font-semibold">
           {label}
         </h1>
+        <h1 className="text-lg font-normal text-gray-400">{sublebel}</h1>
+
+        </div>
       </div>
     </div>
   );

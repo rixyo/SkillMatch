@@ -6,7 +6,7 @@ import usePosts from "@/hooks/usePosts";
 import useToggle from "@/hooks/useToggle";
 import { Metadata } from "next";
 import { FiLogIn } from "react-icons/fi";
-import {BounceLoader} from "react-spinners"
+import {CircleLoader} from "react-spinners"
 export const metadata: Metadata = {
   title: 'Home',
   description: 'Home Page',
@@ -34,7 +34,7 @@ export default function Home() {
 }
 <Form placeholder="Share Your Ideas" />
 {isLoading?<div className="flex justify-center items-center h-full">
-  <BounceLoader color="#3B82F6" className="" size={50} />
+  <CircleLoader color="#3B82F6" className="" size={50} />
 </div> :  <PostFeed  />}
 
   </>

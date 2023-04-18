@@ -1,7 +1,10 @@
 import useSWR from "swr"
 import fetcher from "@/libs/fetcher"
-const useUsers=()=>{
-    const {data,error,isLoading,mutate}=useSWR<User>("/api/users",fetcher)
+
+const useGetFollower=()=>{
+    const {data,error,isLoading,mutate}=useSWR("/api/getfollower",fetcher)
+  
+
     return {
         data,
         isLoading,
@@ -9,4 +12,4 @@ const useUsers=()=>{
         mutate
     }
 }
-export default useUsers
+export default useGetFollower

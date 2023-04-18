@@ -16,7 +16,7 @@ const SidebarItem:React.FC<SidebarItemProps> = ({tab,selectedTab,setSelectedTab}
 
     }
     return (
-        <div className='flex items-center xl:justify-normal  cursor-pointer lg:border-2 border-solid lg:border-gray-300 lg:rounded-lg mt-2' key={tab.title} onClick={handleClick}>
+        <div className='flex items-center xl:justify-normal  cursor-pointer lg:border-2 border-solid lg:border-gray-300 lg:rounded-lg mt-2' key={Math.random()/2} onClick={handleClick}>
             <div key={tab.title+Math.random()*10} className='p-1
                rounded-full 
                h-14
@@ -27,10 +27,10 @@ const SidebarItem:React.FC<SidebarItemProps> = ({tab,selectedTab,setSelectedTab}
                hover:bg-opacity-10 
                cursor-pointer 
             '>
-                <tab.icon className={`text-2xl ${selectedTab ? 'text-blue-500' : 'text-gray-500'} `} title={tab.title} />
+                <tab.icon className={`text-2xl ${selectedTab ? 'text-blue-500' : 'text-gray-500'} `}  title={tab.title} />
             </div>
-            <div>
-                <p className={`text-sm ${selectedTab ? 'text-blue-500' : 'text-gray-500'}  font-semibold hidden md:block `}>{tab.title}</p>
+            <div key={tab.title+tab.title} >
+                <p className={`text-sm ${selectedTab ? 'text-blue-500' : 'text-gray-500'}  font-semibold hidden md:block `} >{tab.title}</p>
             </div>
 
         </div>

@@ -33,14 +33,14 @@ interface ButtonProps {
           border-2
           ${fullWidth ? 'w-full' : 'w-fit'}
           ${secondary ? 'bg-white' : 'bg-sky-500'}
-          ${secondary ? 'text-gray-500' : 'text-white'}
+          ${secondary ? 'text-gray-500' : 'text-black'}
           ${secondary ? 'border-gray-400' : 'border-sky-500'}
           ${large ? 'text-xl' : 'text-md'}
           ${large ? 'px-5' : 'px-4'}
           ${large ? 'py-3' : 'py-2'}
           ${outline ? 'bg-transparent' : ''}
-          ${outline ? 'border-white' : ''}
-          ${outline ? 'text-white' : ''}
+          ${outline ? 'border-sky-500' : ''}
+          ${outline ? 'text-red-500' : ''}
         `}
       >
         {label}
