@@ -11,7 +11,8 @@ import { RingLoader,CircleLoader} from "react-spinners"
 
 const userView:React.FC = () => {
     const router = useRouter();
-    const { userId } = router.query;
+    const { userId } = router.query
+
     
     const {data: fetchUser,isLoading} = useUser(userId as string);
    
@@ -31,7 +32,7 @@ const userView:React.FC = () => {
       <UserHero userId={userId as string}/>
       
      
-    <UserBio userId={userId as string}/>
+  <UserBio userId={userId as string}/> 
        
        
         {loading?<div className="flex justify-center items-center h-full">

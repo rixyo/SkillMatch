@@ -1,5 +1,3 @@
-
-
 import { NextApiRequest, NextApiResponse } from 'next'
 const { StatusCodes } = require('http-status-codes')
 import prisma from '@/libs/prismadb'

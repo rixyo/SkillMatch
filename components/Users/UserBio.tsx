@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useState } from 'react';
 import useUser from '@/hooks/useUser'
 import {format} from 'date-fns';
@@ -10,6 +11,7 @@ import useFollow from '@/hooks/useFollow';
 import {toast} from "react-hot-toast"
 import { BiMessageSquareDots } from 'react-icons/bi';
 import useGetFollower from '@/hooks/useGetFollower';
+import { useRouter } from 'next/router';
 type UserBioProps = {
     userId: string;
 };
@@ -19,7 +21,8 @@ const UserBio:React.FC<UserBioProps> = ({userId}) => {
     
     const {data: fetchUser} = useUser(userId)
     const {data: follower} = useGetFollower()
-    console.log(follower)
+    const router=useRouter()
+   
     
     
   
@@ -83,7 +86,7 @@ const UserBio:React.FC<UserBioProps> = ({userId}) => {
                  <span className='font-bold'>{fetchUser.followingId.length}</span> <span className='text-gray-500'>
                  Following
                  </span>
-                 <span className='font-bold  ml-3'>{fetchUser.followerId.length}</span> <span className='text-gray-500'>
+                 <span className='font-bold  ml-3 cursor-pointer hover:underline' onClick={()=>router.push(`/users/${userId}/followers`)}>{fetchUser.followerId.length}</span> <span className='text-gray-500 cursor-pointer hover:underline'  onClick={()=>router.push(`/users/${userId}/followers`)}>
                  Followers
                  </span>
              </p>

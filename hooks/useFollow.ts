@@ -1,4 +1,3 @@
-
 import axios from "axios";
 
 import { useCallback, useMemo } from "react";
@@ -37,15 +36,11 @@ const useFollow = (userId: string) => {
 
       if (isFollowing ) {
         
-        request = () => axios.delete('/api/following',{data:{userId} } );
+        request = () => axios.delete('/api/follow',{data:{userId} } );
       }
       
       else {
-        request = () => axios.post('/api/following', { userId });
-        if(currentUser.user.id !== userId){
-          axios.post('/api/following', { userId:currentUser.user.id });
-        }
-      
+        request = () => axios.post('/api/follow', { userId });
       }
 
    
