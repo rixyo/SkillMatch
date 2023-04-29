@@ -1,5 +1,6 @@
 
 import useCurrentUser from '@/hooks/useCurrentUser';
+import useGetComments from '@/hooks/useGetComments';
 import usePost from '@/hooks/usePost';
 import usePosts from '@/hooks/usePosts';
 import useToggle from '@/hooks/useToggle';
@@ -13,11 +14,10 @@ import Button from './Button';
 type FormProps = {
     placeholder: string;
     isComment?: boolean;
-    isLikes?: boolean;
     postId?: string;
 };
 
-const Form:React.FC<FormProps> = ({placeholder}) => {
+const Form:React.FC<FormProps> = ({placeholder,isComment}) => {
     const {data:currentUser} = useCurrentUser()
     const router=useRouter()
     const {postId}=router.query
@@ -25,6 +25,7 @@ const Form:React.FC<FormProps> = ({placeholder}) => {
     
     const {login} = useToggle()
     const {mutate:mutatePost} = usePosts()
+    const {mutate:mutatedComment}=useGetComments(postId as string)
     const [body,setBody] = useState<string>('')
     const [loading,setLoading] = useState<boolean>(false)
     const [characterRemaning,setCharacterRemaing]=useState<number>(140)
@@ -47,11 +48,15 @@ const Form:React.FC<FormProps> = ({placeholder}) => {
                 return
             }
             else{
+                const url=isComment?`/api/comment?postId=${postId}`:`/api/posts`
 
-                await axios.post("/api/posts",{body})
-                toast.success("Post created")
+                await axios.post(url,{body})
+                toast.success(isComment?"Commented successfully":"Posted successfully")
                 setBody("")
                 mutatePost()
+                if(isComment){
+                    mutatedComment()
+                }
             }
            
             
@@ -63,7 +68,7 @@ const Form:React.FC<FormProps> = ({placeholder}) => {
             setLoading(false)
         }
         
-    },[body,setBody,mutatePost])
+    },[body,setBody,mutatePost,isComment,postId,currentUser,login])
     
     return (
         <div className='flex gap-4 mt-2'>
@@ -78,6 +83,8 @@ const Form:React.FC<FormProps> = ({placeholder}) => {
                 onChange={handleChange}
                 className='w-full h-20 disabled:opacity-80 peer resize-none mt-3  p-2 rounded-lg text-[20px] placeholder-gray-400 focus:outline-none ring-0 outline-none'
                 placeholder={placeholder}
+                maxLength={140}
+             
 
                >
              
@@ -86,7 +93,7 @@ const Form:React.FC<FormProps> = ({placeholder}) => {
                <hr className='opacity-0 peer-focous:oopacity-100 h-[1px] w-full border-gray-300 transition'/>
                <div className='flex justify-end'>
                 <Button
-                label='Post'
+                label={isComment?"Replay":"Share"}
                 disabled={loading || !body}
                 onClick={onSubmit}
                 />

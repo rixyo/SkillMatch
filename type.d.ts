@@ -31,17 +31,18 @@ type Post={
     updatedAt: Date,
     deletedAt: Date?,
     image: string?,
-    likesIds: string[],
-    viewsIds: string[],
+    likesId: string[],
+    viewsId: string[],
     user: User,
-    comments: Comment[],
+    comments: comment[],
    
 }
-type Comment={
+type comment={
     id: string,
     userId: string,
     postId: string,
     body: string,
+    likesId: string[],
     createdAt: Date,
     updatedAt: Date,
     

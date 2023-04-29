@@ -1,6 +1,7 @@
 
 import usePosts from '@/hooks/usePosts';
 import React from 'react';
+import Form from '../Form';
 import PostIteam from './PostIteam';
 
 type postFeedProps = {
@@ -13,8 +14,12 @@ const postFeed:React.FC<postFeedProps> = ({userId}) => {
     return(
         <>
   
-        {posts && posts?.length>=1 &&   posts.map((post)=>(
+        {posts && posts.map((post:Post)=>(
+         
+         
                 <PostIteam key={post.id} post={post} userId={userId} mutate={mutate}/>
+              
+            
             ))
                 
              }

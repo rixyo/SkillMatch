@@ -1,48 +1,31 @@
-import Avatar from '@/components/Avatar';
-import Button from '@/components/Button';
+
 import Header from '@/components/Header/Heder';
-import useFollow from '@/hooks/useFollow';
 import useGetFollower from '@/hooks/useGetFollower';
 import useUser from '@/hooks/useUser';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { MdVerified } from 'react-icons/md';
-import { RingLoader } from 'react-spinners';
+import React from 'react';
+import { RingLoader,CircleLoader } from 'react-spinners';
 import {useRouter} from 'next/router'
-import useCurrentUser from '@/hooks/useCurrentUser';
-import useLoginModal from '@/hooks/useLoginModal';
-import axios from 'axios';
-import toast from 'react-hot-toast';
 import FollowerItem from '@/components/Users/FollowerItem';
 
-type followerProps = {
-    
-};
 
-const followers:React.FC<followerProps> = () => {
+
+const followers:React.FC = () => {
     const router=useRouter()
     const {userId}=router.query
-    const {data:followers,isLoading:followerDataLoading}=useGetFollower()
+    const {data:followers,isLoading:followerDataLoading}=useGetFollower(userId as string)
 
-    const {data:user,mutate:mutateFetchedUser}=useUser(userId as string)
-    const {data:currentUser}=useCurrentUser()
-  
-  
-
- 
-  
-   
-
+    const {data:user}=useUser(userId as string)
 
 
     if(followerDataLoading) return(
         <div className='flex justify-center items-center h-full'>
-            <RingLoader color={'#3B82F6'} loading={true} size={50} />
+            <CircleLoader color={'#3B82F6'} loading={true} size={50} />
 
         </div>
     )
     
     return (
-        <div className='flex flex-col w-auto border-2 border-red-500 mx-5'>
+        <div className='flex flex-col sm:w-auto lg:w-full mx-5'>
           
 
         
@@ -51,10 +34,16 @@ const followers:React.FC<followerProps> = () => {
          }  
         
        
-            <div className='flex  flex-col w- items-start border-2 border-blue-500'>
+            <div className='flex  flex-col sm:w-full lg:w-auto items-start'>
               {followers?.map((follower,index)=>(
+                <>
+              
                     <FollowerItem key={index} follower={follower} />
+                </>
               ))}
+                {followers && followers?.length===0 && <div className="flex justify-center items-center h-full">
+                <h1 className="text-2xl  font-bold text-gray-500">No followers yet</h1>
+                    </div>}
             </div>
    
           

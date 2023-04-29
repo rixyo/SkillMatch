@@ -10,6 +10,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
           const {currentUser}=await serverAuth(req,res)
             const {name,bio, profileImage, coverImage}=req.body
             if(!name) throw new Error("Please enter your name")
+            
 
             const updatedUser=await prisma.user.update({
                 where:{

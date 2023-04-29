@@ -5,12 +5,14 @@ import React, { useCallback,  useMemo} from 'react';
 import {formatDistanceToNowStrict } from  "date-fns"
 import Avatar from '../Avatar';
 import { MdVerified } from 'react-icons/md';
-import { AiOutlineComment, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
+import { AiFillHeart, AiOutlineComment, AiOutlineDelete, AiOutlineEdit, AiOutlineHeart } from 'react-icons/ai';
 import { IoAnalyticsOutline } from 'react-icons/io5';
 import {GoHeart} from 'react-icons/go'
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import usePostEditModal from '@/hooks/useEditPostModal';
+import useLike from '@/hooks/useLike';
+
 
 
 type PostIteamProps = {
@@ -20,13 +22,17 @@ type PostIteamProps = {
 
 };
 
-const PostIteam:React.FC<PostIteamProps> = ({post,mutate}) => {
+const PostIteam:React.FC<PostIteamProps> = ({post,mutate,userId}) => {
     const {onOpen}=usePostEditModal()
+  
+    
     
 
     const router=useRouter()
     const {login}=useToggle()
     const {data:currentUser} = useCurrentUser()
+ const {hasLiked,toggleLike}=useLike({postId:post.id,userId})
+ 
 
     const gotoProfile = useCallback((event:any) => {
         event.stopPropagation();
@@ -52,7 +58,9 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate}) => {
             login()
             return
         }
-    }, [login,currentUser]);
+        toggleLike()
+
+    }, [login,currentUser,toggleLike]);
     const createdAt=useMemo(()=>{
         if(!post.createdAt) return ""
         else{
@@ -65,23 +73,26 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate}) => {
         event.stopPropagation()
         try {
             await axios.delete(`/api/posts/${post.id}`)
-            mutate({...post as Post})
+           // mutate({...post as Post})
+           mutate()
             
 
         
         } catch (error: any) {
             console.log(error.message)
+            toast.error(error.response?.data?.error || error.message)
         }finally{
             toast.success("Post deleted")
         }
 
     },[post?.id,router])
 
-    
+    const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
     return(
         <div
         onClick={gotoPost}
         className="flex flex-col border-2 border-solid border-gray-300 p-5 cursor-pointer rounded-lg   my-5 mx-2 hover:border-gray-200"
+        key={post.id}
         >
             <div className='flex items-start gap-1'>
                 <Avatar
@@ -113,9 +124,27 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate}) => {
              
                 <p className='text-gray-500'>{post.comments?.length}</p>
                 <IoAnalyticsOutline className='text-2xl text-gray-500 hover:text-blue-300' title='Views'/>
-                <p className='text-gray-500'>{post.viewsIds?.length || 0}</p> 
-                <GoHeart className='text-2xl text-gray-400 hover:text-red-200' onClick={onLike} title='like'/>
-                <p className='text-gray-500'>{post.likesIds?.length}</p>
+                <p className='text-gray-500'>{post.viewsId?.length || 0}</p> 
+          
+              
+                <div
+             
+              className="
+                flex 
+                flex-row 
+                items-center 
+                text-neutral-500 
+                gap-2 
+                cursor-pointer 
+                transition 
+                hover:text-red-500
+            ">
+              <LikeIcon color={hasLiked ? 'red' : ''} size={20} onClick={onLike} />
+              <p>
+                {post.likesId.length}
+              </p>
+            </div>
+            
 
             </div>
 

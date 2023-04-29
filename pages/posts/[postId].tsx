@@ -1,13 +1,17 @@
 import Avatar from '@/components/Avatar';
+import Form from '@/components/Form';
+import CommentsFeed from '@/components/posts/CommentsFeed';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import usePostEditModal from '@/hooks/useEditPostModal';
+import useLike from '@/hooks/useLike';
 import usePost from '@/hooks/usePost';
+import useToggle from '@/hooks/useToggle';
 import axios from 'axios';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
-import { AiOutlineComment, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
+import { AiFillHeart, AiOutlineComment, AiOutlineDelete, AiOutlineEdit, AiOutlineHeart } from 'react-icons/ai';
 import { GoHeart } from 'react-icons/go';
 import { IoAnalyticsOutline } from 'react-icons/io5';
 import { MdVerified } from 'react-icons/md';
@@ -21,6 +25,9 @@ const postId:React.FC = () => {
     const {data:currentUser}=useCurrentUser()
     const {onOpen}=usePostEditModal()
     const {data:post, isLoading, mutate}=usePost(postId as string)
+    const {hasLiked,toggleLike}=useLike({postId:postId as string,userId:currentUser?.id})
+    const {login}=useToggle()
+
     const deletePost=useCallback(async()=>{
         try {
             await axios.delete(`/api/posts/${postId}`)
@@ -32,9 +39,18 @@ const postId:React.FC = () => {
         
         } catch (error: any) {
             console.log(error.message)
-            toast.error(error.message)
+            toast.error(error.response?.data?.error || error.message)
         }
     },[post?.id,router,mutate])
+    const onLike = useCallback((event:React.MouseEvent<SVGElement,MouseEvent>) => {
+        event.stopPropagation();
+        if(!currentUser){
+            login()
+            return
+        }
+        toggleLike()
+
+    }, [login,currentUser,toggleLike]);
 
     const createdAt=useMemo(()=>{
         if(!post?.createdAt) return ""
@@ -43,6 +59,7 @@ const postId:React.FC = () => {
 
         }
     },[post?.createdAt])
+    const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
     return(
        <>
        {isLoading ? <div className="flex justify-center items-center h-full">
@@ -81,12 +98,37 @@ const postId:React.FC = () => {
                <AiOutlineComment className='text-2xl text-gray-500 hover:text-blue-300' title='comment'/>
                <p className='text-gray-500'>{post?.comments?.length}</p>
                <IoAnalyticsOutline className='text-2xl text-gray-500 hover:text-blue-300' title='Views'/>
-               <p className='text-gray-500'>{post?.viewsIds?.length || 0}</p> 
-               <GoHeart className='text-2xl text-gray-400 hover:text-red-200'  title='like'/>
-               <p className='text-gray-500'>{post?.likesIds?.length}</p>
+               <p className='text-gray-500'>{post?.viewsId?.length || 0}</p> 
+               <div
+             
+             className="
+               flex 
+               flex-row 
+               items-center 
+               text-neutral-500 
+               gap-2 
+               cursor-pointer 
+               transition 
+               hover:text-red-500
+           ">
+             <LikeIcon color={hasLiked ? 'red' : ''} size={20} onClick={onLike} />
+             <p>
+               {post?.likesId.length}
+             </p>
+           </div>
              
 
            </div>
+           
+              <div className='md:mx-16 md:my-2 '>
+                <p className='text-gray-500'>Replay to <span className='text-blue-400 hover:underline '>{post?.user.customTag}</span></p>
+              </div>
+           <Form 
+                postId={post?.id as string}
+                isComment
+                placeholder='share your thoughts'
+                />
+              { <CommentsFeed postId={postId as string} /> } 
 
        </div>
        }

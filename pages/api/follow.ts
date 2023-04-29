@@ -5,7 +5,7 @@ import serverAuth from '@/libs/serverAuth'
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
 if(req.method !== 'POST' && req.method !== 'DELETE') return res.status(StatusCodes.METHOD_NOT_ALLOWED).json({message:'Method not allowed'})
   try {
-    const {userId} = req.body
+    const userId = req.method === 'POST' ? req.body.userId : req.query.userId;
     const {currentUser} = await serverAuth(req,res)
     console.log(userId)
     if(!userId || typeof userId !== 'string'){

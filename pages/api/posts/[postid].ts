@@ -20,7 +20,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     comments:true
                 }
             })
-            
+        
             res.status(StatusCodes.OK).json({...existingPost})
             
               
@@ -55,12 +55,9 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     id:postid
                 }
             })
-            if (!res.headersSent) {
-                res.setHeader('Content-Type', 'application/json')
-               
-                
+            
                 res.status(StatusCodes.OK).json({deletedPost})
-            }
+            
               
         }
         }
@@ -94,12 +91,10 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         body
                     }
                 })
-                if (!res.headersSent) {
-                    res.setHeader('Content-Type', 'application/json')
-                   
+                
                     
                     res.status(StatusCodes.OK).json({updatedPost})
-                }
+                
             }
 
         }
