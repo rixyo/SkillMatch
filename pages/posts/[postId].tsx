@@ -12,7 +12,6 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { AiFillHeart, AiOutlineComment, AiOutlineDelete, AiOutlineEdit, AiOutlineHeart } from 'react-icons/ai';
-import { GoHeart } from 'react-icons/go';
 import { IoAnalyticsOutline } from 'react-icons/io5';
 import { MdVerified } from 'react-icons/md';
 import { CircleLoader } from 'react-spinners';
@@ -23,6 +22,7 @@ const postId:React.FC = () => {
     const router = useRouter();
     const { postId } = router.query;
     const {data:currentUser}=useCurrentUser()
+    console.log(currentUser)
     const {onOpen}=usePostEditModal()
     const {data:post, isLoading, mutate}=usePost(postId as string)
     const {hasLiked,toggleLike}=useLike({postId:postId as string,userId:currentUser?.id})
@@ -113,7 +113,7 @@ const postId:React.FC = () => {
            ">
              <LikeIcon color={hasLiked ? 'red' : ''} size={20} onClick={onLike} />
              <p>
-               {post?.likesId.length}
+               {post?.likesId?.length}
              </p>
            </div>
              
@@ -121,7 +121,7 @@ const postId:React.FC = () => {
            </div>
            
               <div className='md:mx-16 md:my-2 '>
-                <p className='text-gray-500'>Replay to <span className='text-blue-400 hover:underline '>{post?.user.customTag}</span></p>
+              {post?.userId!==currentUser?.user.id &&  <p className='text-gray-500'>Replay to <span className='text-blue-400 hover:underline '>{post?.user.customTag}</span></p>} 
               </div>
            <Form 
                 postId={post?.id as string}

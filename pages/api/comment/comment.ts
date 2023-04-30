@@ -15,7 +15,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         postId:postId
                     },
                     include:{
-                        user:true
+                        user:true,
+                        replays:true
                     },
                     orderBy:{
                         createdAt:"desc"

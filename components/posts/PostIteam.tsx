@@ -122,7 +122,7 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate,userId}) => {
             <div className='flex items-center w-full gap-5 ml-2' >
                 <AiOutlineComment className='text-2xl text-gray-500 hover:text-blue-300' title='comment'/>
              
-                <p className='text-gray-500'>{post.comments?.length}</p>
+                <p className=' text-neutral-500 '>{post.comments?.length}</p>
                 <IoAnalyticsOutline className='text-2xl text-gray-500 hover:text-blue-300' title='Views'/>
                 <p className='text-gray-500'>{post.viewsId?.length || 0}</p> 
           

@@ -20,6 +20,7 @@ type User={
     posts: Post[],
     comments: Comment[],
     notifications: Notification[],
+    replays: Replay[],
 
 
 }
@@ -45,7 +46,17 @@ type comment={
     likesId: string[],
     createdAt: Date,
     updatedAt: Date,
+    replays: Replay[],
     
+}
+type Replay={
+    id: string,
+    userId: string,
+    commentId: string,
+    body: string,
+    likesId: string[],
+    createdAt: Date,
+    updatedAt: Date,
 }
 type Notification={
     id: string,

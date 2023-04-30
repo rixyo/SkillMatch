@@ -48,7 +48,7 @@ const Form:React.FC<FormProps> = ({placeholder,isComment}) => {
                 return
             }
             else{
-                const url=isComment?`/api/comment?postId=${postId}`:`/api/posts`
+                const url=isComment?`/api/comment/comment?postId=${postId}`:`/api/posts`
 
                 await axios.post(url,{body})
                 toast.success(isComment?"Commented successfully":"Posted successfully")
@@ -83,7 +83,7 @@ const Form:React.FC<FormProps> = ({placeholder,isComment}) => {
                 onChange={handleChange}
                 className='w-full h-20 disabled:opacity-80 peer resize-none mt-3  p-2 rounded-lg text-[20px] placeholder-gray-400 focus:outline-none ring-0 outline-none'
                 placeholder={placeholder}
-                maxLength={140}
+              
              
 
                >

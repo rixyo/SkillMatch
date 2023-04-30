@@ -49,7 +49,7 @@ const EditPostModal:React.FC = () => {
     const bodyContent=(
         <div className='flex gap-4 mt-2'>
             <div>
-                <Avatar userId={post?.userId}/>
+                <Avatar userId={post?.userId as string}/>
       
             </div>
             <div className='w-full'>

@@ -20,7 +20,7 @@ const userView:React.FC = () => {
 
     if(isLoading || !fetchUser) return(
         <div className='flex justify-center items-center h-full'>
-            <RingLoader color={'#3B82F6'} loading={true} size={50} />
+            <CircleLoader color={'#3B82F6'} loading={true} size={50} />
 
         </div>
     )
