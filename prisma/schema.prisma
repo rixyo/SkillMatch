@@ -29,6 +29,7 @@ model User {
   posts Post[]
   comments Comment[]
   replays Replay[]
+ nustedReplays NestedReplay[]
 
 }
 model Post{
@@ -64,11 +65,28 @@ model Replay {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   userId            String @db.ObjectId
+  postId            String @db.ObjectId
   commentId         String @db.ObjectId
   likesId           String[] @db.ObjectId
+ nestedReplays    NestedReplay[]
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
 }
+model NestedReplay{
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  body              String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  userId            String @db.ObjectId
+  replayId          String @db.ObjectId
+  likesId           String[] @db.ObjectId
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ // comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  replay Replay @relation(fields: [replayId], references: [id], onDelete: Cascade)
+}
+
+
+
 
 model Notification {
   id                 String @id @default(auto()) @map("_id") @db.ObjectId

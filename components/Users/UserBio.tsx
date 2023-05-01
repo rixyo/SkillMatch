@@ -12,6 +12,7 @@ import {toast} from "react-hot-toast"
 import { BiMessageSquareDots } from 'react-icons/bi';
 import useGetFollower from '@/hooks/useGetFollower';
 import { useRouter } from 'next/router';
+import { features } from 'process';
 type UserBioProps = {
     userId: string;
 };
@@ -22,6 +23,7 @@ const UserBio:React.FC<UserBioProps> = ({userId}) => {
     const {data: fetchUser} = useUser(userId)
  
     const router=useRouter()
+    const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi;
    
     
     
@@ -76,8 +78,17 @@ const UserBio:React.FC<UserBioProps> = ({userId}) => {
                     </div>
 
                 <p className='text-gray-500'>{fetchUser?.customTag}</p>
-                <p className='text-gray-500'>{fetchUser?.bio}</p>
-            
+              {fetchUser?.bio && !linkRegex.test(fetchUser.bio) && <p className='text-gray-500'>{fetchUser?.bio}</p> }  
+            {fetchUser?.bio?.match(linkRegex)&&(
+                <div className='mt-0'>
+                    <p>{fetchUser?.bio.replace(linkRegex,"").trim()}</p>
+                  {Array.from(fetchUser?.bio.matchAll(linkRegex)).map((link,index)=>(
+                       <li className='list-none'>
+                          <a href={link[0]} target='_blank' className='text-blue-500 hover:underline' key={index}>{link[0]}</a>
+                       </li>
+                  ))}
+                </div>
+            )}
                     <div className='flex items-center text-gray-500'> <BsCalendar4Week className='mr-1'/>Joined {createdAt}</div>
                    
                  

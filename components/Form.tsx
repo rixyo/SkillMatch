@@ -30,6 +30,7 @@ const Form:React.FC<FormProps> = ({placeholder,isComment}) => {
     const [loading,setLoading] = useState<boolean>(false)
     const [characterRemaning,setCharacterRemaing]=useState<number>(140)
     const [bodyLength,setBodyLength]=useState<number>(0)
+  
 
     const handleChange= useCallback((e:React.ChangeEvent<HTMLTextAreaElement>)=>{
         if(e.target.value.length > 140) return 

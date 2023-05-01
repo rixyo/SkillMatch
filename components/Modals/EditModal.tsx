@@ -67,11 +67,11 @@ const EditModal:React.FC= () => {
         disabled={isLoading}
 
         />
-        <Input
+        <textarea
         onChange={(e)=>setBio(e.target.value)}
         value={bio}
         placeholder="Bio"
-        type="text"
+        className='w-full h-20 disabled:opacity-80 peer resize-none mt-3  p-2 rounded-lg text-[20px] placeholder-gray-400 focus:outline-none ring-0 outline-none'
         disabled={isLoading}
         />
 

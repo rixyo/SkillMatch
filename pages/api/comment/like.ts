@@ -18,11 +18,11 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             if(!comment) throw new Error("Invalid comment id")
             let updatedLikeIds=[...(comment.likesId || [])]
             if(req.method=="POST"){
-                if(updatedLikeIds.includes(currentUser.id)) throw new Error("Already liked")
+               
                
                     updatedLikeIds.push(currentUser.id)
             }
-            if(req.method=="DELETE"){
+            else if(req.method=="DELETE"){
                 if(updatedLikeIds.includes(currentUser.id)){
                     updatedLikeIds=updatedLikeIds.filter((id:string)=>id!=currentUser.id)
                 }

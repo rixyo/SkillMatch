@@ -4,6 +4,7 @@ import useToggle from '@/hooks/useToggle';
 import useUser from '@/hooks/useUser';
 import axios from 'axios';
 import { formatDistanceToNowStrict } from 'date-fns';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
@@ -16,13 +17,15 @@ import Avatar from '../Avatar';
 
 type CommentItemProps = {
     comment: comment
-    commentMutate:any
+   
 };
 
-const CommentItem:React.FC<CommentItemProps> = ({comment,commentMutate}) => {
+const CommentItem:React.FC<CommentItemProps> = ({comment}) => {
     const {data:user}=useUser(comment.userId)
     const router=useRouter()
     const {data:loginUser}=currentUser()
+    const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi
+   
 
     const {login}=useToggle()
     const createdAt=useMemo(()=>{
@@ -37,12 +40,12 @@ const CommentItem:React.FC<CommentItemProps> = ({comment,commentMutate}) => {
       event.stopPropagation()
         try {
             await axios.delete("/api/comment/comment/",{params:{commentId:comment.id}})
-            commentMutate()
+           // commentMutate()
             toast.success('comment deleted')
         } catch (error:any) {
             toast.error(error.response?.data?.error || error.message)
         }
-    },[comment.id,commentMutate])
+    },[comment.id,])
     const isLiked=useMemo(()=>{
         const list=comment.likesId || []
         return list.includes(loginUser?.user.id)
@@ -57,10 +60,10 @@ const CommentItem:React.FC<CommentItemProps> = ({comment,commentMutate}) => {
         try {
             if(isLiked){
                 await axios.delete("/api/comment/like/",{params:{commentId:comment.id}})
-                commentMutate()
+                //commentMutate()
             }else{
                 await axios.post("/api/comment/like/",{commentId:comment.id})
-                commentMutate()
+                //commentMutate()
                 toast.success('comment liked')
 
             }
@@ -69,7 +72,7 @@ const CommentItem:React.FC<CommentItemProps> = ({comment,commentMutate}) => {
         } catch (error:any) {
             toast.error(error.response?.data?.error || error.message)
         }
-    },[comment.id,commentMutate,isLiked])
+    },[comment.id,,isLiked])
     const LikeIcon = isLiked ? AiFillHeart : AiOutlineHeart;
     return (
         <div className='flex flex-col items-start p-2 w-full  my-2' key={comment.id} onClick={gotoComment} >
@@ -85,9 +88,30 @@ const CommentItem:React.FC<CommentItemProps> = ({comment,commentMutate}) => {
                 <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{user?.customTag}</p>
                 <p className='hidden md:block text-gray-400 mx-2'>{createdAt}</p>
                 <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt}</p>
-                {user?.id===comment.userId && <AiOutlineDelete className='text-gray-400 ml-auto cursor-pointer' onClick={deleteComment}/>}
+                {loginUser?.user.id===comment.userId && <AiOutlineDelete className='text-gray-400 ml-auto cursor-pointer' onClick={deleteComment}/>}
             </div>
-            <p className='text-black text-lg  ml-12'>{comment.body}</p>
+            <div className=' mx-10'>
+                <>
+
+            {!linkRegex.test(comment.body) && <p className="text-md text-black break-words">{comment.body}</p> }   
+               {comment.body.match(linkRegex) && (
+                    <div>
+                        <p>{comment.body.replace(linkRegex,"").trim()}</p>
+                        {Array.from(comment.body.matchAll(linkRegex)).map((link,index)=>(
+                       <li className='list-none'>
+                       
+                            <span   className='text-blue-500 hover:underline' key={index}>{link[0]}</span>
+                           
+                        
+                         
+                        
+                       </li>
+                  ))}
+                    </div>
+               )}
+
+                </>
+            </div>
             <div className='flex items-center w-full gap-5 ml-2' >
                 <AiOutlineComment className='text-2xl text-gray-500 hover:text-blue-300' title='replay' onClick={gotoComment} />
                 <p className='  text-neutral-500 '>{comment?.replays?.length}</p>

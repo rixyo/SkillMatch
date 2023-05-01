@@ -6,16 +6,19 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     else{
         try {
             const {commentId}=req.query
-            if(!commentId || typeof commentId!="string") throw new Error("Invalid post id")
+            if(!commentId || typeof commentId!="string") throw new Error("Invalid id")
             const comments=await prisma.comment.findUnique({
                 where:{
                     id:commentId
                 },
-                include:{
-                    user:true,
-                    replays:true
-                }
+               include:{
+                     user:true,
+                     replays:true,
+                     
+               }
             })
+            if(!comments) throw new Error("Comment not found")
+            
             res.status(StatusCodes.OK).json(comments)
         } catch (error:any) {
             console.log(error.message)

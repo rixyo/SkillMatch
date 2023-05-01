@@ -24,10 +24,10 @@ const ReplayModal:React.FC = () => {
     const {data:user}=useUser(comment?.userId as string)
     const [body,setBody]=useState<string>("")
     const [loading,setLoading]=useState<boolean>(false)
-    const [characterRemaning,setCharacterRemaing]=useState<number>(50)
+    const [characterRemaning,setCharacterRemaing]=useState<number>(140)
     const [bodyLength,setBodyLength]=useState<number>(0)
     const handleChange= useCallback((e:React.ChangeEvent<HTMLTextAreaElement>)=>{
-        if(e.target.value.length > 50) return 
+        if(e.target.value.length > 140) return 
         setBody(e.target.value)
         setBodyLength(e.target.value.length)
         setCharacterRemaing(50 - e.target.value.length)

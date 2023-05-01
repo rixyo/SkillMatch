@@ -8,6 +8,7 @@ import usePost from '@/hooks/usePost';
 import useToggle from '@/hooks/useToggle';
 import axios from 'axios';
 import { formatDistanceToNowStrict } from 'date-fns';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
@@ -21,8 +22,8 @@ import { CircleLoader } from 'react-spinners';
 const postId:React.FC = () => {
     const router = useRouter();
     const { postId } = router.query;
+    const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi;
     const {data:currentUser}=useCurrentUser()
-    console.log(currentUser)
     const {onOpen}=usePostEditModal()
     const {data:post, isLoading, mutate}=usePost(postId as string)
     const {hasLiked,toggleLike}=useLike({postId:postId as string,userId:currentUser?.id})
@@ -89,10 +90,20 @@ const postId:React.FC = () => {
 
            </div>
            <div className=' mx-5  p-3'>
-               <div>
-
-               <p className='text-md text-gray-500 break-words'>{post?.body}</p>
-               </div>
+           {post &&!linkRegex.test(post.body) && <p className="text-md text-black break-words">{post?.body}</p> }   
+               {post?.body.match(linkRegex) && (
+                    <div className="mt-2">
+                        <p>{post.body.replace(linkRegex,"").trim()}</p>
+                     
+                        {Array.from(post.body.matchAll(linkRegex)).map((link,index)=>(
+                       <li className='list-none'>
+                         <Link href={link[0].startsWith("http") ? link[0] : `https://${link[0]}`}>
+                            <span className='text-blue-500 hover:underline' key={index}>{link[0]}</span>
+                         </Link>
+                       </li>
+                  ))}
+                    </div>
+               )}
            </div>
            <div className='flex items-center w-full gap-5 ml-2' >
                <AiOutlineComment className='text-2xl text-gray-500 hover:text-blue-300' title='comment'/>
@@ -128,7 +139,7 @@ const postId:React.FC = () => {
                 isComment
                 placeholder='share your thoughts'
                 />
-              { <CommentsFeed postId={postId as string} /> } 
+              {post?.comments && <CommentsFeed postId={post.id} /> } 
 
        </div>
        }

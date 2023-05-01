@@ -3,6 +3,7 @@ import ReplaysFeed from '@/components/Replay/ReplaysFeed';
 import useComment from '@/hooks/useComment';
 import currentUser from '@/hooks/useCurrentUser';
 import usePost from '@/hooks/usePost';
+import useReplays from '@/hooks/useReplays';
 import useReplayModal from '@/hooks/useReplayModal';
 import useToggle from '@/hooks/useToggle';
 import useUser from '@/hooks/useUser';
@@ -13,31 +14,33 @@ import React, { useCallback, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { AiFillHeart, AiOutlineComment, AiOutlineDelete, AiOutlineHeart } from 'react-icons/ai';
 import { MdVerified } from 'react-icons/md';
+import Link from 'next/link';
 
 
 
 const commentId:React.FC = () => {
     const router=useRouter()
     const {commentId}=router.query
+    const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi
     
 
     const {data:comment,mutate:commentMutate}=useComment(commentId as string)
     const {data:post,mutate:postMutated}=usePost(comment?.postId as string)
-  
+    const {mutate:mutatedReplay}=useReplays(commentId as string)
     const ReplayModal=useReplayModal()
- 
     const {data:loginUser}=currentUser()
     const {login}=useToggle()
     const {data:user}=useUser(comment?.userId as string)
+  
     const [loading,setLoading]=useState<boolean>(false)
     const [body,setBody]=useState<string>("")
-    const [characterRemaning,setCharacterRemaing]=useState<number>(50)
+    const [characterRemaning,setCharacterRemaing]=useState<number>(140)
     const [bodyLength,setBodyLength]=useState<number>(0)
     const handleChange= useCallback((e:React.ChangeEvent<HTMLTextAreaElement>)=>{
-        if(e.target.value.length > 50) return 
+        if(e.target.value.length > 140) return 
         setBody(e.target.value)
         setBodyLength(e.target.value.length)
-        setCharacterRemaing(50 - e.target.value.length)
+        setCharacterRemaing(140 - e.target.value.length)
     },[setBody,setBodyLength,setCharacterRemaing])
     const createdAt=useMemo(()=>{
         if(!comment?.createdAt) return ""
@@ -50,13 +53,19 @@ const commentId:React.FC = () => {
         try {
             setLoading(true)
             if(body.length<=0) return toast.error("Please enter replay")
+            else if(body.length>140) return toast.error("Replay must be less than 140 characters")
+            else if(!loginUser) return login()
            
 
+            else{
             await axios.post(`/api/comment/replay/`,{body,commentId:comment?.id,postId:post?.id})
-           
+           mutatedReplay()
             commentMutate()
-           postMutated()
+            postMutated()
+           
             setBody("")
+
+            }
             toast.success("Replay successfully")
         } catch (error: any) {
             toast.error(error.response.data)
@@ -69,9 +78,11 @@ const commentId:React.FC = () => {
     const deleteComment=useCallback(async(event:React.MouseEvent<SVGElement,MouseEvent>)=>{
         event.stopPropagation()
           try {
+
               await axios.delete("/api/comment/comment/",{params:{commentId:comment?.id}})
               commentMutate()
               toast.success('comment deleted')
+                router.push(`/posts/${comment?.postId}`)
           } catch (error:any) {
               toast.error(error.response?.data?.error || error.message)
           }
@@ -104,6 +115,7 @@ const commentId:React.FC = () => {
               toast.error(error.response?.data?.error || error.message)
           }
       },[comment?.id,commentMutate,isLiked])
+      
       const LikeIcon = isLiked ? AiFillHeart : AiOutlineHeart;
      
     return (
@@ -121,11 +133,32 @@ const commentId:React.FC = () => {
             <p className='hidden md:block text-gray-400 mx-2'>{createdAt}</p>
             <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt}</p>
     
-            {user?.id===comment?.userId && comment && <AiOutlineDelete className='text-gray-400  cursor-pointer' onClick={deleteComment}/>}
+            {loginUser?.user.id===comment?.userId  && comment && <AiOutlineDelete className='text-gray-400  cursor-pointer' onClick={deleteComment}/>}
         </div>
-        <p className='text-black text-lg ml-12'>{comment?.body}</p>
+        <div className=' mx-10'>
+                <>
+
+            {comment &&!linkRegex.test(comment?.body) && <p className="text-md text-black break-words">{comment?.body}</p> }   
+               {comment?.body.match(linkRegex) && (
+                    <div>
+                        <p>{comment.body.replace(linkRegex,"").trim()}</p>
+                        {Array.from(comment.body.matchAll(linkRegex)).map((link,index)=>(
+                       <li className='list-none'>
+                        <Link href={link[0].includes('http') ? link[0] : `https://${link[0]}`} key={index}>
+                            <span   className='text-blue-500 hover:underline' key={index}>{link[0]}</span>
+                            </Link>
+                        
+                         
+                        
+                       </li>
+                  ))}
+                    </div>
+               )}
+
+                </>
+            </div>
         <div className='flex items-center w-full gap-5 ml-2' >
-      {comment &&  <AiOutlineComment className='text-2xl text-gray-500 hover:text-blue-300' title='replay' onClick={ReplayModal.onOpen} /> } 
+      {comment &&  <AiOutlineComment className='text-2xl cursor-pointer text-gray-500 hover:text-blue-300' title='replay' onClick={ReplayModal.onOpen} /> } 
      {comment && <p className='gap-2 text-gray-500 '>{comment?.replays.length}</p> } 
         
           
@@ -170,7 +203,7 @@ const commentId:React.FC = () => {
         </div>
      
        
-     {comment?.replays &&  <ReplaysFeed replays={comment.replays}/> }  
+      <ReplaysFeed commentId={comment?.id as string}/>   
         
 
     </div>

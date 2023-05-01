@@ -10,6 +10,7 @@ type postFeedProps = {
 
 const postFeed:React.FC<postFeedProps> = ({userId}) => {
     const {data:posts ,mutate}=usePosts(userId)
+   
     
     return(
         <>

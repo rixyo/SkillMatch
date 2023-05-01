@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import usePostEditModal from '@/hooks/useEditPostModal';
 import useLike from '@/hooks/useLike';
+import Link from 'next/link';
 
 
 
@@ -24,6 +25,8 @@ type PostIteamProps = {
 
 const PostIteam:React.FC<PostIteamProps> = ({post,mutate,userId}) => {
     const {onOpen}=usePostEditModal()
+    const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi
+
   
     
     
@@ -88,6 +91,7 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate,userId}) => {
     },[post?.id,router])
 
     const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
+   
     return(
         <div
         onClick={gotoPost}
@@ -116,7 +120,20 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate,userId}) => {
             <div className=' mx-5  p-3'>
                 <div>
 
-                <p className='text-md text-gray-500 break-words'>{post.body}</p>
+            {!linkRegex.test(post.body) && <p className="text-md text-black break-words">{post.body}</p> }   
+               {post.body.match(linkRegex) && (
+                    <div className="mt-2">
+                        <p>{post.body.replace(linkRegex,"").trim()}</p>
+                        {Array.from(post.body.matchAll(linkRegex)).map((link,index)=>(
+                       <li className='list-none'>
+                        
+                          <span className='text-blue-500 hover:underline' key={index}>{link[0]}</span>
+                          
+                       </li>
+                  ))}
+                    </div>
+               )}
+
                 </div>
             </div>
             <div className='flex items-center w-full gap-5 ml-2' >

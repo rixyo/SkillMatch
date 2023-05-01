@@ -21,6 +21,7 @@ type User={
     comments: Comment[],
     notifications: Notification[],
     replays: Replay[],
+    nestedReplays: NestedReplay[],
 
 
 }
@@ -52,11 +53,23 @@ type comment={
 type Replay={
     id: string,
     userId: string,
+    postId: string,
     commentId: string,
     body: string,
     likesId: string[],
     createdAt: Date,
     updatedAt: Date,
+    nestedReplays: NestedReplay[],
+}
+type NestedReplay={
+    id: string,
+    userId: string,
+    replayId: string,
+    body: string,
+    likesId: string[],
+    createdAt: Date,
+    updatedAt: Date,
+
 }
 type Notification={
     id: string,

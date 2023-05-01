@@ -9,6 +9,8 @@ import RegistrationModal from '@/components/Modals/RegistrationModal'
 import EditModal from '@/components/Modals/EditModal'
 import EditPostModal from '@/components/Modals/EditPostModal'
 import ReplayModal from '@/components/Modals/ReplayModal'
+import NestedModal from '@/components/Modals/NestedModal'
+
 
 
 
@@ -17,8 +19,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <SessionProvider session={pageProps.session}>
     <Toaster/>
     <EditPostModal/>
- <EditModal/>
-<ReplayModal/>
+    <NestedModal/>
+    <EditModal/>
+    <ReplayModal/>
   <LoginModal/>
   <RegistrationModal/>
     <Layout>
