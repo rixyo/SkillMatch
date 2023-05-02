@@ -30,6 +30,33 @@ if(req.method !== 'POST' && req.method !== 'DELETE') return res.status(StatusCod
         updatedFollowingIds = updatedFollowingIds.filter((id:string) => id !== currentUser.id)
 
       }
+      try {
+        if(updatedFollowerIds.includes(currentUser.id)){
+          await prisma.notification.create({
+            data:{
+              userId:userId,
+              body:`${currentUser.name} started following you`,
+              type:'follow',
+              fromUserId:currentUser.id,
+              link:`/users/${currentUser.id}`,
+            }
+          })
+        }
+        await prisma.user.update({
+          where:{
+            id:userId
+          },
+          data:{
+            hasNotifications:true
+          }
+        })
+     
+        
+      } catch (error:any) {
+        console.log(error.message)
+
+        
+      }
     }
     if(req.method === 'DELETE'){
       if(updatedFollowerIds.includes(currentUser.id)){
@@ -38,6 +65,15 @@ if(req.method !== 'POST' && req.method !== 'DELETE') return res.status(StatusCod
       if(updatedFollowingIds.includes(userId)){
         updatedFollowingIds = updatedFollowingIds.filter((id:string) => id !== userId)
       }
+      await prisma.notification.deleteMany({
+        where:{
+          userId:userId,
+          fromUserId:currentUser.id,
+          type:'follow',
+          link:`/users/${currentUser.id}`
+
+        }
+      })
     }
     const updatedUser = await prisma.user.update({
       where:{

@@ -11,6 +11,8 @@ import toast from 'react-hot-toast';
 import { AiFillHeart, AiOutlineComment, AiOutlineDelete, AiOutlineHeart } from 'react-icons/ai';
 import { MdVerified } from 'react-icons/md';
 import Avatar from '../Avatar';
+import useReplays from '@/hooks/useReplays';
+import ReplayItem from '../Replay/ReplayItem';
 
 
 
@@ -25,6 +27,8 @@ const CommentItem:React.FC<CommentItemProps> = ({comment}) => {
     const router=useRouter()
     const {data:loginUser}=currentUser()
     const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi
+    const {data:replays,mutate:mutatedReplay}=useReplays(comment.id as string)
+   
    
 
     const {login}=useToggle()
@@ -75,7 +79,7 @@ const CommentItem:React.FC<CommentItemProps> = ({comment}) => {
     },[comment.id,,isLiked])
     const LikeIcon = isLiked ? AiFillHeart : AiOutlineHeart;
     return (
-        <div className='flex flex-col items-start p-2 w-full  my-2' key={comment.id} onClick={gotoComment} >
+        <div className='flex flex-col items-start p-3 w-full  my-2' key={comment.id} onClick={gotoComment} >
             <div className='flex items-center' onClick={()=>router.push(`/users/${comment.userId}`)}>
                 <Avatar userId={comment.userId}/>
                 <div className='flex items-center cursor-pointer hover:underline' >
@@ -90,17 +94,17 @@ const CommentItem:React.FC<CommentItemProps> = ({comment}) => {
                 <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt}</p>
                 {loginUser?.user.id===comment.userId && <AiOutlineDelete className='text-gray-400 ml-auto cursor-pointer' onClick={deleteComment}/>}
             </div>
-            <div className=' mx-10'>
+            <div className=' mx-10 w-full'>
                 <>
 
             {!linkRegex.test(comment.body) && <p className="text-md text-black break-words">{comment.body}</p> }   
                {comment.body.match(linkRegex) && (
                     <div>
-                        <p>{comment.body.replace(linkRegex,"").trim()}</p>
+                        <p className='text-md text-black break-words '>{comment.body.replace(linkRegex,"").trim()}</p>
                         {Array.from(comment.body.matchAll(linkRegex)).map((link,index)=>(
                        <li className='list-none'>
                        
-                            <span   className='text-blue-500 hover:underline' key={index}>{link[0]}</span>
+                            <span   className='text-blue-500 hover:underline break-words ' key={index}>{link[0]}</span>
                            
                         
                          
@@ -111,6 +115,20 @@ const CommentItem:React.FC<CommentItemProps> = ({comment}) => {
                )}
 
                 </>
+                {
+                     
+                 replays && replays.length>=2? <div>
+                        <ReplayItem replay={replays[0]} key={0} mutatedReplay={mutatedReplay}/>
+                    <span className='text-md text-sky-500 cursor-pointer hover:underline'>Show More</span>
+                 </div>   :(
+                    replays?.map((replay:Replay,index)=>(
+                        <div className='hidden md:flex flex-col w-full '>
+                        <ReplayItem replay={replay} key={index} mutatedReplay={mutatedReplay}/>
+                        </div>
+                    ))
+                    )
+                   
+                }
             </div>
             <div className='flex items-center w-full gap-5 ml-2' >
                 <AiOutlineComment className='text-2xl text-gray-500 hover:text-blue-300' title='replay' onClick={gotoComment} />

@@ -17,7 +17,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                      
                }
             })
-            if(!comments) throw new Error("Comment not found")
+           // if(!comments) throw new Error("Comment not found")
             
             res.status(StatusCodes.OK).json(comments)
         } catch (error:any) {

@@ -71,9 +71,13 @@ type NestedReplay={
     updatedAt: Date,
 
 }
-type Notification={
+type notification={
     id: string,
     userId: string,
     body: string,
     createdAt: Date,
+    type: string,
+    link: string,
+   isRead: boolean,
+   fromUserId: string,
 }

@@ -1,5 +1,6 @@
 import useReplays from '@/hooks/useReplays';
 import React from 'react';
+import CommentItem from '../posts/CommentItem';
 import ReplayItem from './ReplayItem';
 
 type ReplaysFeedProps = {
@@ -13,8 +14,12 @@ const ReplaysFeed:React.FC<ReplaysFeedProps> = ({commentId}) => {
     return (
        <>
       {replays  && replays.map((replay:Replay)=>(
-      
+        <>
         <ReplayItem replay={replay} key={replay.id} mutatedReplay={mutatedReplay}/>
+       
+        </>
+      
+        
       
       ))}
        </>

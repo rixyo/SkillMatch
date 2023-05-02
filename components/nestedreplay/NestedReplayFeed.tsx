@@ -8,14 +8,11 @@ type NestedReplayFeedProps = {
 };
 
 const NestedReplayFeed:React.FC<NestedReplayFeedProps> = ({replayId}) => {
-    const {data:nestedReplays,mutate:nestedMutatedReplay,isLoading}=useGetNestedReplays(replayId as string)
+    const {data:nestedReplays,mutate:nestedMutatedReplay}=useGetNestedReplays(replayId as string)
 
     
     return (
-        <div className=' sm:w-full lg:w-auto   my-5' key={`comments`}>
-        {isLoading ? <div className="flex justify-center items-center h-full">
-<CircleLoader color="#3B82F6"  size={50} />
-        </div> :(
+        
             <>
             {nestedReplays && nestedReplays.map((replay:NestedReplay)=>(
         <>
@@ -23,15 +20,14 @@ const NestedReplayFeed:React.FC<NestedReplayFeedProps> = ({replayId}) => {
        
         </>
        ) )}
-            </>
-        )}
+         
+        
   
 
 
-      
+      </>
 
 
-    </div>
     )
 }
 export default NestedReplayFeed;

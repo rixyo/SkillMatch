@@ -8,6 +8,8 @@ import usePost from '@/hooks/usePost';
 import useToggle from '@/hooks/useToggle';
 import axios from 'axios';
 import { formatDistanceToNowStrict } from 'date-fns';
+import { NextPageContext } from 'next';
+import { getSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo } from 'react';
@@ -17,7 +19,20 @@ import { IoAnalyticsOutline } from 'react-icons/io5';
 import { MdVerified } from 'react-icons/md';
 import { CircleLoader } from 'react-spinners';
 
-
+export async function getServerSideProps(context:NextPageContext) {
+  const session = await getSession(context)
+  if(!session){
+      return{
+          redirect:{
+          destination:"/",
+          permanent:false
+          }
+      }
+  }
+  return {
+      props: { session },
+  }
+}
 
 const postId:React.FC = () => {
     const router = useRouter();

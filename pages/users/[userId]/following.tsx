@@ -2,10 +2,25 @@ import Header from '@/components/Header/Heder';
 import FollowingItem from '@/components/Users/FollowingItem';
 import useGetFollowing from '@/hooks/useGetFollowing';
 import useUser from '@/hooks/useUser';
+import { NextPageContext } from 'next';
+import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-
+export async function getServerSideProps(context:NextPageContext) {
+    const session = await getSession(context)
+    if(!session){
+        return{
+            redirect:{
+            destination:"/",
+            permanent:false
+            }
+        }
+    }
+    return {
+        props: { session },
+    }
+  }
 
 const following:React.FC = () => {
     const router=useRouter()

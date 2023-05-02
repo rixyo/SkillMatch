@@ -4,10 +4,25 @@ import UserBio from '@/components/Users/UserBio';
 import UserHero from '@/components/Users/UserHero';
 import usePosts from '@/hooks/usePosts';
 import useUser from '@/hooks/useUser';
+import { NextPageContext } from 'next';
+import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { RingLoader,CircleLoader} from "react-spinners"
-
+import { CircleLoader} from "react-spinners"
+export async function getServerSideProps(context:NextPageContext) {
+    const session = await getSession(context)
+    if(!session){
+        return{
+            redirect:{
+            destination:"/",
+            permanent:false
+            }
+        }
+    }
+    return {
+        props: { session },
+    }
+  }
 
 const userView:React.FC = () => {
     const router = useRouter();

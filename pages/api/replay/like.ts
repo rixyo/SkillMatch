@@ -19,10 +19,66 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             if(req.method==="POST"){
                
                 updatedLikeIds.push(currentUser.id)
+                try {
+                    if(replay?.userId){
+                        if(!currentUser.id && typeof currentUser.id!="string") throw new Error("Invalid user id")
+                        if(updatedLikeIds.includes(currentUser.id)){
+                            await prisma.notification.create({
+                                data:{
+                                    userId:replay.userId,
+                                    body:`${currentUser.name} liked your replay`,
+                                    type:"like",
+                                    fromUserId:currentUser.id,
+                                    link:`/replay/${replay.id}`,
+                                    isRead:false,
+                                    
+                                 
+                                }
+                            })
+                        }
+                        await prisma.user.update({
+                            where:{
+                                id:replay.userId
+                            } ,
+                            data:{
+                                hasNotifications:true
+                            }
+                        })
+                    
+                    }
+                    
+                } catch (error:any) {
+                    console.log("NotificationError",error.message)
+                    
+                }
             }
             else if(req.method==="DELETE"){
                 if(updatedLikeIds.includes(currentUser.id)){
                     updatedLikeIds=updatedLikeIds.filter((id:string)=>id!=currentUser.id)
+                }
+                try {
+                    if(updatedLikeIds=updatedLikeIds.filter((id:string)=>id!=currentUser.id)){
+                        await prisma.notification.deleteMany({
+                            where:{
+                                userId:replay.userId,
+                                fromUserId:currentUser.id,
+                                type:"like",
+                                link:`/replay/${replay.id}`
+                            }
+                        })
+                    }
+                    await prisma.user.update({
+                        where:{
+                            id:replay.userId
+                        },
+                        data:{
+                            hasNotifications:false
+                        }
+                    })
+                    
+                } catch (error:any) {
+                    console.log("NotificationError",error.message)
+                    
                 }
             }
             const updatedReplay=await prisma.replay.update({

@@ -15,8 +15,23 @@ import toast from 'react-hot-toast';
 import { AiFillHeart, AiOutlineComment, AiOutlineDelete, AiOutlineHeart } from 'react-icons/ai';
 import { MdVerified } from 'react-icons/md';
 import Link from 'next/link';
+import { getSession } from 'next-auth/react';
+import { NextPageContext } from 'next';
 
-
+export async function getServerSideProps(context:NextPageContext) {
+    const session = await getSession(context)
+    if(!session){
+        return{
+            redirect:{
+            destination:"/",
+            permanent:false
+            }
+        }
+    }
+    return {
+        props: { session },
+    }
+  }
 
 const commentId:React.FC = () => {
     const router=useRouter()
@@ -133,7 +148,7 @@ const commentId:React.FC = () => {
             <p className='hidden md:block text-gray-400 mx-2'>{createdAt}</p>
             <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt}</p>
     
-            {loginUser?.user.id===comment?.userId  && comment && <AiOutlineDelete className='text-gray-400  cursor-pointer' onClick={deleteComment}/>}
+            {loginUser?.user.id===comment?.userId   && <AiOutlineDelete className='text-gray-400  cursor-pointer' onClick={deleteComment}/>}
         </div>
         <div className=' mx-10'>
                 <>

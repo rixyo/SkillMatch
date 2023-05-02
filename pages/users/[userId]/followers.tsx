@@ -6,9 +6,24 @@ import React from 'react';
 import { RingLoader,CircleLoader } from 'react-spinners';
 import {useRouter} from 'next/router'
 import FollowerItem from '@/components/Users/FollowerItem';
+import { getSession } from 'next-auth/react';
+import { NextPageContext } from 'next';
 
 
-
+export async function getServerSideProps(context:NextPageContext) {
+    const session = await getSession(context)
+    if(!session){
+        return{
+            redirect:{
+            destination:"/",
+            permanent:false
+            }
+        }
+    }
+    return {
+        props: { session },
+    }
+  }
 const followers:React.FC = () => {
     const router=useRouter()
     const {userId}=router.query

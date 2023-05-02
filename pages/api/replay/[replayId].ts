@@ -20,7 +20,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     
                 }
             })
-            if(!replay) throw new Error("Replay not found")
+           // if(!replay) throw new Error("Replay not found")
             res.status(StatusCodes.OK).json(replay)
             
         } catch (error:any) {

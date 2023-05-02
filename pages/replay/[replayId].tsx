@@ -3,10 +3,13 @@ import NestedReplayFeed from '@/components/nestedreplay/NestedReplayFeed';
 import useComment from '@/hooks/useComment';
 import currentUser from '@/hooks/useCurrentUser';
 import useNestedModal from '@/hooks/useNestedModal';
+import usePost from '@/hooks/usePost';
 import useReplay from '@/hooks/useReplay';
 import useUser from '@/hooks/useUser';
 import axios from 'axios';
 import { formatDistanceToNowStrict } from 'date-fns';
+import { NextPageContext } from 'next';
+import { getSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -15,7 +18,20 @@ import { AiOutlineDelete, AiOutlineComment, AiFillHeart, AiOutlineHeart } from '
 import { MdVerified } from 'react-icons/md';
 
 
-
+export async function getServerSideProps(context:NextPageContext) {
+    const session = await getSession(context)
+    if(!session){
+        return{
+            redirect:{
+            destination:"/",
+            permanent:false
+            }
+        }
+    }
+    return {
+        props: { session },
+    }
+  }
 const replayId:React.FC = () => {
     const router=useRouter()
     const {replayId}=router.query
@@ -25,6 +41,7 @@ const replayId:React.FC = () => {
     const {mutate:mutatedComment}=useComment(replay?.commentId as string)
     const {mutate:mutatedNestedReplay}=useComment(replayId as string)
     const {data:comment}=useComment(replay?.commentId as string)
+    const {mutate:mutatedPost}=usePost(comment?.postId as string)
     const {data:loginUser}=currentUser()
     const {data:user}=useUser(replay?.userId as string)
     const nestedModal=useNestedModal()
@@ -52,6 +69,7 @@ const replayId:React.FC = () => {
         
             else{
             await axios.post(`/api/replay/nestedreplay/`,{body,replayId:replay?.id})
+            mutatedPost()
             mutatedComment()
             mutatedReplay()
             mutatedNestedReplay()
@@ -74,14 +92,19 @@ const replayId:React.FC = () => {
         if(!loginUser) return
         else if(!isLiked){
             await axios.post("/api/replay/like",{replayId:replay?.id})
+            mutatedPost()
+            mutatedComment()
             mutatedReplay()
             toast.success("replay liked")
         }
         else{
             await axios.delete("/api/replay/like",{params:{replayId:replay?.id}})
+            mutatedPost()
+            mutatedComment()
             mutatedReplay()
         }
     },[replay?.id,isLiked,loginUser])
+  
 
     const LikeIcon = isLiked ? AiFillHeart : AiOutlineHeart;
     
@@ -100,7 +123,7 @@ const replayId:React.FC = () => {
               <p className='hidden md:block text-gray-400 mx-2'>{createdAt}</p>
               <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt}</p>
       
-              {loginUser?.user.id===replay?.userId && replay && <AiOutlineDelete className='text-gray-400  cursor-pointer' />}
+              {loginUser?.user.id===replay?.userId && <AiOutlineDelete className='text-gray-400  cursor-pointer' />}
           </div>
           <div className=' mx-10'>
                 <>

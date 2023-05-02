@@ -1,6 +1,9 @@
+import currentUser from '@/hooks/useCurrentUser';
 import useUser from '@/hooks/useUser';
 import axios from 'axios';
 import { formatDistanceToNowStrict } from 'date-fns';
+import { useRouter } from 'next/router';
+
 
 import React, { useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
@@ -17,7 +20,13 @@ type NestedItemProps = {
 
 const NestedItem:React.FC<NestedItemProps> = ({nestedReplay,nestedMutatedReplay}) => {
     const {data:user}=useUser(nestedReplay.userId as string)
-    const isLiked=nestedReplay.likesId.includes(user?.id as string)
+    const {data:loginUser}=currentUser()
+    
+    const isLiked=useMemo(()=>{
+        return nestedReplay.likesId.includes(user?.id as string)
+
+    },[nestedReplay.likesId,user?.id])
+    const router=useRouter()
     const createdAt=useMemo(()=>{
         return formatDistanceToNowStrict(new Date(nestedReplay.createdAt),{addSuffix:true})
 
@@ -26,18 +35,43 @@ const NestedItem:React.FC<NestedItemProps> = ({nestedReplay,nestedMutatedReplay}
     const onDelete=useCallback(async(event:React.MouseEvent<SVGElement,MouseEvent>)=>{
         event.stopPropagation()
         try {
-            await axios.delete("/api/replay/nestedreplay/",{params:{replayId:nestedReplay.id}})
+            await axios.delete("/api/replay/nestedreplay/",{params:{nestedreplayId:nestedReplay.id}})
             nestedMutatedReplay()
             toast.success('replay deleted')
             
-        } catch (error) {
+        } catch (error:any) {
             console.log(error)
+            toast.error(error.response.data)
             
         }
     },[nestedReplay.id,nestedMutatedReplay])
+    const onLike=useCallback(async(event:React.MouseEvent<SVGElement,MouseEvent>)=>{
+        event.stopPropagation()
+        try {
+            if(isLiked){
+                await axios.delete("/api/nestedreplay/like",{params:{nestedreplayId:nestedReplay.id}})
+                nestedMutatedReplay()
+                return
+            }
+            await axios.post("/api/nestedreplay/like",{nestedreplayId:nestedReplay.id})
+            nestedMutatedReplay()
+            toast.success('liked')
+            
+        } catch (error:any) {
+            console.log(error)
+            toast.error(error.response.data)
+            
+        }
+    },[])
+    const gotoNestedReplay=useCallback((event:any)=>{
+        event.stopPropagation()
+        //router.push(`/comment/${comment.id}`)
+        router.push(`/nestedreplay/${nestedReplay.id}`)
+        
+    },[nestedMutatedReplay.id,router])
     
     return (
-        <div className=' w-full p-2 my-1 cursor-pointer mt-2' >
+        <div className=' w-full p-2 my-1 cursor-pointer mt-2' onClick={gotoNestedReplay} >
         <div className='flex items-center'>
              <Avatar userId={nestedReplay.userId as string}/>
              <div className='flex items-center cursor-pointer hover:underline' >
@@ -49,7 +83,7 @@ const NestedItem:React.FC<NestedItemProps> = ({nestedReplay,nestedMutatedReplay}
              <p className='truncate w-10 md:hidden text-gray-500 mx-2'>{user?.customTag}</p>
              <p className='hidden md:block text-gray-400 mx-2'>{createdAt}</p>
              <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt}</p>
-             { <AiOutlineDelete className='text-gray-400  cursor-pointer' onClick={onDelete} />}
+             {nestedReplay.userId ===loginUser.user.id && <AiOutlineDelete className='text-gray-400  cursor-pointer' onClick={onDelete} />}
          </div>
              <p className='text-md text-black text-lg  break-words ml-12 '>{nestedReplay.body}</p>
              <div className='flex items-center w-full gap-5 ml-2'>
@@ -66,7 +100,7 @@ const NestedItem:React.FC<NestedItemProps> = ({nestedReplay,nestedMutatedReplay}
           transition 
           hover:text-red-500
       ">
-        <LikeIcon color={isLiked ? 'red' : ''} size={20}   />
+        <LikeIcon color={isLiked ? 'red' : ''} size={20} onClick={onLike}   />
         <p>
           {nestedReplay?.likesId.length||0}
         </p>

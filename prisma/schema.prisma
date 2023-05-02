@@ -93,5 +93,9 @@ model Notification {
   body               String
   userId             String @db.ObjectId
   createdAt          DateTime @default(now())
+  fromId             String @db.ObjectId           
+  type               String
+  link               String
+  isRead             Boolean @default(false)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

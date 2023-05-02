@@ -23,6 +23,39 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                            
                         }
                     })
+                    try {
+                        const comment=await prisma.comment.findUnique({
+                            where:{
+                                id:commentId
+                            }
+                        })
+                        if(!comment) throw new Error("Invalid comment id")
+                        else if(currentUser.id as string){
+                           await prisma.notification.create({
+                                data:{
+                                    userId:comment.userId,
+                                    type:"replay",
+                                    fromUserId:currentUser.id,
+                                    link:`/replay/${replay.id}`,
+                                    body:`${currentUser.name}  replayed on your comment`
+    
+                                   
+                                }
+                            })
+                            await prisma.user.update({
+                                where:{
+                                    id:comment.userId
+                                },
+                                data:{
+                                    hasNotifications:true
+                                }
+                            })
+                        }
+                        
+                    } catch (error: any) {
+                        console.log(error)
+                        
+                    }
                     res.status(StatusCodes.OK).json(replay)
                 
             }
@@ -61,6 +94,39 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                             id:replayId
                         }
                     })
+                    try {
+                        if(currentUser.id as string){
+
+                            await prisma.notification.deleteMany({
+                                where:{
+                                    link:`/replay/${replayId}`,
+                                    fromUserId:currentUser.id,
+                                    type:"replay",
+                                    
+
+    
+                                }
+                            })
+                        }
+                        const comment=await prisma.comment.findUnique({
+                            where:{
+                                id:replay.commentId
+                            }
+                        })
+                        if(!comment) throw new Error("Invalid comment id")
+                        await prisma.user.update({
+                            where:{
+                                id:comment.userId
+                            },
+                            data:{
+                                hasNotifications:false
+                            }
+                        })
+                        
+                    } catch (error:any) {
+                        console.log(error.message)
+                        
+                    }
                     res.status(StatusCodes.OK).json(deletedReplay)
                 }
               

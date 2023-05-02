@@ -2,14 +2,15 @@ import { NextApiRequest,NextApiResponse } from "next"
 import {StatusCodes} from "http-status-codes"
 import serverAuth from "@/libs/serverAuth"
 import prisma from "@/libs/prismadb"
+import { data } from "autoprefixer"
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     if(req.method!="GET"&&req.method!="POST"&&req.method!="DELETE") return res.status(StatusCodes.METHOD_NOT_ALLOWED).end()
     else{
         
         const {currentUser}=await serverAuth(req,res)
         try {
+            const {postId}=req.query
             if(req.method==="GET"){
-                const {postId}=req.query
                 if(!postId || typeof postId!="string") throw new Error("Invalid post id")
                 const comments=await prisma.comment.findMany({
                     where:{
@@ -36,7 +37,41 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         postId,
                         userId:currentUser.id
                     }
-                })//create({data:{body:body}})
+                }) 
+                try {
+                    const post=await prisma.post.findUnique({
+                        where:{
+                            id:postId
+                        }
+                    })
+                    if(!post) throw new Error("Invalid post id")
+                    else if(currentUser.id as string){
+                       await prisma.notification.create({
+                            data:{
+                                userId:post.userId,
+                                type:"comment",
+                                fromUserId:currentUser.id,
+                                link:`/posts/${postId}`,
+                                body:`${currentUser.name}  commented on your post`
+
+                               
+                            }
+                        })
+                        await prisma.user.update({
+                            where:{
+                                id:post.userId
+                            },
+                            data:{
+                                hasNotifications:true
+                            }
+                        })
+                    }
+                    
+                } catch (error:any) {
+                    console.log(error.message)
+                    
+                    
+                }
                 res.status(StatusCodes.OK).json(comment)
             }
             else if(req.method==="DELETE"){
@@ -55,6 +90,41 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                             id:commentId
                         }
                     })
+                    try {
+                        const post=await prisma.post.findUnique({
+                            where:{
+                                id:comment.postId
+                            }
+                        })
+                        if(!post) throw new Error("Invalid post id")
+                        else if(currentUser.id as string){
+                            await prisma.notification.deleteMany({
+                                where:{
+                                    link:`/posts/${comment.postId}`,
+                                    type:"comment",
+                                    fromUserId:currentUser.id
+                                    
+                                }
+                            })
+                        }
+                        await prisma.user.update({
+                            where:{
+                                id:post.userId
+                            },
+                            data:{
+                                hasNotifications:false
+                            }
+                        })
+
+                        
+                    } catch (error:any) {
+                        console.log(error.message)
+                        
+                    }
+                  
+                        
+                   
+                  
                     res.status(StatusCodes.OK).json(deletedComment)
                 }
                 

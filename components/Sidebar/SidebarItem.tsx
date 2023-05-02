@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import { Tab } from './Sidebar';
-
+import { BsDot } from 'react-icons/bs';
+import { ta } from 'date-fns/locale';
 type SidebarItemProps = {
   tab: Tab;
     selectedTab: boolean;
@@ -28,6 +29,7 @@ const SidebarItem:React.FC<SidebarItemProps> = ({tab,selectedTab,setSelectedTab}
                cursor-pointer 
             '>
                 <tab.icon className={`text-2xl ${selectedTab ? 'text-blue-500' : 'text-gray-500'} `}  title={tab.title} />
+                {tab.alert && <BsDot className='absolute text-red-500 text-2xl ' size={35} />}
             </div>
             <div key={tab.title+tab.title} >
                 <p className={`text-sm ${selectedTab ? 'text-blue-500' : 'text-gray-500'}  font-semibold hidden md:block `} >{tab.title}</p>

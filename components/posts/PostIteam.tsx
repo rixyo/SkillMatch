@@ -95,7 +95,7 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate,userId}) => {
     return(
         <div
         onClick={gotoPost}
-        className="flex flex-col border-2 border-solid border-gray-300 p-5 cursor-pointer rounded-lg   my-5 mx-2 hover:border-gray-200"
+        className="flex flex-col  border-2 border-solid border-gray-300 p-5 cursor-pointer rounded-lg   my-5 mx-2 hover:border-gray-200"
         key={post.id}
         >
             <div className='flex items-start gap-1'>

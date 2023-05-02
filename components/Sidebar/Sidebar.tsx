@@ -11,39 +11,47 @@ import useCurrentUser from '@/hooks/useCurrentUser';
 import {signOut} from "next-auth/react"
 import {FiLogIn} from "react-icons/fi"
 import SidebarFooter from './sidebarFooter';
-import { useRouter } from 'next/router';
+
+
 export type Tab = {
     title: string;
     icon: IconType;
     href?: string;
+    alert?: boolean;
+    auth?:boolean
 }
-const Tabs:Tab[] = [
-    {
-        title: 'Home',
-        icon: AiOutlineHome,
-        href: '/'
-    },
-    {
-        title:"Notifications",
-        icon: IoIosNotificationsOutline,
-        href: '/notifications',
-    },
-    {
-        title: 'Messages',
-        icon: AiOutlineMessage,
-        href: '/messages'
-    },
-    {
-        title: 'Settings',
-        icon: IoSettingsOutline,
-        href: '/settings'
-
-    },
-    
-  
-]
 const Sidebar:React.FC= () => {
     const [selectedTab,setSelectedTab]=useState<string>("")
+    const {data:loginUser}=useCurrentUser()
+  
+  
+    const Tabs:Tab[] = [
+        {
+            title: 'Home',
+            icon: AiOutlineHome,
+            href: '/'
+        },
+        {
+            title:"Notifications",
+            icon: IoIosNotificationsOutline,
+            href: '/notifications',
+            alert:loginUser?.user?.hasNotifications,
+            auth:true
+        },
+        {
+            title: 'Messages',
+            icon: AiOutlineMessage,
+            href: '/messages'
+        },
+        {
+            title: 'Settings',
+            icon: IoSettingsOutline,
+            href: '/settings'
+    
+        },
+        
+      
+    ]
 
     const {register} =useToggle()
     const {data:currentUser}=useCurrentUser()

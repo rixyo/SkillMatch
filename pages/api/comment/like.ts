@@ -21,10 +21,85 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                
                
                     updatedLikeIds.push(currentUser.id)
+                    try {
+                        const comment=await prisma.comment.findUnique({
+                            where:{
+                                id:commentId
+                            },
+                            include:{
+                                post:true
+                            }
+                        })
+                        if(comment?.userId){
+                            if(!currentUser.id && typeof currentUser.id!="string") throw new Error("Invalid user id")
+                            if(updatedLikeIds.includes(currentUser.id)){
+
+                                await prisma.notification.create({
+                                    data:{
+                                        userId:comment.userId,
+                                        body:`${currentUser.name} liked your comment`,
+                                        type:"like",
+                                        fromUserId:currentUser.id,
+                                        link:`/comment/${comment.id}`,
+                                        isRead:false,
+                                        
+                                     
+    
+                                    }
+                                })
+                            }
+                        
+    
+                            
+                            await prisma.user.update({
+                                where:{
+                                    id:comment.userId
+                                } ,
+                                data:{
+                                    hasNotifications:true
+                                }
+                            })
+                        }
+                        
+                    } catch (error:any) {
+                        console.log("geting user error",error.message)
+                        
+                    }
             }
             else if(req.method=="DELETE"){
                 if(updatedLikeIds.includes(currentUser.id)){
                     updatedLikeIds=updatedLikeIds.filter((id:string)=>id!=currentUser.id)
+                }
+                try {
+                    if(comment?.userId){
+                        if(!currentUser.id && typeof currentUser.id!="string") throw new Error("Invalid user id")
+                        if(updatedLikeIds=updatedLikeIds.filter((id:string)=>id!=currentUser.id)){
+                            await prisma.notification.deleteMany({
+                                where:{
+                                    userId:comment.userId,
+                                    fromUserId:currentUser.id,
+                                    type:"like",
+                                    link:`/comment/${comment.id}`
+
+                                }
+                            })
+
+                        }
+                        await prisma.user.update({
+                            where:{
+                                id:comment.userId
+                            } ,
+                            data:{
+                                hasNotifications:false
+                            }
+                        })
+                    }
+                  
+                   
+                    
+                } catch (error:any) {
+                    console.log("geting user error",error.message)
+                    
                 }
             }
             const updatedComment=await prisma.comment.update({

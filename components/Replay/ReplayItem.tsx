@@ -12,6 +12,8 @@ import toast from 'react-hot-toast';
 import { AiFillHeart, AiOutlineComment, AiOutlineDelete, AiOutlineHeart } from 'react-icons/ai';
 import { MdVerified } from 'react-icons/md';
 import Avatar from '../Avatar';
+import useGetNestedReplays from '@/hooks/useGetNestedReplays';
+import NestedItem from '../nestedreplay/NestedItem';
 
 
 type ReplayItemProps = {
@@ -25,6 +27,8 @@ const ReplayItem:React.FC<ReplayItemProps> = ({replay,mutatedReplay}) => {
     const {mutate:mutatedPost}=usePost(replay.postId as string)
     const {mutate:mutatedComment}=useComment(replay.commentId as string)
     const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi;
+    const {data:nestedReplay,mutate:nestedMutatedReplay}=useGetNestedReplays(replay.id as string)
+   
 
   
    
@@ -109,19 +113,19 @@ const ReplayItem:React.FC<ReplayItemProps> = ({replay,mutatedReplay}) => {
                 <p className='truncate w-10 md:hidden text-gray-500 mx-2'>{user?.customTag}</p>
                 <p className='hidden md:block text-gray-400 mx-2'>{createdAt}</p>
                 <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt}</p>
-                { <AiOutlineDelete className='text-gray-400  cursor-pointer' onClick={onDelete} />}
+                {loginUser?.user.id===replay.userId && <AiOutlineDelete className='text-gray-400  cursor-pointer' onClick={onDelete} />}
             </div>
-            <div className=' mx-10'>
+            <div className=' mx-10  w-full'>
                 <>
 
-            {!linkRegex.test(replay.body) && <p className="text-md text-black break-words">{replay.body}</p> }   
+            {!linkRegex.test(replay.body) && <p className="text-md text-black ">{replay.body}</p> }   
                {replay.body.match(linkRegex) && (
                     <div>
-                        <p>{replay.body.replace(linkRegex,"").trim()}</p>
+                        <p className='text-md text-black break-words'>{replay.body.replace(linkRegex,"").trim()}</p>
                         {Array.from(replay.body.matchAll(linkRegex)).map((link,index)=>(
                        <li className='list-none'>
                        
-                            <span   className='text-blue-500 hover:underline' key={index}>{link[0]}</span>
+                            <span   className='text-blue-500 hover:underline break-words' key={index}>{link[0]}</span>
                           
                         
                          
@@ -132,6 +136,8 @@ const ReplayItem:React.FC<ReplayItemProps> = ({replay,mutatedReplay}) => {
                )}
 
                 </>
+               
+
             </div>
                 <div className='flex items-center w-full gap-5 ml-2'>
                     <AiOutlineComment className='text-2xl text-gray-500 hover:text-blue-300' title='replay'/>

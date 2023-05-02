@@ -21,6 +21,39 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
 
                     }
                 })
+                try {
+                    const replay=await prisma.replay.findUnique({
+                        where:{
+                            id:replayId
+                        }
+                    })
+                    console.log(replay)
+                    if(!replay) throw new Error("Invalid replay id")
+                    else if(currentUser.id as string){
+                        await prisma.notification.create({
+                            data:{
+                                userId:replay.userId,
+                                type:"nestedreplay",
+                                fromUserId:currentUser.id,
+                                link:`/replay/${replay.id}`,
+                                body:`${currentUser.name}  replayed on your replay`
+                            }
+                        })
+                        await prisma.user.update({
+                            where:{
+                                id:replay.userId
+                            },
+                            data:{
+                                hasNotifications:true
+                            }
+                        })
+                    }
+                   
+                    
+                } catch (error: any) {
+                    console.log(error)
+                    
+                }
                 return res.status(StatusCodes.OK).json(replay)
             }
             else if(req.method==="GET"){
@@ -43,21 +76,60 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 return res.status(StatusCodes.OK).json(replays)
             }
             else if(req.method==="DELETE"){
-                const {replayId}=req.query
-                if(!replayId || typeof replayId!="string") throw new Error("Invalid replay id")
-                const replay=await prisma.nestedReplay.findUnique({
+                const {nestedreplayId}=req.query
+                if(!nestedreplayId|| typeof nestedreplayId!="string") throw new Error("Invalid replay id")
+                const nestedreplay=await prisma.nestedReplay.findUnique({
                     where:{
-                        id:replayId
+                        id:nestedreplayId
                     }
                 })
-                if(!replay) throw new Error("Invalid replay id")
-                else if(replay.userId!=currentUser.id) throw new Error("You are not authorized to delete this replay")
+                if(!nestedreplay) throw new Error("Invalid replay id")
+                else if(nestedreplay.userId!=currentUser.id) throw new Error("You are not authorized to delete this replay")
                 else{
                     const deletedReplay=await prisma.nestedReplay.delete({
                         where:{
-                            id:replayId
+                            id:nestedreplayId
                         }
                     })
+                    try {
+                        const replay=await prisma.replay.findUnique({
+                            where:{
+                                id:nestedreplay.replayId
+                            }
+                        })
+                        if(replay){
+                            if(!currentUser.id && typeof currentUser.id !="string") throw new Error("Invalid user id")
+
+                            await prisma.notification.deleteMany({
+                                where:{
+                                    fromUserId:currentUser.id,
+                                    link:`/replay/${replay.id}`,
+                                    type:"nestedreplay",
+                                 
+
+                                }
+                            })
+                            await prisma.user.update({
+                                where:{
+                                    id:replay.userId
+                                },
+                                data:{
+                                    hasNotifications:false
+                                }
+                            })
+                        }
+                        
+                            
+                        
+                      
+                        
+                        
+                        
+                    } catch (error: any) {
+                        console.log(error)
+                        
+                    }
+                   
                     return res.status(StatusCodes.OK).json(deletedReplay)
                 }
             }
