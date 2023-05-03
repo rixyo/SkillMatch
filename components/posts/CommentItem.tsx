@@ -80,7 +80,7 @@ const CommentItem:React.FC<CommentItemProps> = ({comment}) => {
     const LikeIcon = isLiked ? AiFillHeart : AiOutlineHeart;
     return (
         <div className='flex flex-col items-start p-3 w-full  my-2' key={comment.id} onClick={gotoComment} >
-            <div className='flex items-center' onClick={()=>router.push(`/users/${comment.userId}`)}>
+            <div className='flex items-center' >
                 <Avatar userId={comment.userId}/>
                 <div className='flex items-center cursor-pointer hover:underline' >
 

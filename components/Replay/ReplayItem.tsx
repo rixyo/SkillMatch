@@ -27,7 +27,7 @@ const ReplayItem:React.FC<ReplayItemProps> = ({replay,mutatedReplay}) => {
     const {mutate:mutatedPost}=usePost(replay.postId as string)
     const {mutate:mutatedComment}=useComment(replay.commentId as string)
     const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi;
-    const {data:nestedReplay,mutate:nestedMutatedReplay}=useGetNestedReplays(replay.id as string)
+    //const {data:nestedReplay,mutate:nestedMutatedReplay}=useGetNestedReplays(replay.id as string)
    
 
   

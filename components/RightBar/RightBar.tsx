@@ -1,39 +1,52 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { MdVerified } from 'react-icons/md';
 import { BsSearch } from 'react-icons/bs';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import useUsers from '@/hooks/useUsers';
 import Avatar from '../Avatar';
-type FollowBarProps = {
-    
-};
+import { useRouter } from 'next/navigation'
 
-const FollowBar:React.FC<FollowBarProps> = () => {
+
+const FollowBar:React.FC = () => {
+    const [search,setSearch]=useState<string>("")
+    const router=useRouter()
 const {data:currentUser}=useCurrentUser()
 
-const {data:users=[]}=useUsers()
+const {data:users}=useUsers()
 
-if(users.length===0) return null
+if(users?.length===0) return null
+const onSearch=useCallback((event:React.FormEvent)=>{
+    event.preventDefault()
+    const encodedSearch=encodeURI(search)
+    router.push(`/search?q=${encodedSearch}`)
+   
+
+},[search])
 
     return (
         <>
         {currentUser && 
-        <div className='hidden xl:block xl:col-span-2  mt-2 ml-5 rounded-lg border-2 border-red-600'>
+        <div className='hidden xl:block xl:col-span-3  mt-2 ml-5 '>
         <div className='flex flex-col'>
            <div className='w-auto mt-1 p-2' >
            <BsSearch className='w-5 h-5 absolute mt-1 ml-1  text-gray-500'/>
+           <form onSubmit={onSearch}>
+
             <input   type="text"
             placeholder="Search"
             className="border-2 border-none  h-8 pr-3 pl-10 py-2 font-semibold place-holder-gray-500 text-black rounded-lg ring-2 ring-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent w-full" 
+            onChange={(e)=>setSearch(e.target.value)}
+            value={search}
         
             />
+           </form>
          
 
            </div>
             <h1 className='font-bold text-2xl text-center'>Who To Follow</h1>
          {
-            users.users.map((user: Record<string,any>)=>(
+            users?.map((user:User)=>(
 
              <div key={user.id} className='flex flex-row gap-4 ml-5 mt-5 justify-start  '>
                  {currentUser.user.id!==user.id &&  <Avatar userId={user.id}/> }  

@@ -85,9 +85,6 @@ model NestedReplay{
   replay Replay @relation(fields: [replayId], references: [id], onDelete: Cascade)
 }
 
-
-
-
 model Notification {
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
   body               String
@@ -98,4 +95,9 @@ model Notification {
   link               String
   isRead             Boolean @default(false)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+model SearchQuery {
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  query              String
+ 
 }

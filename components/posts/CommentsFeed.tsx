@@ -15,7 +15,7 @@ const CommentsFeed:React.FC<CommentsFeedProps> = ({postId}) => {
   
     return (
         <>
-            {isLoading ? <div className="flex justify-center items-center h-full">
+            {isLoading ? <div className="flex justify-center items-center h-full" key={"loading"}>
     <CircleLoader color="#3B82F6"  size={50} />
             </div> :(
                 <>
