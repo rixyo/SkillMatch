@@ -11,6 +11,7 @@ import useCurrentUser from '@/hooks/useCurrentUser';
 import {signOut} from "next-auth/react"
 import {FiLogIn} from "react-icons/fi"
 import SidebarFooter from './sidebarFooter';
+import { useRouter } from 'next/router';
 
 
 export type Tab = {
@@ -23,6 +24,9 @@ export type Tab = {
 const Sidebar:React.FC= () => {
     const [selectedTab,setSelectedTab]=useState<string>("")
     const {data:loginUser}=useCurrentUser()
+    const router =useRouter()
+    const url=router.asPath
+    console.log(url)
   
   
     const Tabs:Tab[] = [
@@ -41,7 +45,7 @@ const Sidebar:React.FC= () => {
         {
             title: 'Messages',
             icon: AiOutlineMessage,
-            href: '/messages'
+            href: ''
         },
         {
             title: 'Settings',
@@ -87,7 +91,7 @@ const Sidebar:React.FC= () => {
        
       
 
-     {!currentUser &&  
+     {!currentUser && url==="/" &&  
         <div className='flex justify-center' key="new user">
      <div className='ml-5 w-auto hidden md:block' key={"follow user"}>
      <h1 className='text-center mt-2 text-2xl font-semibold'>New To MatchMass</h1>

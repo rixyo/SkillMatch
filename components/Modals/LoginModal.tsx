@@ -9,6 +9,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 
 
+
 const LoginModal:React.FC = () => {
     const loginModal=useLoginModal()
     const {register,loading,setLoading}=useToggle()
@@ -32,8 +33,12 @@ const LoginModal:React.FC = () => {
                 email,
                 password,
               });
+            
+              
         
               toast.success('Logged in');
+           
+              
         
               loginModal.onClose();
             } catch (error:any) {

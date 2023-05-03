@@ -1,7 +1,7 @@
+//get followers & following
 import { NextApiRequest,NextApiResponse } from "next";
 import { StatusCodes } from "http-status-codes";
 import prisma from "@/libs/prismadb";
-
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     if(req.method!=="GET") return res.status(StatusCodes.METHOD_NOT_ALLOWED).end()
     else{
@@ -38,7 +38,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             
         } catch (error:any) {
             console.log("geting user error",error.message)
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error:error.message})
+            res.status(StatusCodes.BAD_REQUEST).json({error:error.message})
             
         }
       

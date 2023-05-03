@@ -9,7 +9,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             res.status(StatusCodes.OK).json({user:currentUser})
             
         } catch (error) {
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).end()
+            res.status(StatusCodes.BAD_REQUEST).end()
             
         }
     }

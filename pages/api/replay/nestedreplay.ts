@@ -64,7 +64,16 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         replayId:replayId
                     },
                     include:{
-                        user:true,
+                        user: {
+                            select: {
+                              id: true,
+                              name: true,
+                              bio: true,
+                              customTag: true,
+                              isVarified: true,
+                            }
+              
+                          },
                         replay:true
                        
                     },

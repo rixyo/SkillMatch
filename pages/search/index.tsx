@@ -41,7 +41,7 @@ const index:React.FC = () => {
             
            { searchResult?.posts.length===0 && searchResult?.users.length===0 && <h1 className='text-center mt-5 text-xl'>No Result Found</h1>}
            {searchResult?.users.length>0 &&searchResult?.users?.map((user:any)=>(
-                  <div key={user.id} className='flex flex-row gap-4 ml-5 mt-5 justify-start  '>
+                  <div key={user.id} className='flex flex-row gap-4 ml-5 mt-5 justify-start  ' onClick={()=>router.push(`/users/${user.id}`)}>
                   { <Avatar userId={user.id}/> }  
                     
                     <>

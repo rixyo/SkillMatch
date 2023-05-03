@@ -19,13 +19,29 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
        
     }
 }
+
 async function usersResult(q:string){
     const users=await prisma.user.findMany({
         where:{
-            name:{
-                contains:q,
-                mode:"insensitive"
-            }
+            OR:[
+                {customTag:{
+                    contains:q,
+                    mode:"insensitive"
+                }
+                  
+                },
+                {name:{
+                    contains:q,
+                    mode:"insensitive"
+                }},
+            ]
+          
+            
+            
+         
+            
+            
+            
         },
         select:{
             id:true,
@@ -33,6 +49,7 @@ async function usersResult(q:string){
           customTag:true,
           isVarified:true,
           bio:true,
+         
         }
     })
     return users

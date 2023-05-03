@@ -17,6 +17,7 @@ type User={
     followingId: string[],
     followerId: string[],
     hasNotifications: boolean,
+    isActived: boolean,
     posts: Post[],
     comments: Comment[],
     notifications: Notification[],

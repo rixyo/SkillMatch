@@ -24,8 +24,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             res.status(StatusCodes.OK).json(users)
             
         } catch (error:any) {
-            console.log("geting user error",error)
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error:error.message})
+        
+            res.status(StatusCodes.BAD_REQUEST).json({error:error.message})
             
         }
     }

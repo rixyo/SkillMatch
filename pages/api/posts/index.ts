@@ -37,7 +37,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             userId
           },
           include: {
-            user: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                bio: true,
+                customTag: true,
+                isVarified: true,
+              }
+
+            },
             comments: true
           },
           orderBy: {
@@ -47,7 +56,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } else {
         posts = await prisma.post.findMany({
           include: {
-            user: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                bio: true,
+                customTag: true,
+                isVarified: true,
+              }
+
+            },
             comments: true,
             
           

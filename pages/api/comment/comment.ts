@@ -17,7 +17,15 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         postId
                     },
                     include:{
-                        user:true,
+                        user:{
+                            select:{
+                                id:true,
+                                name:true,
+                                bio:true,
+                                customTag:true,
+                                isVarified:true,
+                            }
+                        },
                         replays:true
                     },
                     orderBy:{

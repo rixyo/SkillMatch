@@ -25,6 +25,7 @@ model User {
   followerId String[]  @db.ObjectId
   followingId String [] @db.ObjectId
   hasNotifications Boolean @default(false)
+  isActived Boolean @default(true)
   notifications Notification[]
   posts Post[]
   comments Comment[]

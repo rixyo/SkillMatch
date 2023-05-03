@@ -21,7 +21,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             
             
         } catch (error:any) {
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error:error.message})
+            res.status(StatusCodes.BAD_REQUEST).json({error:error.message})
             
         }
     }

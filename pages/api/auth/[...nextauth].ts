@@ -6,7 +6,11 @@ import  { PrismaAdapter } from "@next-auth/prisma-adapter"
 import prisma from "@/libs/prismadb"
 
 export const  authOptions: NextAuthOptions=({
-    adapter: PrismaAdapter(prisma), //This is a line of code that initializes a new adapter for the Prisma ORM library.
+    adapter: PrismaAdapter(prisma),
+     //This is a line of code that initializes a new adapter for the Prisma ORM library.
+     pages:{
+        error:"/auth/error",
+     },
     providers: [
         CredentialsProvider({
             name: "credentials",
