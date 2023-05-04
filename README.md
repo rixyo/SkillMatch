@@ -20,7 +20,7 @@ Users will receive notifications when they are mentioned in a post or comment, w
 ### Like
 Users can like posts made by other users. This allows them to show their support and appreciation for the content.
 
-Technologies Used
+## Technologies Used
 Next.js
 Prisma
 MongoDB
