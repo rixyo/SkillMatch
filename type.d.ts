@@ -80,5 +80,5 @@ type notification={
     type: string,
     link: string,
    isRead: boolean,
-   fromUserId: string,
+   fromId   : string,
 }

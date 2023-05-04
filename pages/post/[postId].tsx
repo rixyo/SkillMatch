@@ -38,6 +38,7 @@ const postId:React.FC = () => {
     const router = useRouter();
     const { postId } = router.query;
     const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi;
+    const mentionRegex = /@(\w+)/g
     const {data:currentUser}=useCurrentUser()
     const {onOpen}=usePostEditModal()
     const {data:post, isLoading, mutate}=usePost(postId as string)
@@ -46,9 +47,9 @@ const postId:React.FC = () => {
 
     const deletePost=useCallback(async()=>{
         try {
-            await axios.delete(`/api/posts/${postId}`)
+            await axios.delete(`/api/posts/`,{params:{postId:post?.id}})
             toast.success("Post deleted successfully")
-          await  mutate({...post as Post})
+            mutate()
             router.push("/")
 
 
@@ -95,8 +96,8 @@ const postId:React.FC = () => {
                   {post?.user?.isVarified && <MdVerified className='text-blue-500'/>}
                   <p className='hidden md:block  text-gray-500 text-lg'>{post?.user?.customTag}</p>
                   <p className='truncate w-10 md:hidden text-gray-500'>{post?.user?.customTag}</p>
-                  <p className='text-gray-500 hidden md:block'>{createdAt}</p>
-                  <p className='truncate w-10 md:hidden text-gray-500'>{createdAt}</p>
+                  <p className='text-gray-500 hidden md:block'>{createdAt.split("ago")}</p>
+                  <p className='truncate w-10 md:hidden text-gray-500'>{createdAt.split("ago")}</p>
                   {currentUser?.user?.id===post?.userId &&  <AiOutlineEdit className='text-gray-500 ' title='Edit' onClick={onOpen} /> } 
                {currentUser?.user?.id===post?.userId &&  <AiOutlineDelete size={20} className='text-gray-500 ' title='Delete' onClick={deletePost} /> }  
                  
@@ -104,10 +105,10 @@ const postId:React.FC = () => {
                        
 
            </div>
-           <div className=' mx-5  p-3'>
-           {post &&!linkRegex.test(post.body) && <p className="text-md text-black break-words">{post?.body}</p> }   
-               {post?.body.match(linkRegex) && (
-                    <div className="mt-2">
+           <div className=' mx-5 p-1'>
+           {post?.body &&!linkRegex.test(post.body)&&!mentionRegex.test(post.body) && <p className="text-md text-black break-words">{post?.body}</p> }   
+               {post?.body.match(linkRegex) && !mentionRegex.test(post.body) && (
+                    <>
                         <p>{post.body.replace(linkRegex,"").trim()}</p>
                      
                         {Array.from(post.body.matchAll(linkRegex)).map((link,index)=>(
@@ -117,8 +118,37 @@ const postId:React.FC = () => {
                          </Link>
                        </li>
                   ))}
-                    </div>
+                    </>
                )}
+                 {post?.body.match(mentionRegex)&&!linkRegex.test(post.body) && (
+                    <>
+                        <p>{post.body.replace(mentionRegex,"").trim()}</p>
+                        {Array.from(post.body.matchAll(mentionRegex)).map((mention,index)=>(
+                          <li className='list-none'>
+                            <span className='text-blue-500 hover:underline' key={index}>{mention[0]}</span>
+                          </li>
+                        ))}
+                    </>
+                )}
+                  {post?.body.match(mentionRegex) && post.body.match(linkRegex) && (
+                    <>
+                       
+                        {Array.from(post.body.matchAll(mentionRegex)).map((mention,index)=>(
+                          <li className='list-none'>
+                            <span className='text-blue-500 hover:underline' key={index}>{mention[0]}</span>
+                          </li>
+                        ))}
+                        <p>{post.body.replace(mentionRegex,'').replace(linkRegex,'')}</p>
+                        {Array.from(post.body.matchAll(linkRegex)).map((link,index)=>(
+                          <li className='list-none'>
+                             <Link href={link[0].startsWith("http") ? link[0] : `https://${link[0]}`}>
+                            <span className='text-blue-500 hover:underline' key={index}>{link[0]}</span>
+                         </Link>
+                          </li>
+                        ))}
+                            
+                    </>
+                )}
            </div>
            <div className='flex items-center w-full gap-5 ml-2' >
                <AiOutlineComment className='text-2xl text-gray-500 hover:text-blue-300' title='comment'/>

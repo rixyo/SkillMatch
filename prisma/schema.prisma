@@ -31,6 +31,7 @@ model User {
   comments Comment[]
   replays Replay[]
  nustedReplays NestedReplay[]
+ 
 
 }
 model Post{
@@ -45,6 +46,7 @@ model Post{
   viewsId String[] @db.ObjectId
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
    comments          Comment[]
+ 
   
 }
 
@@ -91,7 +93,7 @@ model Notification {
   body               String
   userId             String @db.ObjectId
   createdAt          DateTime @default(now())
-  fromId             String @db.ObjectId           
+  fromId             String @db.ObjectId          
   type               String
   link               String
   isRead             Boolean @default(false)

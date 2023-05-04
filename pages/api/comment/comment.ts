@@ -2,7 +2,7 @@ import { NextApiRequest,NextApiResponse } from "next"
 import {StatusCodes} from "http-status-codes"
 import serverAuth from "@/libs/serverAuth"
 import prisma from "@/libs/prismadb"
-import { data } from "autoprefixer"
+
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     if(req.method!="GET"&&req.method!="POST"&&req.method!="DELETE") return res.status(StatusCodes.METHOD_NOT_ALLOWED).end()
     else{
@@ -38,6 +38,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             else if(req.method==="POST"){
                 const {body}=req.body
                 const {postId}=req.query
+                const mentionRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g;
                 if(!postId || typeof postId!="string") throw new Error("Invalid post id")
                 const comment=await prisma.comment.create({
                     data:{
@@ -47,33 +48,81 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     }
                 }) 
                 try {
+                    const mentionedUser=body.match(mentionRegex)
+                    if(mentionedUser){
+                        const user=await prisma.user.findUnique({
+                            where:{
+                                customTag:mentionedUser[0]
+                            }
+                        })
+                        if(!user) throw new Error("Invalid user")
+                        else if(user.id===currentUser.id) throw new Error("You can't mention yourself")
+                        
+                     
+
+                        else if(user.id !==comment.userId ) {
+
+                            await prisma.notification.create({
+                                data:{
+                                    userId:user.id,
+                                    fromId:currentUser.id,
+                                    type:"mention",
+                                    link:`/post/${postId}`,
+                                    body:`${currentUser.name} mentioned you in a comment`
+                                }
+                            })
+                            await prisma.user.update({
+                                where:{
+                                    id:user.id
+                                },
+                                data:{
+                                    hasNotifications:true
+                                }
+                            })
+                        }
+                        
+                    }
+                
+
+                    
+                } catch (error:any) {
+                    console.log(error.message)
+                    
+                }
+                try {
                     const post=await prisma.post.findUnique({
                         where:{
                             id:postId
                         }
                     })
                     if(!post) throw new Error("Invalid post id")
-                    else if(currentUser.id as string){
-                       await prisma.notification.create({
-                            data:{
-                                userId:post.userId,
-                                type:"comment",
-                                fromUserId:currentUser.id,
-                                link:`/posts/${postId}`,
-                                body:`${currentUser.name}  commented on your post`
+                    else if(!currentUser.id && typeof currentUser.id!="string") throw new Error("Invalid user id")
+                    else if(post.userId!=currentUser.id) {
 
-                               
-                            }
-                        })
-                        await prisma.user.update({
-                            where:{
-                                id:post.userId
-                            },
-                            data:{
-                                hasNotifications:true
-                            }
-                        })
+                        await prisma.notification.create({
+                             data:{
+                                 userId:post.userId,
+                                 fromId:currentUser.id,
+                                 type:"comment",
+                                 
+                                 
+                                 link:`/post/${postId}`,
+                                 body:`${currentUser.name}  commented on your post`
+ 
+ 
+                                
+                             }
+                         })
+                         await prisma.user.update({
+                             where:{
+                                 id:post.userId
+                             },
+                             data:{
+                                 hasNotifications:true
+                             }
+                         })
                     }
+                    
                     
                 } catch (error:any) {
                     console.log(error.message)
@@ -99,6 +148,39 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         }
                     })
                     try {
+                        const mentionedUsers=comment.body.match(/@(\w+)/g)
+                        if(mentionedUsers){
+                            const user=await prisma.user.findUnique({
+                                where:{
+                                    customTag:mentionedUsers[0]
+                                }
+                            })
+                            if(!user) throw new Error("Invalid user")
+                            await prisma.notification.deleteMany({
+                                where:{
+                                    userId:user.id,
+                                    link:`/post/${comment.postId}`,
+                                    type:"mention",
+                                    fromId:currentUser.id
+                                    
+                                }
+                            })
+                            await prisma.user.update({
+                                where:{
+                                    id:user.id
+                                },
+                                data:{
+                                    hasNotifications:false
+                                }
+                            })
+                            
+                        }
+                        
+                    } catch (error:any) {
+                        console.log(error.message)
+                        
+                    }
+                    try {
                         const post=await prisma.post.findUnique({
                             where:{
                                 id:comment.postId
@@ -108,9 +190,9 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         else if(currentUser.id as string){
                             await prisma.notification.deleteMany({
                                 where:{
-                                    link:`/posts/${comment.postId}`,
+                                    link:`/post/${comment.postId}`,
                                     type:"comment",
-                                    fromUserId:currentUser.id
+                                    fromId:currentUser.id
                                     
                                 }
                             })

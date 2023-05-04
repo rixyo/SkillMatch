@@ -10,8 +10,13 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             if(req.method==="POST"){
                 const {body}=req.body
                 const {commentId}=req.body
+                const mentionRegex = /@(\w+)/g
+               
+             
+                
               const postId=req.body.postId
                 if(!commentId || typeof commentId!="string") throw new Error("Invalid id")
+               
               
              
                     const replay=await prisma.replay.create({
@@ -24,18 +29,56 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         }
                     })
                     try {
+                        const mentonUser=body.match(mentionRegex)
+                   
+                        if(mentonUser){
+                            const user=await prisma.user.findUnique({
+                                where:{
+                                    customTag:mentonUser[0]
+                                }
+                            })
+                            if(!user) throw new Error("Invalid user")
+                            else if(replay.userId!=user.id){
+
+                                await prisma.notification.create({
+                                    data:{
+                                        userId:user.id,
+                                        type:"replay",
+                                        fromId:currentUser.id,
+                                        link:`/replay/${replay.id}`,
+                                        body:`${currentUser.name} mentioned you in a replay`
+        
+                                       
+                                    }
+                                })
+                                await prisma.user.update({
+                                    where:{
+                                        id:user.id
+                                    },
+                                    data:{
+                                        hasNotifications:true
+                                    }
+                                })
+                            }
+                        }
+                        
+                    } catch (error: any) {
+                        console.log(error)
+                        
+                    }
+                    try {
                         const comment=await prisma.comment.findUnique({
                             where:{
                                 id:commentId
                             }
                         })
                         if(!comment) throw new Error("Invalid comment id")
-                        else if(currentUser.id as string){
+                        else if(currentUser.id as string && comment.userId!=currentUser.id){
                            await prisma.notification.create({
                                 data:{
                                     userId:comment.userId,
                                     type:"replay",
-                                    fromUserId:currentUser.id,
+                                    fromId:currentUser.id,
                                     link:`/replay/${replay.id}`,
                                     body:`${currentUser.name}  replayed on your comment`
     
@@ -88,6 +131,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             }
             else if(req.method==="DELETE"){
                 const {replayId}=req.query
+                const mentionRegex = /@(\w+)/g
                 if(!replayId || typeof replayId!="string") throw new Error("Invalid replay id")
                 const replay=await prisma.replay.findUnique({
                     where:{
@@ -103,12 +147,44 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         }
                     })
                     try {
+                        const mentonUser=replay.body.match(mentionRegex)
+                        if(mentonUser){
+                            const user=await prisma.user.findUnique({
+                                where:{
+                                    customTag:mentonUser[0]
+                                }
+                            })
+                            if(!user) throw new Error("Invalid user")
+                            await prisma.notification.deleteMany({
+                                where:{
+                                    link:`/replay/${replayId}`,
+                                    fromId:currentUser.id,
+                                    type:"replay",
+                                    userId:user.id
+    
+                                }
+                            })
+                            await prisma.user.update({
+                                where:{
+                                    id:user.id
+                                },
+                                data:{
+                                    hasNotifications:false
+                                }
+                            })
+                        }
+                        
+                    } catch (error:any) {
+                        console.log(error.message)
+                        
+                    }
+                    try {
                         if(currentUser.id as string){
 
                             await prisma.notification.deleteMany({
                                 where:{
                                     link:`/replay/${replayId}`,
-                                    fromUserId:currentUser.id,
+                                    fromId:currentUser.id,
                                     type:"replay",
                                     
 

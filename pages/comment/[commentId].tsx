@@ -37,7 +37,7 @@ const commentId:React.FC = () => {
     const router=useRouter()
     const {commentId}=router.query
     const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi
-    
+    const mentionRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g;
 
     const {data:comment,mutate:commentMutate}=useComment(commentId as string)
     const {data:post,mutate:postMutated}=usePost(comment?.postId as string)
@@ -134,8 +134,8 @@ const commentId:React.FC = () => {
       const LikeIcon = isLiked ? AiFillHeart : AiOutlineHeart;
      
     return (
-     <div className='flex flex-col items-start p-2 w-full  my-2 mx-2 ' key={comment?.id} >
-      <div className='flex items-center w-full ' onClick={()=>router.push(`/users/${comment?.userId}`)}>
+     <div className='flex flex-col items-start p-1 w-full  my-2 mx-2 ' key={comment?.id} >
+      <div className='flex items-center w-full ' onClick={()=>router.push(`/user/${comment?.userId}`)}>
           {comment &&  <Avatar userId={comment?.userId as string}/> } 
            {comment &&  <div className='flex items-center cursor-pointer hover:underline' >
 
@@ -145,30 +145,61 @@ const commentId:React.FC = () => {
             </div>}
            <p className='hidden md:block text-gray-400 mx-2'>{user?.customTag}</p>
             <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{user?.customTag}</p>
-            <p className='hidden md:block text-gray-400 mx-2'>{createdAt}</p>
-            <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt}</p>
+            <p className='hidden md:block text-gray-400 mx-2'>{createdAt.split("ago")[0]}</p>
+            <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt.split("ago")[0]}</p>
     
             {loginUser?.user.id===comment?.userId   && <AiOutlineDelete className='text-gray-400  cursor-pointer' onClick={deleteComment}/>}
         </div>
         <div className=' mx-10'>
                 <>
 
-            {comment &&!linkRegex.test(comment?.body) && <p className="text-md text-black break-words">{comment?.body}</p> }   
-               {comment?.body.match(linkRegex) && (
-                    <div>
-                        <p>{comment.body.replace(linkRegex,"").trim()}</p>
+                {comment && !linkRegex.test(comment?.body) &&!mentionRegex.test(comment.body) && <p className="text-md text-black break-words">{comment.body}</p> }   
+               {comment?.body.match(linkRegex) &&!mentionRegex.test(comment.body) && (
+                    <>
+                        <p className='text-md text-black break-words '>{comment.body.replace(linkRegex,"").trim()}</p>
                         {Array.from(comment.body.matchAll(linkRegex)).map((link,index)=>(
                        <li className='list-none'>
-                        <Link href={link[0].includes('http') ? link[0] : `https://${link[0]}`} key={index}>
-                            <span   className='text-blue-500 hover:underline' key={index}>{link[0]}</span>
-                            </Link>
-                        
-                         
-                        
+                       
+                            <span   className='text-blue-500 hover:underline break-words ' key={index}>{link[0]}</span>
+                           
+
                        </li>
                   ))}
-                    </div>
+                    </>
                )}
+                {comment?.body.match(mentionRegex) &&!linkRegex.test(comment.body) && (
+                    <div className='flex items-center gap-2'>
+                        {Array.from(comment.body.matchAll(mentionRegex)).map((mention,index)=>(
+                            <li className='list-none'>
+                            <span className='text-blue-500 hover:underline break-words ' key={index}>{mention[0]}</span>
+                          </li>
+                        ))}
+                        <p className='text-md text-black break-words '>{comment.body.replace(mentionRegex,"").trim()}</p>
+                    </div>
+                )}
+
+              
+                {
+                    comment?.body.match(mentionRegex) && comment.body.match(linkRegex) && (
+                        <div className='flex items-center gap-2'>
+                        <p className='text-md text-black break-words '>{comment.body.replace(mentionRegex,"").replace(linkRegex,"")}</p>
+                        {Array.from(comment.body.matchAll(mentionRegex)).map((mention,index)=>(
+                          <li className='list-none'>
+                            <span className='text-blue-500 hover:underline break-words ' key={index}>{mention[0]}</span>
+                         
+                          </li>
+                        ))}
+                            {Array.from(comment.body.matchAll(linkRegex)).map((link,index)=>(
+                       <li className='list-none'>
+                       
+                            <span   className='text-blue-500 hover:underline break-words ' key={index}>{link[0]}</span>
+                           
+
+                       </li>
+                  ))}
+                        </div>
+                    )
+                }
 
                 </>
             </div>

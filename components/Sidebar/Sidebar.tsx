@@ -26,7 +26,7 @@ const Sidebar:React.FC= () => {
     const {data:loginUser}=useCurrentUser()
     const router =useRouter()
     const url=router.asPath
-    console.log(url)
+    
   
   
     const Tabs:Tab[] = [
@@ -77,7 +77,7 @@ const Sidebar:React.FC= () => {
         
               
             </div>
-     {currentUser &&        <div className='flex items-center self-start mx-6 md:p-2  gap-4  cursor-pointer ' key={"Logout"} onClick={()=>signOut()}>
+     {currentUser &&url==="/" &&        <div className='flex items-center self-start mx-6 md:p-2  gap-4  cursor-pointer ' key={"Logout"} onClick={()=>signOut()}>
         <MdLogout className=' text-gray-500 text-xl ' title='LogOut'/>
         <p className='text-md font-semibold text-gray-500 hidden md:block' >Logout</p>
         </div>

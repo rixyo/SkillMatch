@@ -39,7 +39,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                                         userId:comment.userId,
                                         body:`${currentUser.name} liked your comment`,
                                         type:"like",
-                                        fromUserId:currentUser.id,
+                                        fromId:currentUser.id,
                                         link:`/comment/${comment.id}`,
                                         isRead:false,
                                         
@@ -77,7 +77,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                             await prisma.notification.deleteMany({
                                 where:{
                                     userId:comment.userId,
-                                    fromUserId:currentUser.id,
+                                    fromId:currentUser.id,
                                     type:"like",
                                     link:`/comment/${comment.id}`
 

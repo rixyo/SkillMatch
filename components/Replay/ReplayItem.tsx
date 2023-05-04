@@ -12,8 +12,7 @@ import toast from 'react-hot-toast';
 import { AiFillHeart, AiOutlineComment, AiOutlineDelete, AiOutlineHeart } from 'react-icons/ai';
 import { MdVerified } from 'react-icons/md';
 import Avatar from '../Avatar';
-import useGetNestedReplays from '@/hooks/useGetNestedReplays';
-import NestedItem from '../nestedreplay/NestedItem';
+
 
 
 type ReplayItemProps = {
@@ -26,7 +25,10 @@ const ReplayItem:React.FC<ReplayItemProps> = ({replay,mutatedReplay}) => {
     const {data:user}=useUser(replay.userId as string)
     const {mutate:mutatedPost}=usePost(replay.postId as string)
     const {mutate:mutatedComment}=useComment(replay.commentId as string)
-    const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi;
+    const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi
+    const mentionRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g
+   
+     
     //const {data:nestedReplay,mutate:nestedMutatedReplay}=useGetNestedReplays(replay.id as string)
    
 
@@ -111,16 +113,16 @@ const ReplayItem:React.FC<ReplayItemProps> = ({replay,mutatedReplay}) => {
                 </div>
                 <p className='hidden md:block text-gray-500 mx-2'>{user?.customTag}</p>
                 <p className='truncate w-10 md:hidden text-gray-500 mx-2'>{user?.customTag}</p>
-                <p className='hidden md:block text-gray-400 mx-2'>{createdAt}</p>
-                <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt}</p>
+                <p className='hidden md:block text-gray-400 mx-2'>{createdAt.split("ago")[0]}</p>
+                <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt.split("ago")[0]}</p>
                 {loginUser?.user.id===replay.userId && <AiOutlineDelete className='text-gray-400  cursor-pointer' onClick={onDelete} />}
             </div>
             <div className=' mx-10  w-full'>
                 <>
 
-            {!linkRegex.test(replay.body) && <p className="text-md text-black ">{replay.body}</p> }   
-               {replay.body.match(linkRegex) && (
-                    <div>
+            {!linkRegex.test(replay.body) &&!mentionRegex.test(replay.body)  && <p className="text-md text-black whitespace-normal">{replay.body}</p> }   
+               {replay.body.match(linkRegex) &&!mentionRegex.test(replay.body) && (
+                    <>
                         <p className='text-md text-black break-words'>{replay.body.replace(linkRegex,"").trim()}</p>
                         {Array.from(replay.body.matchAll(linkRegex)).map((link,index)=>(
                        <li className='list-none'>
@@ -132,8 +134,39 @@ const ReplayItem:React.FC<ReplayItemProps> = ({replay,mutatedReplay}) => {
                         
                        </li>
                   ))}
-                    </div>
+                    </>
                )}
+               {!linkRegex.test(replay.body) &&replay.body.match(mentionRegex) && (
+                    <>
+                        {Array.from(replay.body.matchAll(mentionRegex)).map((mention,index)=>(
+                            <li className='list-none'>
+                         <span className='text-blue-500 hover:underline break-words ' key={index}>{mention[0]}</span>
+                          </li>
+                        ))}
+                        <p className='text-md text-black break-words'>{replay.body.replace(mentionRegex,"").trim()}</p>
+                    </>
+               )}
+               {replay.body.match(linkRegex) && !mentionRegex.test(replay.body)  && (
+                <>
+                {Array.from(replay.body.matchAll(mentionRegex)).map((mention,index)=>(
+                            <li className='list-none'>
+                         <span className='text-blue-500 hover:underline break-words ' key={index}>{mention[0]}</span>
+                          </li>
+                        ))}
+                <p className='text-md text-black break-words '>{replay.body.replace(mentionRegex,"").replace(linkRegex,"")}</p>
+                {Array.from(replay.body.matchAll(linkRegex)).map((link,index)=>(
+                       <li className='list-none'>
+                       
+                            <span   className='text-blue-500 hover:underline break-words' key={index}>{link[0]}</span>
+                          
+                        
+                         
+                        
+                       </li>
+                  ))}
+                </>
+               )}
+           
 
                 </>
                

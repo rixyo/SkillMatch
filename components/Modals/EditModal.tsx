@@ -17,6 +17,7 @@ const EditModal:React.FC= () => {
     const [bio,setBio]=useState<string>("")
     const [profileImage,setProfileImage]=useState<string>("")
     const [coverImage,setCoverImage]=useState<string>("")
+
     
     useEffect(()=>{
         setProfileImage(currentUser?.user?.profileImage)
@@ -26,6 +27,12 @@ const EditModal:React.FC= () => {
 
     },[currentUser?.user?.name,currentUser?.user?.bio,currentUser?.user?.profileImage,currentUser?.user?.coverImage])
     const [isLoading,setIsLoading]=useState<boolean>(false)
+    const handleChange=useCallback((event:React.ChangeEvent<HTMLInputElement>)=>{
+        if(event.target.value.length >50) return
+        else if(event.target.value.length < 3) return
+        setName(event.target.value)
+   
+    },[setName])
    const onSubmit=useCallback(async()=>{
     try {
         setIsLoading(true)
@@ -60,7 +67,7 @@ const EditModal:React.FC= () => {
 
        />
         <Input
-        onChange={(e)=>setName(e.target.value)}
+        onChange={handleChange}
         value={name}
         placeholder="Name"
         type="text"

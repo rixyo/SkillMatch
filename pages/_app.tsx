@@ -14,6 +14,7 @@ import NestedModal from '@/components/Modals/NestedModal'
 
 
 
+
 export default function App({ Component, pageProps }: AppProps) {
   return( 
     <SessionProvider session={pageProps.session}>

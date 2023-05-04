@@ -11,10 +11,10 @@ import useUser from '@/hooks/useUser';
 const sidebarFooter:React.FC = () => {
     const {data:currentUser}=useCurrentUser()
     const router = useRouter();
-    const onClick = useCallback((event: any) => {
+    const gotoProfile = useCallback((event: any) => {
         event.stopPropagation();
     
-        const url = `/users/${currentUser.user.id}`;
+        const url = `/user/${currentUser.user.id}`;
     
         router.push(url);
       }, [router, currentUser]);
@@ -28,7 +28,7 @@ const sidebarFooter:React.FC = () => {
          <Avatar userId={currentUser.user.id}/>
            
             <div className='hidden md:flex flex-col md:ml-5 ml-2'>
-            <div className='flex  items-center' onClick={onClick}>
+            <div className='flex  items-center' onClick={gotoProfile}>
             <p className='md:ml-2 hover:underline hover:cursor-pointer  font-semibold text-lg' >
               <span className='hidden md:block'>{currentUser.user.name}</span>
               </p>

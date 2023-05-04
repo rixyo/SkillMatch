@@ -28,7 +28,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                                     userId:replay.userId,
                                     body:`${currentUser.name} liked your replay`,
                                     type:"like",
-                                    fromUserId:currentUser.id,
+                                    fromId:currentUser.id,
                                     link:`/replay/${replay.id}`,
                                     isRead:false,
                                     
@@ -61,7 +61,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         await prisma.notification.deleteMany({
                             where:{
                                 userId:replay.userId,
-                                fromUserId:currentUser.id,
+                                fromId:currentUser.id,
                                 type:"like",
                                 link:`/replay/${replay.id}`
                             }

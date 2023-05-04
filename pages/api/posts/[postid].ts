@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import {StatusCodes} from "http-status-codes"
 import prisma from "@/libs/prismadb"
 import serverAuth from "@/libs/serverAuth";
+import { link } from "fs";
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     if(req.method!=="GET" && req.method!=="DELETE" && req.method!=="PATCH") return res.status(StatusCodes.METHOD_NOT_ALLOWED).end()
     else{
@@ -32,45 +33,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 
             }
         }
-        else if(req.method==="DELETE"){
-            try {
-                const {postid}=req.query
-                const {currentUser}=await serverAuth(req,res)
-                if(!postid || typeof postid!="string"){
-                    throw new Error("Invalid post id")
-                }
-                const existingPost=await prisma.post.findUnique({
-                    where:{
-                        id:postid
-                    }
-                })
-                if(!existingPost){
-                    throw new Error("Post not found")
-                }
-                else if(existingPost.userId!==currentUser.id){
-                    throw new Error("You are not authorized to delete this post")
-                }
-                else {
-    
-                    const deletedPost=await prisma.post.delete({
-                        where:{
-                            id:postid
-                        }
-                    })
-                    
-                        res.status(StatusCodes.OK).json({deletedPost})
-                    
-                      
-                }
-                
-            } catch (error:any) {
-                console.log(error.message)
-                res.status(StatusCodes.BAD_REQUEST).json({error:error.message})
-                
-            }
-           
-            
-            }
+       
             else if (req.method ==="PATCH"){
                 try {
                     const {postid}=req.query

@@ -31,6 +31,7 @@ const index:React.FC = () => {
     const router=useRouter()
     const serachQuery=search?search.get("q"):null
     const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi;
+    const mentionRegex =  /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g;
     const encodedSearchQuery=encodeURI(serachQuery as string)
     const {data:searchResult}=useSearch(encodedSearchQuery as string)
    
@@ -101,8 +102,8 @@ const index:React.FC = () => {
                     <div className=' mx-5  p-3'>
                         <div>
         
-                    {!linkRegex.test(post.body) && <p className="text-md text-black break-words">{post.body}</p> }   
-                       {post.body.match(linkRegex) && (
+                    {!linkRegex.test(post.body) && !mentionRegex.test(post.body) && <p className="text-md text-black break-words">{post.body}</p> }   
+                       {post.body.match(linkRegex) &&!mentionRegex.test(post.body) && (
                             <div className="mt-2">
                                 <p>{post.body.replace(linkRegex,"").trim()}</p>
                                 {Array.from(post.body.matchAll(linkRegex)).map((link:any,index)=>(
@@ -114,6 +115,35 @@ const index:React.FC = () => {
                           ))}
                             </div>
                        )}
+                        {post.body.match(mentionRegex) && !linkRegex.test(post.body) && (
+                    <div className='flex items-center gap-2'>
+                        {Array.from(post.body.matchAll(mentionRegex)).map((mention:any,index)=>(
+                            <li className='list-none'>
+                            <span className='text-blue-500 hover:underline' key={index}>{mention[0]}</span>
+                          </li>
+                        ))}
+                        <p>{post.body.replace(mentionRegex,"").trim()}</p>
+                    </div>
+                )}
+                {post.body.match(mentionRegex) && post.body.match(linkRegex) && (
+                    <>
+                       
+                        {Array.from(post.body.matchAll(mentionRegex)).map((mention:any,index)=>(
+                          <li className='list-none'>
+                          <span className='text-blue-500 hover:underline' key={index}>{mention[0]}</span>
+                          </li>
+                        ))}
+                        <p>{post.body.replace(mentionRegex,'').replace(linkRegex,'')}</p>
+                        {Array.from(post.body.matchAll(linkRegex)).map((link:any,index)=>(
+                          <li className='list-none'>
+                           <Link href={link[0].startsWith("http") ? link[0] : `https://${link[0]}`}>
+                            <span className='text-blue-500 hover:underline' key={index}>{link[0]}</span>
+                         </Link>
+                          </li>
+                        ))}
+                            
+                    </>
+                )}
         
                         </div>
                     </div>

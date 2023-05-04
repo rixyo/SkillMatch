@@ -7,16 +7,25 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     else{
         try {
             const {nestedreplayId}=req.query
+         
             if(!nestedreplayId || typeof nestedreplayId!="string") throw new Error("Invalid nestedreplay id")
             const nestedreplay=await prisma.nestedReplay.findUnique({
                 where:{
                     id:nestedreplayId
                 },
                 include:{
-                    user:true,
+                    user:{
+                        select:{
+                            id:true,
+                            name:true,
+                            customTag:true,
+                            isVarified:true,
+                        }
+                    },
                     replay:true
                 }
             })
+           
             return res.status(StatusCodes.OK).json(nestedreplay)
             
         } catch (error:any) {

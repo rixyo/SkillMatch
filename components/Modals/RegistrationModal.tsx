@@ -1,4 +1,4 @@
-import useLoginModal from '@/hooks/useLoginModal';
+
 import useRegisterModal from '@/hooks/useRegisterModal';
 import useToggle from '@/hooks/useToggle';
 import React, { useCallback, useState } from 'react';
@@ -19,13 +19,21 @@ const RegistrationModal:React.FC = () => {
     const [name,setName]=useState<string>("")
     const [serverError,setServerError]=useState<string>("")
     const [passwordType, setPasswordType] = useState<string>("password")
+   
   
     const [customError,setError]=useState<string>("")
 
     const emailRegex=/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
 
 
-  
+  const onNameChange=useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
+  if(e.target.value.length>50) return
+  setName(e.target.value)
+
+    if(e.target.value.length>=50){
+      setError("Name canot  be more than 50 characters")
+    }
+  },[setName,setError])
     const onSubmit=(async()=>{
         setLoading(true)
         try {
@@ -128,7 +136,7 @@ const RegistrationModal:React.FC = () => {
                placeholder="Name"
                 type="text"
                 value={name}
-                onChange={(e)=>setName(e.target.value)}
+                onChange={onNameChange}
                 disabled={loading}
             />
              <div className='flex'>

@@ -7,11 +7,14 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     else{
         try {
             const {currentUser}=await serverAuth(req,res)
+            const mentionRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g;
             if(req.method==="POST"){
                 const {body}=req.body
                 const {replayId}=req.body
-                if(!body || typeof body!="string") throw new Error("Invalid body")
-                else if(!req.body.replayId || typeof req.body.replayId!="string") throw new Error("Invalid replay id")
+               
+                const Mentioned = body.match(mentionRegex)
+                
+                 if(!req.body.replayId || typeof req.body.replayId!="string") throw new Error("Invalid replay id")
                 const replay=await prisma.nestedReplay.create({
                     data:{
                         body,
@@ -21,20 +24,52 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
 
                     }
                 })
+                if(Mentioned){
+                    try {
+                        const user=await prisma.user.findUnique({
+                            where:{
+                                customTag:Mentioned[0]
+                            }
+                        })
+                        if(!user) throw new Error("User not found")
+                        await prisma.notification.create({
+                            data:{
+                                userId:user.id as string,
+                                fromId:currentUser.id,
+                                body:`${currentUser.name} mentioned you in a replay`,
+                                type:"mention",
+                                link:`/nestedreplay/${replay.id}`
+                            }
+                        })
+                        await prisma.user.update({
+                            where:{
+                                id:user.id as string,
+                            },
+                            data:{
+                                hasNotifications:true
+                            }
+                        })
+                       
+                    } catch (error:any) {
+                        console.log(error.message)
+                        
+                        
+                    }
+                }
                 try {
                     const replay=await prisma.replay.findUnique({
                         where:{
                             id:replayId
                         }
                     })
-                    console.log(replay)
+                 
                     if(!replay) throw new Error("Invalid replay id")
-                    else if(currentUser.id as string){
+                    else if(currentUser.id as string !==replay.userId){
                         await prisma.notification.create({
                             data:{
                                 userId:replay.userId,
                                 type:"nestedreplay",
-                                fromUserId:currentUser.id,
+                                fromId:currentUser.id,
                                 link:`/replay/${replay.id}`,
                                 body:`${currentUser.name}  replayed on your replay`
                             }
@@ -95,11 +130,42 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                 if(!nestedreplay) throw new Error("Invalid replay id")
                 else if(nestedreplay.userId!=currentUser.id) throw new Error("You are not authorized to delete this replay")
                 else{
+                    const Mentioned = nestedreplay.body.match(mentionRegex)
                     const deletedReplay=await prisma.nestedReplay.delete({
                         where:{
                             id:nestedreplayId
                         }
                     })
+                    try {
+                        if(Mentioned){
+                            const user=await prisma.user.findUnique({
+                                where:{
+                                    customTag:Mentioned[0]
+                                }
+                            })
+                            if(!user) throw new Error("User not found")
+                            await prisma.notification.deleteMany({
+                                where:{
+                                    fromId:currentUser.id,
+                                    link:`/nestedreplay/${nestedreplay.id}`,
+                                    type:"mention",
+                                    userId:user.id as string
+                                }
+                            })
+                            await prisma.user.update({
+                                where:{
+                                    id:user.id as string,
+                                },
+                                data:{
+                                    hasNotifications:false
+                                }
+                            })
+                        }
+                        
+                    } catch (error:any) {
+                        console.log(error.message)
+                        
+                    }
                     try {
                         const replay=await prisma.replay.findUnique({
                             where:{
@@ -111,7 +177,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
 
                             await prisma.notification.deleteMany({
                                 where:{
-                                    fromUserId:currentUser.id,
+                                    fromId:currentUser.id,
                                     link:`/replay/${replay.id}`,
                                     type:"nestedreplay",
                                  

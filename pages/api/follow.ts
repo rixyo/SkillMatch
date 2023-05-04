@@ -37,8 +37,8 @@ if(req.method !== 'POST' && req.method !== 'DELETE') return res.status(StatusCod
               userId:userId,
               body:`${currentUser.name} started following you`,
               type:'follow',
-              fromUserId:currentUser.id,
-              link:`/users/${currentUser.id}`,
+              fromId:currentUser.id,
+              link:`/user/${currentUser.id}`,
             }
           })
         }
@@ -68,9 +68,9 @@ if(req.method !== 'POST' && req.method !== 'DELETE') return res.status(StatusCod
       await prisma.notification.deleteMany({
         where:{
           userId:userId,
-          fromUserId:currentUser.id,
+          fromId:currentUser.id,
           type:'follow',
-          link:`/users/${currentUser.id}`
+          link:`/user/${currentUser.id}`
 
         }
       })

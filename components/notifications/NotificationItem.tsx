@@ -1,9 +1,6 @@
 import React, { useMemo } from 'react';
-import useUser from '@/hooks/useUser';
 import Avatar from '../Avatar';
 import Link from 'next/link';
-import { AiFillHeart } from 'react-icons/ai';
-import { SlUserFollow } from 'react-icons/sl';
 import { formatDistanceToNowStrict } from 'date-fns';
 type NotificationItemProps = {
     notification:notification
@@ -21,12 +18,12 @@ const NotificationItem:React.FC<NotificationItemProps> = ({notification}) => {
         <div className='w-full p-2 '>
             <div className='flex gap-2 items-center '>
                 <Avatar
-                userId={notification?.fromUserId as string}
+                userId={notification?.fromId as string}
                 />
                 
                  <Link href={notification.link}>
                 <p className='text-blue-500 hover:underline'>{notification?.body}</p>
-                <p>{createdAt}</p>
+                <p className='text-md text-gray-700 '>{createdAt}</p>
                  </Link>
 
             </div>

@@ -48,7 +48,7 @@ const onSearch=useCallback((event:React.FormEvent)=>{
          {
             users?.map((user:User)=>(
 
-             <div key={user.id} className='flex flex-row gap-4 ml-5 mt-5 justify-start  '>
+             <div key={user.id} className='flex flex-row gap-4 ml-5 mt-5 justify-start hover:cursor-pointer ' onClick={()=>router.push(`/user/${user.id}`)}>
                  {currentUser.user.id!==user.id &&  <Avatar userId={user.id}/> }  
                    {currentUser.user.id!==user.id &&
                    <>

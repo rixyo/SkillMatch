@@ -12,7 +12,7 @@ import {toast} from "react-hot-toast"
 import { BiMessageSquareDots } from 'react-icons/bi';
 import useGetFollower from '@/hooks/useGetFollower';
 import { useRouter } from 'next/router';
-import { features } from 'process';
+
 type UserBioProps = {
     userId: string;
 };
@@ -94,10 +94,10 @@ const UserBio:React.FC<UserBioProps> = ({userId}) => {
                  
                {fetchUser && 
                  <p>
-                 <span className='font-bold cursor-pointer hover:underline' onClick={()=>router.push(`/users/${userId}/following`)}>{fetchUser.followingId.length}</span> <span className='text-gray-500 cursor-pointer hover:underline' onClick={()=>router.push(`/users/${userId}/following`)}>
+                 <span className='font-bold cursor-pointer hover:underline' onClick={()=>router.push(`/user/${userId}/following`)}>{fetchUser.followingId.length}</span> <span className='text-gray-500 cursor-pointer hover:underline' onClick={()=>router.push(`/users/${userId}/following`)}>
                  Following
                  </span>
-                 <span className='font-bold  ml-3 cursor-pointer hover:underline' onClick={()=>router.push(`/users/${userId}/followers`)}>{fetchUser.followerId.length}</span> <span className='text-gray-500 cursor-pointer hover:underline'  onClick={()=>router.push(`/users/${userId}/followers`)}>
+                 <span className='font-bold  ml-3 cursor-pointer hover:underline' onClick={()=>router.push(`/user/${userId}/followers`)}>{fetchUser.followerId.length}</span> <span className='text-gray-500 cursor-pointer hover:underline'  onClick={()=>router.push(`/users/${userId}/followers`)}>
                  Followers
                  </span>
              </p>

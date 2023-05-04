@@ -12,7 +12,8 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
                
             }
             const hashedPassword=await bcrypt.hash(password,10)
-            const customTag=`@${email.split("@")[0]}`
+            const username=email.split("@")[0]
+            const customTag=`@${username.replace(/\W+/g, "_")}`
             const userExists=await prisma.user.findUnique({
                 where:{
                     email
@@ -22,6 +23,7 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
                 throw new Error("User already exists with this email")
                 
             }
+            else if(name.length>50) throw new Error("Name canot be more than 50 characters")
             const user=await prisma.user.create({
                 data:{
                     email,

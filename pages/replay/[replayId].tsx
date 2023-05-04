@@ -37,6 +37,9 @@ const replayId:React.FC = () => {
     const {replayId}=router.query
     const {data:replay,mutate:mutatedReplay}=useReplay(replayId as string)
     const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi
+    const mentionRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g;
+ 
+
    
     const {mutate:mutatedComment}=useComment(replay?.commentId as string)
     const {mutate:mutatedNestedReplay}=useComment(replayId as string)
@@ -104,13 +107,41 @@ const replayId:React.FC = () => {
             mutatedReplay()
         }
     },[replay?.id,isLiked,loginUser])
+    const onDelete=useCallback(async(event:React.MouseEvent<SVGElement,MouseEvent>)=>{
+        event.stopPropagation()
+       
+            try {
+                if(replay?.userId!==loginUser?.user.id) {
+                    toast.error("you can't delete this replay")
+                    return
+                    
+                    
+                   
+                }else{
+                    axios.delete("/api/comment/replay/",{params:{replayId:replay?.id}})
+                    mutatedReplay()
+                    mutatedComment()
+                    toast.success('replay deleted')
+                    router.push(`//${replay?.postId}`)
+                }
+               
+                
+            } catch (error:any) {
+                console.log(error.message)
+                toast.error(error.response?.data?.error || error.message)
+                
+            }
+        
+
+      
+      },[loginUser,replay?.id,mutatedReplay,mutatedPost,mutatedComment])
   
 
     const LikeIcon = isLiked ? AiFillHeart : AiOutlineHeart;
     
     return(
         <div className='flex flex-col items-start p-2 w-full  my-2 mx-2 ' key={replay?.id} >
-        <div className='flex items-center w-full ' onClick={()=>router.push(`/users/${replay?.userId}`)}>
+        <div className='flex items-center w-full ' >
             {replay &&  <Avatar userId={replay?.userId as string}/> } 
              {replay &&  <div className='flex items-center cursor-pointer hover:underline' >
   
@@ -120,16 +151,16 @@ const replayId:React.FC = () => {
               </div>}
              <p className='hidden md:block text-gray-400 mx-2'>{user?.customTag}</p>
               <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{user?.customTag}</p>
-              <p className='hidden md:block text-gray-400 mx-2'>{createdAt}</p>
-              <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt}</p>
+              <p className='hidden md:block text-gray-400 mx-2'>{createdAt.split("ago")[0]}</p>
+              <p className='truncate w-10 md:hidden text-gray-400 mx-2'>{createdAt.split("ago")[0]}</p>
       
-              {loginUser?.user.id===replay?.userId && <AiOutlineDelete className='text-gray-400  cursor-pointer' />}
+              {loginUser?.user.id===replay?.userId && <AiOutlineDelete className='text-gray-400  cursor-pointer' onClick={onDelete} />}
           </div>
           <div className=' mx-10'>
                 <>
 
-            {replay &&!linkRegex.test(replay.body) && <p className="text-md text-black break-words">{replay.body}</p> }   
-               {replay?.body.match(linkRegex) && (
+            {replay &&!linkRegex.test(replay.body) &&!mentionRegex.test(replay.body) && <p className="text-md text-black break-words">{replay.body}</p> }   
+               {replay?.body.match(linkRegex) &&!mentionRegex.test(replay.body) && (
                     <div>
                         <p>{replay.body.replace(linkRegex,"").trim()}</p>
                         {Array.from(replay.body.matchAll(linkRegex)).map((link,index)=>(
@@ -144,6 +175,37 @@ const replayId:React.FC = () => {
                   ))}
                     </div>
                )}
+                {replay &&!linkRegex.test(replay.body) &&replay.body.match(mentionRegex)  && (
+                    <>
+                        {Array.from(replay.body.matchAll(mentionRegex)).map((mention,index)=>(
+                            <li className='list-none'>
+                         <span className='text-blue-500 hover:underline break-words ' key={index}>{mention[0]}</span>
+                          </li>
+                        ))}
+                        
+                    </>
+               )}
+                  { replay && replay.body.match(linkRegex) &&mentionRegex.test(replay.body) && (
+                <>
+                {Array.from(replay.body.matchAll(mentionRegex)).map((mention,index)=>(
+                            <li className='list-none'>
+                         <span className='text-blue-500 hover:underline break-words ' key={index}>{mention[0]}</span>
+                          </li>
+                        ))}
+                <p className='text-md text-black break-words '>{replay.body.replace(mentionRegex,"").replace(linkRegex,"")}</p>
+                {Array.from(replay.body.matchAll(linkRegex)).map((link,index)=>(
+                       <li className='list-none'>
+                       
+                            <span   className='text-blue-500 hover:underline break-words' key={index}>{link[0]}</span>
+                          
+                        
+                         
+                        
+                       </li>
+                  ))}
+                </>
+               )}
+                
 
                 </>
             </div>
