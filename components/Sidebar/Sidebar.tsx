@@ -69,16 +69,16 @@ const Sidebar:React.FC= () => {
         <div className='flex flex-col  md:items-center '>
             <div className='space-y-2 lg:w-[230px] mx-5'>
 
-            { Tabs.map((tab)=>(
+            { Tabs.map((tab,index)=>(
                 <>
-            {currentUser &&  <SidebarItem key={tab.title} tab={tab} selectedTab={tab.title===selectedTab} setSelectedTab={setSelectedTab}/> }   
+            {currentUser &&  <SidebarItem key={index} tab={tab} selectedTab={tab.title===selectedTab} setSelectedTab={setSelectedTab}/> }   
                 </>
             ))}
         
               
             </div>
-     {currentUser &&url==="/" &&        <div className='flex items-center self-start mx-6 md:p-2  gap-4  cursor-pointer ' key={"Logout"} onClick={()=>signOut()}>
-        <MdLogout className=' text-gray-500 text-xl ' title='LogOut'/>
+     {currentUser &&url==="/" &&        <div className='flex items-center self-start md:p-2  gap-4  cursor-pointer ' key={"Logout"} onClick={()=>signOut()}>
+        <MdLogout className=' text-gray-500 text-xl ' size={25} title='LogOut'/>
         <p className='text-md font-semibold text-gray-500 hidden md:block' >Logout</p>
         </div>
 }

@@ -10,6 +10,7 @@ import axios from 'axios';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
+import { CldImage } from 'next-cloudinary';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo } from 'react';
@@ -85,8 +86,9 @@ const postId:React.FC = () => {
      
        <div
        className="flex flex-col border-2 border-solid border-gray-200 p-5 cursor-pointer rounded-lg   my-5 mx-2 hover:border-gray-200"
+       key={post?.id}
        >
-     <div className='flex items-start gap-1'>
+     <div className='flex items-start gap-1' key={Math.random()}>
                <Avatar
                userId={post?.userId as string}
                />
@@ -150,6 +152,10 @@ const postId:React.FC = () => {
                     </>
                 )}
            </div>
+           {post?.image && <CldImage src={post.image} alt="post" className='w-full h-96 object-cover mb-3'
+            width={500}
+            height={500}
+            />}
            <div className='flex items-center w-full gap-5 ml-2' >
                <AiOutlineComment className='text-2xl text-gray-500 hover:text-blue-300' title='comment'/>
                <p className='text-gray-500'>{post?.comments?.length}</p>
@@ -180,7 +186,7 @@ const postId:React.FC = () => {
               {post?.userId!==currentUser?.user.id &&  <p className='text-gray-500'>Replay to <span className='text-blue-400 hover:underline '>{post?.user.customTag}</span></p>} 
               </div>
            <Form 
-                postId={post?.id as string}
+                postid={post?.id as string}
                 isComment
                 placeholder='share your thoughts'
                 />

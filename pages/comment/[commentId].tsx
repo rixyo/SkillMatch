@@ -17,6 +17,7 @@ import { MdVerified } from 'react-icons/md';
 import Link from 'next/link';
 import { getSession } from 'next-auth/react';
 import { NextPageContext } from 'next';
+import Form from '@/components/Form';
 
 export async function getServerSideProps(context:NextPageContext) {
     const session = await getSession(context)
@@ -64,32 +65,6 @@ const commentId:React.FC = () => {
 
         }
     },[comment?.createdAt])
-    const onSubmit=useCallback(async()=>{
-        try {
-            setLoading(true)
-            if(body.length<=0) return toast.error("Please enter replay")
-            else if(body.length>140) return toast.error("Replay must be less than 140 characters")
-            else if(!loginUser) return login()
-           
-
-            else{
-            await axios.post(`/api/comment/replay/`,{body,commentId:comment?.id,postId:post?.id})
-           mutatedReplay()
-            commentMutate()
-            postMutated()
-           
-            setBody("")
-
-            }
-            toast.success("Replay successfully")
-        } catch (error: any) {
-            toast.error(error.response.data)
-            
-        } finally {
-            setLoading(false)
-        }
-
-    },[body,comment?.id,commentMutate,])
     const deleteComment=useCallback(async(event:React.MouseEvent<SVGElement,MouseEvent>)=>{
         event.stopPropagation()
           try {
@@ -230,23 +205,14 @@ const commentId:React.FC = () => {
        </div>
 }
         </div>
-        <div className='flex flex-col w-full'>
+     <Form
+     placeholder='replay'
+        isReplay
+        commentId={comment?.id as string}
+        mutatedReplay={mutatedReplay}
+        postid={comment?.postId as string}
 
-        <div className='w-full flex gap-2  mt-5'>
-       <Avatar userId={loginUser?.user.id as string}/>
-        <textarea
-         className='w-full h-20 border-2 border-solid border-gray-300 disabled:opacity-80 peer resize-none mt-3  p-2 rounded-lg text-[20px] placeholder-gray-400 focus:outline-none ring-0 outline-none'
-            placeholder="Replay"
-            value={body}
-            onChange={handleChange}
-           
-        />
-       </div>
-        <div className='flex justify-end mt-1 '>
-            <button className='bg-sky-500 rounded-full  h-11 p-2 text-center text-white text-lg font-semibold w-20' onClick={onSubmit} >Replay</button>
-
-        </div>
-        </div>
+     />
      
        
       <ReplaysFeed commentId={comment?.id as string}/>   

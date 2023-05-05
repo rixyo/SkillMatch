@@ -1,4 +1,5 @@
 import Avatar from '@/components/Avatar';
+import Form from '@/components/Form';
 import NestedReplayFeed from '@/components/nestedreplay/NestedReplayFeed';
 import useComment from '@/hooks/useComment';
 import currentUser from '@/hooks/useCurrentUser';
@@ -72,9 +73,7 @@ const replayId:React.FC = () => {
         
             else{
             await axios.post(`/api/replay/nestedreplay/`,{body,replayId:replay?.id})
-            mutatedPost()
-            mutatedComment()
-            mutatedReplay()
+           
             mutatedNestedReplay()
            setBody("")
            toast.success("Replay added")
@@ -236,24 +235,13 @@ const replayId:React.FC = () => {
          </div>
   }
           </div>
-          <div className='flex flex-col w-full'>
-  
-          <div className='w-full flex gap-2  mt-5'>
-         <Avatar userId={loginUser?.user.id as string}/>
-          <textarea
-           className='w-full h-20 border-2 border-solid border-gray-300 disabled:opacity-80 peer resize-none mt-3  p-2 rounded-lg text-[20px] placeholder-gray-400 focus:outline-none ring-0 outline-none'
-              placeholder="Replay"
-                value={body}
-                onChange={handleChange}
-            
-             
-          />
-         </div>
-          <div className='flex justify-end mt-1 '>
-              <button className='bg-sky-500 rounded-full  h-11 p-2 text-center text-white text-lg font-semibold w-20'onClick={onSubmit} >Replay</button>
-  
-          </div>
-          </div>
+        <Form placeholder={'replay'}  
+        isNestedReplay
+        mutatedNestedReplay={mutatedNestedReplay}
+        replayId={replay?.id as string}
+
+
+              />
           <NestedReplayFeed replayId={replay?.id as string}/>
        
          

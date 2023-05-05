@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { MdVerified } from 'react-icons/md';
 import { useRouter } from 'next/router';
 import Avatar from '../Avatar';
-import useUser from '@/hooks/useUser';
+
 
 
 

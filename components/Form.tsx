@@ -6,22 +6,55 @@ import usePosts from '@/hooks/usePosts';
 import useToggle from '@/hooks/useToggle';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {toast} from "react-hot-toast"
+import { IconType } from 'react-icons';
+import { IoImageOutline } from 'react-icons/io5';
 import Avatar from './Avatar';
 import Button from './Button';
+
+import Picker from '@emoji-mart/react'
+import { BsEmojiSmile } from 'react-icons/bs';
+import FormItem from './FormItem';
+import FormImageUpload from './FormImageUpload';
+
 
 type FormProps = {
     placeholder: string;
     isComment?: boolean;
-    postId?: string;
+    postid?: string;
+    isReplay?: boolean;
+    commentId?:string;
+    mutatedReplay?:any;
+    isNestedReplay?:boolean;
+    mutatedNestedReplay?:any;
+    replayId?:string;
+
 };
 
-const Form:React.FC<FormProps> = ({placeholder,isComment}) => {
+export interface FormTab{
+   
+    icon:IconType;
+    title:string;
+}
+const Tabs:FormTab[]=[
+    {
+        icon:IoImageOutline ,
+        title:"Image"
+
+    },
+    {
+        icon:BsEmojiSmile,
+        title:"Emoji"
+    }
+]
+const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,mutatedReplay,postid,isNestedReplay,replayId,mutatedNestedReplay}) => {
     const {data:currentUser} = useCurrentUser()
     const router=useRouter()
     const {postId}=router.query
-    const {data:singlePost}=usePost(postId as string)
+    const path=router.asPath
+   
+  
     
     const {login} = useToggle()
     const {mutate:mutatePost} = usePosts()
@@ -30,8 +63,10 @@ const Form:React.FC<FormProps> = ({placeholder,isComment}) => {
     const [loading,setLoading] = useState<boolean>(false)
     const [characterRemaning,setCharacterRemaing]=useState<number>(140)
     const [bodyLength,setBodyLength]=useState<number>(0)
+    const [emoji, setEmoji] = useState(null);
+    const [selectedTab,setSelectedTab]=useState<string>("")
+    const [image,setImage]=useState<string>("")
   
-
     const handleChange= useCallback((e:React.ChangeEvent<HTMLTextAreaElement>)=>{
         if(e.target.value.length > 140) return 
         setBody(e.target.value)
@@ -49,15 +84,35 @@ const Form:React.FC<FormProps> = ({placeholder,isComment}) => {
                 return
             }
             else{
+             
                 const url=isComment?`/api/comment/comment?postId=${postId}`:`/api/posts`
-
-                await axios.post(url,{body})
-                toast.success(isComment?"Commented successfully":"Posted successfully")
+               if(isReplay){
+                await axios.post(`/api/comment/replay/`,{body,commentId:commentId,postId:postid})
+                toast.success("Replayed successfully")
                 setBody("")
-                mutatePost()
-                if(isComment){
-                    mutatedComment()
+                mutatedReplay()
+
+
+               }
+                else if(isNestedReplay){
+                    await axios.post(`/api/replay/nestedreplay/`,{body,replayId:replayId})
+                    toast.success("Replayed successfully")
+                    setBody("")
+                    mutatedNestedReplay()
                 }
+               else{
+
+                   await axios.post(url,{body,image})
+                   toast.success(isComment?"Commented successfully":"Posted successfully")
+                   setBody("")
+                     setImage("")
+                     setSelectedTab("")
+                   mutatePost()
+                   if(isComment){
+                       mutatedComment()
+                   }
+               }
+
             }
            
             
@@ -70,7 +125,11 @@ const Form:React.FC<FormProps> = ({placeholder,isComment}) => {
         }
         
     },[body,setBody,mutatePost,isComment,postId,currentUser,login])
-    
+    const handleEmoji=(emoji:any)=>{
+        setEmoji(emoji)
+        setBody(body+emoji.native)
+
+    }
     return (
         <div className='flex gap-4 mt-2'>
             <div>
@@ -92,6 +151,16 @@ const Form:React.FC<FormProps> = ({placeholder,isComment}) => {
                </textarea>
            {bodyLength>=130 && <p className='text-red-500 text-center mx-32 border-2 border-solid border-blue-400 rounded-full h-10 w-10'>{characterRemaning}</p> }    
                <hr className='opacity-0 peer-focous:oopacity-100 h-[1px] w-full border-gray-300 transition'/>
+                <div className='flex gap-2 items-center'>
+                 
+            {Tabs.map((tab,index)=>(
+              <>
+              <FormItem tab={tab} key={index}  selectedTab={tab.title===selectedTab} setSelectedTab={setSelectedTab} />
+              </>
+            ))}
+           
+                
+                </div>
                <div className='flex justify-end'>
                 <Button
                 label={isComment?"Replay":"Share"}
@@ -100,6 +169,20 @@ const Form:React.FC<FormProps> = ({placeholder,isComment}) => {
                 />
 
                </div>
+               {currentUser?.user  &&
+                    selectedTab==="Emoji" &&
+                    <div>
+
+                        <Picker set='twitter' onEmojiSelect={handleEmoji} />
+                    </div>
+              }
+              { currentUser?.user && path==="/" &&
+                    selectedTab==="Image" &&
+                    <FormImageUpload
+                    value={image}
+                    onChange={(value)=>setImage(value)}
+                    />
+              }
                
 
             </div>
@@ -109,3 +192,5 @@ const Form:React.FC<FormProps> = ({placeholder,isComment}) => {
     )
 }
 export default Form;
+
+

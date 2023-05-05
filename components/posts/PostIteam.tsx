@@ -13,6 +13,7 @@ import axios from 'axios';
 import usePostEditModal from '@/hooks/useEditPostModal';
 import useLike from '@/hooks/useLike';
 import Link from 'next/link';
+import {CldImage} from "next-cloudinary"
 
 
 
@@ -170,6 +171,11 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate,userId}) => {
                 </div>
 
             </div>
+            {post.image && <CldImage src={post.image} alt="post" className='w-full h-96 object-cover mb-3'
+            width={500}
+            height={500}
+            />}
+
             <div className='flex items-center w-full gap-5 ml-2' >
                 <AiOutlineComment className='text-2xl text-gray-500 hover:text-blue-300' title='comment'/>
              

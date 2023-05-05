@@ -6,11 +6,15 @@ import useCurrentUser from '@/hooks/useCurrentUser';
 import useUsers from '@/hooks/useUsers';
 import Avatar from '../Avatar';
 import { useRouter } from 'next/navigation'
+import { useRouter as Router } from 'next/router';
 
 
 const FollowBar:React.FC = () => {
     const [search,setSearch]=useState<string>("")
     const router=useRouter()
+    const r=Router()
+  const url=r.asPath
+
 const {data:currentUser}=useCurrentUser()
 
 const {data:users}=useUsers()
@@ -44,8 +48,8 @@ const onSearch=useCallback((event:React.FormEvent)=>{
          
 
            </div>
-            <h1 className='font-bold text-2xl text-center'>Who To Follow</h1>
-         {
+          {url ==="/" &&  <h1 className='font-bold text-2xl text-center'>Who To Follow</h1>} 
+         { url==="/" &&
             users?.map((user:User)=>(
 
              <div key={user.id} className='flex flex-row gap-4 ml-5 mt-5 justify-start hover:cursor-pointer ' onClick={()=>router.push(`/user/${user.id}`)}>

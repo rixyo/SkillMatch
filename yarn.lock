@@ -9,6 +9,43 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
+"@cloudinary-util/url-loader@^3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@cloudinary-util/url-loader/-/url-loader-3.5.1.tgz#42ce7a6f279530a05d62e453006666f7ee34c4c9"
+  integrity sha512-Czh9/afEDtLBNuGoSPTvNSgUILCFMDd9pTwwLdonuTI+F5vJhGHYSLLmQF2ddDHVMd2c3S4RkcEC1Hhfm6x4Ow==
+  dependencies:
+    "@cloudinary-util/util" "2.0.1"
+    "@cloudinary/url-gen" "^1.8.7"
+
+"@cloudinary-util/util@2.0.1", "@cloudinary-util/util@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@cloudinary-util/util/-/util-2.0.1.tgz#0797d2dd96f91971184b2f94da768c15922ea33d"
+  integrity sha512-d2imgUjYTLjv8ZhZPMAts/uPbMvIE71X4I/5hwdY/7vM4BuFQoJMSyq+h2pW1z1MyGG9BOWBm70vp082lSrbEQ==
+
+"@cloudinary/transformation-builder-sdk@^1.2.7":
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@cloudinary/transformation-builder-sdk/-/transformation-builder-sdk-1.2.8.tgz#afd5b3205b9a43b9a3887daa512dbcf173111970"
+  integrity sha512-Rxvt/tjzTNzHDvH2l5ZLky/ahp60pHf51uLfzkFA/Mrh6Uj8aMHne0TRbYvpaH4t8l9wLGcdK6SbBqKVzlN16A==
+  dependencies:
+    "@cloudinary/url-gen" "^1.7.0"
+
+"@cloudinary/url-gen@^1.7.0", "@cloudinary/url-gen@^1.8.6", "@cloudinary/url-gen@^1.8.7":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@cloudinary/url-gen/-/url-gen-1.10.0.tgz#cdf64add1833fb616289bc96fbf97d20c8a953c1"
+  integrity sha512-J3V+gzT6Tepw9bMrR3prWVbW22cIFJtPS8Wkt1WFSZVHWpZx8/vv9ACHaxUmRqaSkjhX8ErsuzDY5YxdWnaCbw==
+  dependencies:
+    "@cloudinary/transformation-builder-sdk" "^1.2.7"
+
+"@emoji-mart/data@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@emoji-mart/data/-/data-1.1.2.tgz#777c976f8f143df47cbb23a7077c9ca9fe5fc513"
+  integrity sha512-1HP8BxD2azjqWJvxIaWAMyTySeZY0Osr83ukYjltPVkNXeJvTz7yDrPLBtnrD5uqJ3tg4CcLuuBW09wahqL/fg==
+
+"@emoji-mart/react@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@emoji-mart/react/-/react-1.1.1.tgz#ddad52f93a25baf31c5383c3e7e4c6e05554312a"
+  integrity sha512-NMlFNeWgv1//uPsvLxvGQoIerPuVdXwK/EUek8OOkJ6wVOWPUizRBJU0hDqWZCOROVpfBgCemaC3m6jDOXi03g==
+
 "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"
   resolved "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.3.3.tgz"
@@ -457,6 +494,11 @@ electron-to-chromium@^1.4.284:
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.361.tgz"
   integrity sha512-VocVwjPp05HUXzf3xmL0boRn5b0iyqC7amtDww84Jb1QJNPBc7F69gJyEeXRoriLBC4a5pSyckdllrXAg4mmRA==
 
+emoji-mart@^5.5.2:
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/emoji-mart/-/emoji-mart-5.5.2.tgz#3ddbaf053139cf4aa217650078bc1c50ca8381af"
+  integrity sha512-Sqc/nso4cjxhOwWJsp9xkVm8OF5c+mJLZJFoFfzRuKO+yWiN7K8c96xmtughYb0d/fZ8UC6cLIQ/p4BR6Pv3/A==
+
 emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.npmjs.org/emoji-regex/-/emoji-regex-8.0.0.tgz"
@@ -808,6 +850,15 @@ next-auth@^4.22.0:
     preact "^10.6.3"
     preact-render-to-string "^5.1.19"
     uuid "^8.3.2"
+
+next-cloudinary@^4.10.0:
+  version "4.10.0"
+  resolved "https://registry.yarnpkg.com/next-cloudinary/-/next-cloudinary-4.10.0.tgz#5526fb5a9436c80de18072bb1ff8f414948ad0fa"
+  integrity sha512-yOoG0jFO4y8+hLR+07W2QkTvFKKe6padKVpemEnkaOV/HxBnoHhB4gjXoHIUEVc9aKjEsji+3ViwwFzWR4ukMA==
+  dependencies:
+    "@cloudinary-util/url-loader" "^3.5.1"
+    "@cloudinary-util/util" "^2.0.1"
+    "@cloudinary/url-gen" "^1.8.6"
 
 next@13.3.0:
   version "13.3.0"

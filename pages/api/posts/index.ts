@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const mentionRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g;
     if (req.method === 'POST') {
       const { currentUser } = await serverAuth(req, res);
-      const { body } = req.body;
+      const { body,image } = req.body;
      
 
       const Mentioned = body.match(mentionRegex)
@@ -25,6 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const post = await prisma.post.create({
         data: {
           body,
+          image,
           userId: currentUser.id
         }
       });
