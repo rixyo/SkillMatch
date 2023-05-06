@@ -2,11 +2,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 import {StatusCodes} from "http-status-codes"
 import prisma from "@/libs/prismadb"
 import serverAuth from "@/libs/serverAuth";
-import { link } from "fs";
+
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     if(req.method!=="GET" && req.method!=="DELETE" && req.method!=="PATCH") return res.status(StatusCodes.METHOD_NOT_ALLOWED).end()
     else{
         if(req.method==="GET"){
+            const {currentUser}=await serverAuth(req,res)
+            
             try {
                 const {postid}=req.query
                 if(!postid || typeof postid!=="string"){
@@ -18,10 +20,35 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         id:postid
                     },
                     include:{
-                        user:true,
+                        user:{
+                            select:{
+                                name:true,
+                                email:true,
+                                id:true,
+                                customTag:true,
+                                isVarified:true,
+                            }
+                        },
                         comments:true
                     }
                 })
+                let updatedViewsId = [...(existingPost?.viewsId || [])]
+                if(!existingPost) throw new Error("Post not found")
+                if(!updatedViewsId.includes(currentUser.id)){
+                    updatedViewsId.push(currentUser.id)
+                    await prisma.post.update({
+                        where:{
+                            id:existingPost.id
+                        },
+                        data:{
+                            viewsId: updatedViewsId
+                                
+                            
+                        }
+                    })
+                }
+               
+              
             
                 res.status(StatusCodes.OK).json({...existingPost})
                 

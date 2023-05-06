@@ -65,8 +65,8 @@ const Sidebar:React.FC= () => {
     
     return( 
         <>
-    <div className='col-span-1 xl:col-span-2 mr-5 h-1/2 pr-4 md:pr-6  mt-2  rounded-lg' >
-        <div className='flex flex-col  md:items-center '>
+    <div className='col-span-1 xl:col-span-2 mr-5   mt-2  rounded-lg' >
+        <div className='flex flex-col   items-center '>
             <div className='space-y-2 lg:w-[230px] mx-5'>
 
             { Tabs.map((tab,index)=>(
@@ -82,11 +82,13 @@ const Sidebar:React.FC= () => {
         <p className='text-md font-semibold text-gray-500 hidden md:block' >Logout</p>
         </div>
 }
-           
+           <div className='self-start'>
+
+        <SidebarFooter key={Math.random()}/>
+           </div>
 
         </div>
        
-        <SidebarFooter/>
 
        
       

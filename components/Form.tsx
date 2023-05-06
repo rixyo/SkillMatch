@@ -15,8 +15,12 @@ import Button from './Button';
 
 import Picker from '@emoji-mart/react'
 import { BsEmojiSmile } from 'react-icons/bs';
+
+
+
 import FormItem from './FormItem';
 import FormImageUpload from './FormImageUpload';
+import {AiOutlineGif } from "react-icons/ai"
 
 
 type FormProps = {
@@ -46,6 +50,10 @@ const Tabs:FormTab[]=[
     {
         icon:BsEmojiSmile,
         title:"Emoji"
+    },
+    {
+        icon:AiOutlineGif,
+        title:"GIF"
     }
 ]
 const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,mutatedReplay,postid,isNestedReplay,replayId,mutatedNestedReplay}) => {
@@ -182,6 +190,13 @@ const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,muta
                     value={image}
                     onChange={(value)=>setImage(value)}
                     />
+              }
+              {currentUser?.user && path==="/" &&
+              selectedTab==="GIF" &&
+              <div>
+                  
+
+              </div>
               }
                
 

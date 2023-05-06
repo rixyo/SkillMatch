@@ -1,20 +1,21 @@
 import currentUser from '@/hooks/useCurrentUser';
 import useNotifications from '@/hooks/useNotifications';
-import useUser from '@/hooks/useUser';
 import React, { useEffect } from 'react';
+import { CircleLoader } from 'react-spinners';
 import NotificationItem from './NotificationItem';
 
 
 
 const NotificationFeed:React.FC = () => {
     const {data:loginUser,mutate:mutatedLoginUser}=currentUser()
-    //console.log(loginUser)
+
    
-        const {data:notifications}=useNotifications(loginUser?.user.id as string)
+        const {data:notifications,isLoading}=useNotifications(loginUser?.user.id as string)
+       
        
     
        
-   // const {data:notifications,mutate:mutatedNotification}=useNotifications(loginUser?.user.id as string)
+  
 
   
     useEffect(()=>{
@@ -24,13 +25,14 @@ const NotificationFeed:React.FC = () => {
     
     return(
         <>
-        {notifications && notifications?.length>0?notifications?.map((notification:notification)=>(
+        {notifications && notifications?.length>0 &&notifications?.map((notification:notification)=>(
             <NotificationItem notification={notification} key={notification.id}/>
         )
-        ):<div className="text-neutral-600 text-center p-6 text-xl">
-        No notifications
-      </div>
-        }
+        )
+    }
+    {isLoading && <div className="flex justify-center items-center">
+    <CircleLoader color="#3B82F6"  size={50} />
+        </div>}
         </>
     )
 }

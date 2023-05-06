@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback, useEffect, useState } from 'react';
+import React, { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { MdVerified } from 'react-icons/md';
 import { BsSearch } from 'react-icons/bs';
@@ -7,6 +7,8 @@ import useUsers from '@/hooks/useUsers';
 import Avatar from '../Avatar';
 import { useRouter } from 'next/navigation'
 import { useRouter as Router } from 'next/router';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 
 const FollowBar:React.FC = () => {
@@ -17,7 +19,9 @@ const FollowBar:React.FC = () => {
 
 const {data:currentUser}=useCurrentUser()
 
-const {data:users}=useUsers()
+const {data:users,mutate:mutatedUser}=useUsers()
+const list=currentUser?.user.followerId || []
+
 
 if(users?.length===0) return null
 const onSearch=useCallback((event:React.FormEvent)=>{
@@ -27,6 +31,15 @@ const onSearch=useCallback((event:React.FormEvent)=>{
    
 
 },[search])
+
+const onFollow=useCallback((userId:string)=>{
+   // event.preventDefault()
+    axios.post("/api/follow",{userId:userId})
+    toast.success("Followed")
+    mutatedUser()
+   
+
+},[currentUser?.user.id])
 
     return (
         <>
@@ -51,8 +64,10 @@ const onSearch=useCallback((event:React.FormEvent)=>{
           {url ==="/" &&  <h1 className='font-bold text-2xl text-center'>Who To Follow</h1>} 
          { url==="/" &&
             users?.map((user:User)=>(
+                
+                <div key={user?.id} className="flex items-center w-11/12">
 
-             <div key={user.id} className='flex flex-row gap-4 ml-5 mt-5 justify-start hover:cursor-pointer ' onClick={()=>router.push(`/user/${user.id}`)}>
+             <div  className='flex flex-row gap-4 ml-5 mt-5 justify-start hover:cursor-pointer  w-full'>
                  {currentUser.user.id!==user.id &&  <Avatar userId={user.id}/> }  
                    {currentUser.user.id!==user.id &&
                    <>
@@ -63,12 +78,22 @@ const onSearch=useCallback((event:React.FormEvent)=>{
                     </div>
                      <p className='text-gray-500 text-sm'>{user.customTag}</p>
                </div>
-                <button className='text-blue border-2 border-solid  w-1/3 h-1/2  my-3 mr-3 border-blue-400  text-lg font-medium rounded-lg'>Follow</button>
+                
                    </>
                     } 
 
 
+
                 </div>
+        
+            {currentUser.user.id!==user.id && 
+            < div className='mx-2'>
+
+                <button className='text-blue w-full border-2 border-solid  p-2  my-3 mr-3 border-blue-400  text-lg font-medium rounded-lg' onClick={()=>onFollow(user.id)}>Follow</button>  
+            </div>
+}
+                </div>
+             
             
             ))
          }

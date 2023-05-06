@@ -50,6 +50,11 @@ async function usersResult(q:string){
           isVarified:true,
           bio:true,
          
+        },
+        orderBy:{
+            isVarified:"desc",
+           
+        
         }
     })
     return users

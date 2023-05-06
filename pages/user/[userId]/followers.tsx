@@ -42,7 +42,6 @@ const followers:React.FC = () => {
     return (
         <div className='flex flex-col sm:w-auto lg:w-full mx-5'>
           
-
         
          {user && 
          <Header showBackArrow label={user?.name as string} sublebel={user?.customTag as string} />

@@ -38,6 +38,9 @@ type Post={
     viewsId: string[],
     user: User,
     comments: comment[],
+    isShared: boolean,
+    fromSharedId: string?,
+    postSharedCreatedAt: Date?,
    
 }
 type comment={

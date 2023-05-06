@@ -13,54 +13,63 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const mentionRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g;
+    //const hashtagRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))#([A-Za-z]+[A-Za-z0-9_]+)/g;
+   
+
     if (req.method === 'POST') {
       const { currentUser } = await serverAuth(req, res);
       const { body,image } = req.body;
      
 
       const Mentioned = body.match(mentionRegex)
-     
    
-
-      const post = await prisma.post.create({
-        data: {
-          body,
-          image,
-          userId: currentUser.id
-        }
-      });
-      if (Mentioned) {
-        const user=await prisma.user.findUnique({
-          where:{
-            customTag:Mentioned[0]
-
-          }
-        })
-        if(!user) throw new Error("User not found")
-       
-
-          await prisma.notification.create({
-            data:{
-              userId:user?.id as string,
-              fromId:currentUser.id,
-              body:`${currentUser.name} mentioned you in a post`,
-              type:"mention",
-              link:`/post/${post.id}`
-            },
-          })
+   
+    
+     const post = await prisma.post.create({
+       data: {
+         body,
+         image,
+         userId: currentUser.id
+       }
+     })
+     if (Mentioned) {
+       const user=await prisma.user.findUnique({
+         where:{
+           customTag:Mentioned[0]
+  
+         }
+       })
+       if(!user) throw new Error("User not found")
       
-        
-        await prisma.user.update({
-          where:{
-            id:user.id as string
-          },
-          data:{
-            hasNotifications:true
-          }
-        })
-      }
+  
+         await prisma.notification.create({
+           data:{
+             userId:user?.id as string,
+             fromId:currentUser.id,
+             body:`${currentUser.name} mentioned you in a post`,
+             type:"mention",
+             link:`/post/${post.id}`
+           },
+         })
+     
+       
+       await prisma.user.update({
+         where:{
+           id:user.id as string
+         },
+         data:{
+           hasNotifications:true
+         }
+       })
+     }
+   
+    
+  
+     return res.status(StatusCodes.OK).json(post);
+   
+  
 
-      return res.status(StatusCodes.OK).json(post);
+     
     }
 
     else if (req.method === 'GET') {
@@ -145,12 +154,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           
 
             const Mentioned = existingPost.body.match(mentionRegex)
-
-              const deletedPost=await prisma.post.delete({
+            if(existingPost.isShared){
+              try {
+                await prisma.notification.deleteMany({
                   where:{
-                      id:postId
+                    userId:existingPost.fromSharedId as string,
+                    fromId:currentUser.id,
+                    type:"share",
+                    link:`/post/${existingPost.id}`
                   }
-              })
+                })
+                await prisma.user.update({
+                  where:{
+                    id:existingPost.fromSharedId as string
+                  },
+                  data:{
+                    hasNotifications:false
+                  }
+                })
+                
+              } catch (error:any) {
+                console.log(error.message)
+                
+              }
+            }
+            
+              const deletedPost=await prisma.post.delete({
+                where:{
+                    id:postId
+                }
+            })
               try {
                   if(Mentioned){
                     const user=await prisma.user.findUnique({
@@ -170,6 +203,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                           link:`/post/${existingPost.id}`
                         },
                       })
+                     
                     await prisma.user.update({
                       where:{
                         id:user.id

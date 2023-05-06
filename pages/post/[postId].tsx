@@ -6,6 +6,7 @@ import usePostEditModal from '@/hooks/useEditPostModal';
 import useLike from '@/hooks/useLike';
 import usePost from '@/hooks/usePost';
 import useToggle from '@/hooks/useToggle';
+import useUser from '@/hooks/useUser';
 import axios from 'axios';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { NextPageContext } from 'next';
@@ -15,7 +16,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
-import { AiFillHeart, AiOutlineComment, AiOutlineDelete, AiOutlineEdit, AiOutlineHeart } from 'react-icons/ai';
+import { AiFillHeart, AiOutlineComment, AiOutlineDelete, AiOutlineEdit, AiOutlineHeart,AiOutlineShareAlt } from 'react-icons/ai';
 import { IoAnalyticsOutline } from 'react-icons/io5';
 import { MdVerified } from 'react-icons/md';
 import { CircleLoader } from 'react-spinners';
@@ -39,16 +40,23 @@ const postId:React.FC = () => {
     const router = useRouter();
     const { postId } = router.query;
     const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi;
-    const mentionRegex = /@(\w+)/g
+    const mentionRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g;
     const {data:currentUser}=useCurrentUser()
     const {onOpen}=usePostEditModal()
     const {data:post, isLoading, mutate}=usePost(postId as string)
     const {hasLiked,toggleLike}=useLike({postId:postId as string,userId:currentUser?.id})
     const {login}=useToggle()
+    const {data:user}=useUser(post?.fromSharedId as string)
 
     const deletePost=useCallback(async()=>{
         try {
-            await axios.delete(`/api/posts/`,{params:{postId:post?.id}})
+            await axios.delete(`/api/posts/`,{params:{postId:post?.id}}).then(()=>{
+                toast.success("Post deleted successfully")
+                mutate()
+                router.push("/")
+            }).catch((error)=>{
+                toast.error(error.response?.data?.error || error.message)
+            })
             toast.success("Post deleted successfully")
             mutate()
             router.push("/")
@@ -77,6 +85,29 @@ const postId:React.FC = () => {
 
         }
     },[post?.createdAt])
+    const fromPostCreatedAt=useMemo(()=>{
+        if(!post?.postSharedCreatedAt) return ""
+        else{
+            return formatDistanceToNowStrict(new Date(post.postSharedCreatedAt),{addSuffix:true})
+
+        }
+    },[post?.postSharedCreatedAt])
+    const handleShare=useCallback((event:any)=>{
+      event.stopPropagation()
+      if(!currentUser){
+          login()
+          return
+      }
+      else{
+          axios.post('/api/posts/share',{postId:post?.id}).then(()=>{
+              mutate()
+              toast.success("Post shared")
+
+          }).catch((error:any)=>{
+              toast.error(error.response?.data?.error || error.message)
+          })
+      }
+  },[currentUser,post?.id,mutate])
     const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
     return(
        <>
@@ -107,20 +138,37 @@ const postId:React.FC = () => {
                        
 
            </div>
+           {post?.isShared && (
+                    <div className='flex items-center gap-1 p-3 mx-5'>
+                        <Avatar
+                        userId={post.fromSharedId as string}/>
+                        <div className='flex items-center gap-1'>
+                        <p className='hidden md:block text-md  font-bold hover:underline' onClick={()=>router.push(`/user/${user?.id}`)} >{user?.name}</p>
+                    <p className='truncate w-10 md:hidden  text-md   font-bold hover:underline' onClick={()=>router.push(`/user/${user?.id}`)}>{user?.name}</p>
+                   {user?.isVarified && <MdVerified className='text-blue-500'/>}
+                   <p className='hidden md:block  text-gray-500 text-lg'>{user?.customTag}</p>
+                   <p className='truncate w-10 md:hidden text-gray-500'>{user?.customTag}</p>
+                   <p className='text-gray-500 hidden md:block'>{fromPostCreatedAt.split("ago")}</p>
+                   <p className='truncate w-10 md:hidden text-gray-500'>{fromPostCreatedAt.split("ago")}</p>
+                        </div>
+                    </div>
+                )}
            <div className=' mx-5 p-1'>
            {post?.body &&!linkRegex.test(post.body)&&!mentionRegex.test(post.body) && <p className="text-md text-black break-words">{post?.body}</p> }   
-               {post?.body.match(linkRegex) && !mentionRegex.test(post.body) && (
-                    <>
-                        <p>{post.body.replace(linkRegex,"").trim()}</p>
-                     
+           {post?.body.match(linkRegex) &&!mentionRegex.test(post.body) && (
+                    <div className=" flex flex-col">
+                        <p className='break-words text-black text-md'>{post.body.replace(linkRegex,"").trim()}</p>
                         {Array.from(post.body.matchAll(linkRegex)).map((link,index)=>(
                        <li className='list-none'>
-                         <Link href={link[0].startsWith("http") ? link[0] : `https://${link[0]}`}>
-                            <span className='text-blue-500 hover:underline' key={index}>{link[0]}</span>
-                         </Link>
+                        <Link href={link[0]} key={index}>
+
+                          <span className='text-blue-500 break-words hover:underline' key={index}>{link[0]}</span>
+                        </Link>
+                        
+                          
                        </li>
                   ))}
-                    </>
+                    </div>
                )}
                  {post?.body.match(mentionRegex)&&!linkRegex.test(post.body) && (
                     <>
@@ -134,22 +182,31 @@ const postId:React.FC = () => {
                 )}
                   {post?.body.match(mentionRegex) && post.body.match(linkRegex) && (
                     <>
-                       
+                    <div className='flex items-center gap-1 w-3/4'>
+                      <div>
                         {Array.from(post.body.matchAll(mentionRegex)).map((mention,index)=>(
                           <li className='list-none'>
                             <span className='text-blue-500 hover:underline' key={index}>{mention[0]}</span>
                           </li>
                         ))}
-                        <p>{post.body.replace(mentionRegex,'').replace(linkRegex,'')}</p>
+
+                      </div>
+
+                          <div className='text-lg font-semibold mr-2  border-2 whitespace-nowrap'>{post.body.replace(mentionRegex,'').replace(linkRegex,'')}</div>
+                         
+
+                         
+                    </div>
                         {Array.from(post.body.matchAll(linkRegex)).map((link,index)=>(
                           <li className='list-none'>
                              <Link href={link[0].startsWith("http") ? link[0] : `https://${link[0]}`}>
-                            <span className='text-blue-500 hover:underline' key={index}>{link[0]}</span>
+                            <span className='text-blue-500 hover:underline break-all' key={index}>{link[0]}</span>
                          </Link>
                           </li>
                         ))}
-                            
-                    </>
+                       
+                        </>
+                       
                 )}
            </div>
            {post?.image && <CldImage src={post.image} alt="post" className='w-full h-96 object-cover mb-3'
@@ -178,6 +235,7 @@ const postId:React.FC = () => {
                {post?.likesId?.length}
              </p>
            </div>
+           <AiOutlineShareAlt className='text-xl text-gray-500 hover:text-blue-300' title='Share' onClick={handleShare}/>
              
 
            </div>

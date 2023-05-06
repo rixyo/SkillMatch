@@ -44,6 +44,9 @@ model Post{
   deletedAt DateTime?
   likesId String[] @db.ObjectId
   viewsId String[] @db.ObjectId
+  isShared Boolean @default(false)
+  fromSharedId String? @db.ObjectId
+  postSharedCreatedAt DateTime?
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
    comments          Comment[]
  
