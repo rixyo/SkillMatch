@@ -31,6 +31,9 @@ model User {
   comments Comment[]
   replays Replay[]
  nustedReplays NestedReplay[]
+ skill   String[]
+ skills Skill[]
+  projects Project[]
  
 
 }
@@ -41,7 +44,6 @@ model Post{
   image String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  deletedAt DateTime?
   likesId String[] @db.ObjectId
   viewsId String[] @db.ObjectId
   isShared Boolean @default(false)
@@ -106,4 +108,30 @@ model SearchQuery {
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
   query              String
  
+}
+model Skill {
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  userId             String @db.ObjectId
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+
+model Project{
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  description        String
+  createdAt          DateTime @default(now())
+  startDate          DateTime?
+  endDate            DateTime?
+  link               String
+  userId             String @db.ObjectId
+  
+
+
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+
+
 }

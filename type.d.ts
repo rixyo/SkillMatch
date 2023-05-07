@@ -23,6 +23,9 @@ type User={
     notifications: Notification[],
     replays: Replay[],
     nestedReplays: NestedReplay[],
+    skills: string[]
+    skills: Skill[],
+    projects: Project[],
 
 
 }
@@ -84,4 +87,21 @@ type notification={
     link: string,
    isRead: boolean,
    fromId   : string,
+}
+
+type Project={
+    id: string,
+    name: string,
+    description: string,
+    createdAt: Date,
+    startDate: Date?,
+    endDate: Date?,
+    link: string,
+    userId: string,
+}
+type Skill={
+    id: string,
+    name: string,
+   userId: string,
+
 }

@@ -20,10 +20,10 @@ const FollowBar:React.FC = () => {
 const {data:currentUser}=useCurrentUser()
 
 const {data:users,mutate:mutatedUser}=useUsers()
-const list=currentUser?.user.followerId || []
 
 
-if(users?.length===0) return null
+
+
 const onSearch=useCallback((event:React.FormEvent)=>{
     event.preventDefault()
     const encodedSearch=encodeURI(search)

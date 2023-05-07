@@ -10,6 +10,8 @@ import EditModal from '@/components/Modals/EditModal'
 import EditPostModal from '@/components/Modals/EditPostModal'
 import ReplayModal from '@/components/Modals/ReplayModal'
 import NestedModal from '@/components/Modals/NestedModal'
+import SkillModal from '@/components/Modals/SkillModal'
+import ProjectModal from '@/components/Modals/ProjectModal'
 
 
 
@@ -20,6 +22,8 @@ export default function App({ Component, pageProps }: AppProps) {
     <SessionProvider session={pageProps.session}>
     <Toaster/>
     <EditPostModal/>
+    <SkillModal/>
+    <ProjectModal/>
     <NestedModal/>
     <EditModal/>
     <ReplayModal/>

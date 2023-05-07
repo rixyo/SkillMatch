@@ -93,10 +93,10 @@ const UserBio:React.FC<UserBioProps> = ({userId}) => {
                  
                {fetchUser && 
                  <p>
-                 <span className='font-bold cursor-pointer hover:underline' onClick={()=>router.push(`/user/${userId}/following`)}>{fetchUser.followingId.length}</span> <span className='text-gray-500 cursor-pointer hover:underline' onClick={()=>router.push(`/user/${userId}/following`)}>
+                 <span className='font-bold cursor-pointer hover:underline' onClick={()=>router.push(`/user/${userId}/following`)}>{fetchUser?.followingId.length}</span> <span className='text-gray-500 cursor-pointer hover:underline' onClick={()=>router.push(`/user/${userId}/following`)}>
                  Following
                  </span>
-                 <span className='font-bold  ml-3 cursor-pointer hover:underline' onClick={()=>router.push(`/user/${userId}/followers`)}>{fetchUser.followerId.length}</span> <span className='text-gray-500 cursor-pointer hover:underline'  onClick={()=>router.push(`/user/${userId}/followers`)}>
+                 <span className='font-bold  ml-3 cursor-pointer hover:underline' onClick={()=>router.push(`/user/${userId}/followers`)}>{fetchUser?.followerId.length}</span> <span className='text-gray-500 cursor-pointer hover:underline'  onClick={()=>router.push(`/user/${userId}/followers`)}>
                  Followers
                  </span>
              </p>

@@ -1,5 +1,7 @@
 import Header from '@/components/Header/Heder';
 import PostFeed from '@/components/posts/postFeed';
+import Project from '@/components/Users/Project';
+import Skill from '@/components/Users/Skill';
 import UserBio from '@/components/Users/UserBio';
 import UserHero from '@/components/Users/UserHero';
 import usePosts from '@/hooks/usePosts';
@@ -48,6 +50,8 @@ const userView:React.FC = () => {
       
      
   <UserBio userId={userId as string}/> 
+  <Skill/>
+  <Project/>
        
        
         {loading?<div className="flex justify-center items-center h-full">
