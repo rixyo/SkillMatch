@@ -1,10 +1,26 @@
 import useGetSkill from '@/hooks/useGetSkill';
 import useSkillModal from '@/hooks/useSkillModal';
+import { NextPageContext } from 'next';
+import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { FiEdit2 } from 'react-icons/fi';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 
+export async function getServerSideProps(context:NextPageContext) {
+    const session = await getSession(context)
+    if(!session){
+        return{
+            redirect:{
+            destination:"/",
+            permanent:false
+            }
+        }
+    }
+    return {
+        props: { session },
+    }
+  }
 
 
 const Skill:React.FC= () => {

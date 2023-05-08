@@ -8,6 +8,7 @@ import usePosts from '@/hooks/usePosts';
 import useUser from '@/hooks/useUser';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { CircleLoader} from "react-spinners"
@@ -44,6 +45,11 @@ const userView:React.FC = () => {
     
     return (
         <>
+         <Head>
+        <title>{fetchUser.name}({fetchUser.customTag})/</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        
+      </Head>
         <Header showBackArrow label={fetchUser.name as string} />
     
       <UserHero userId={userId as string}/>

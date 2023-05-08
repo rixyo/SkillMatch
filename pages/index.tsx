@@ -4,14 +4,11 @@ import PostFeed from "@/components/posts/postFeed";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import usePosts from "@/hooks/usePosts";
 import useToggle from "@/hooks/useToggle";
-import { Metadata} from "next";
+import Head from 'next/head';
 
 import { FiLogIn } from "react-icons/fi";
 import {CircleLoader} from "react-spinners"
-export const metadata: Metadata = {
-  title: 'Home',
-  description: 'Home Page',
-}
+
 
 
 export default function Home() {
@@ -29,6 +26,14 @@ export default function Home() {
  
  return (
   <>
+   <Head>
+        <title>Skill Match</title>
+        <meta name="description" content="Skill Match is a platfrom for those who is looking for same skilled  team member" />
+        <meta property="og:title" content="Skill Match" />
+        <meta property="og:description" content="Skill Match is a platfrom for those who is looking for same skilled  team member" />
+        <meta property="og:url" content="https://" />
+        <meta property="og:type" content="website" />
+      </Head>
 <Header label={"Home"}/>
 
 {!currentUser &&  <div className='mx-5 w-auto sm:block md:hidden border-b-[1px] border-gray-400  p-3 mt-2'>

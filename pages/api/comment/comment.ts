@@ -222,7 +222,6 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
 
             
         } catch (error:any) {
-            console.log(error.message)
             res.status(StatusCodes.BAD_REQUEST).json(error.message)
             
         }

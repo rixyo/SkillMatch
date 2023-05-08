@@ -1,5 +1,4 @@
 import useCurrentUser from '@/hooks/useCurrentUser';
-import { data } from 'autoprefixer';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo } from 'react';
@@ -19,15 +18,15 @@ const FollowerItem:React.FC<FollowerItemProps> = ({follower}) => {
 
     return list.includes(follower.id);
     },[currentUser?.user.followingId,follower.id])
-    const handleClick=useCallback(()=>{
+    const handleClick=useCallback(async()=>{
         if(isFollowing){
             
-            axios.delete('/api/follow',{params:{userId:follower.id} } );
+           await axios.delete('/api/follow',{params:{userId:follower.id} } );
             mutateUser()
             toast.success("Unfollow")
         }else{
            
-            axios.post('/api/follow',{userId:follower.id})
+           await axios.post('/api/follow',{userId:follower.id})
             mutateUser()
             toast.success("Followed")
         }

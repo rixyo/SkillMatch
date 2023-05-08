@@ -3,7 +3,7 @@ import fetcher from '@/libs/fetcher';
 
 const useGetSkill = (userId: string) => {
     const { data, error, isLoading, mutate } = useSWR<Skill[]>(
-        `/api/users/skill?userId=${userId}`,
+       userId? `/api/users/skill?userId=${userId}`:"/api/users/skill",
         fetcher
     );
     

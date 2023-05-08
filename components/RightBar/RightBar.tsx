@@ -1,5 +1,6 @@
+// Date: 08/05/2023 modified by: Roixy
+// fixed async function
 import React, { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import Image from 'next/image';
 import { MdVerified } from 'react-icons/md';
 import { BsSearch } from 'react-icons/bs';
 import useCurrentUser from '@/hooks/useCurrentUser';
@@ -17,29 +18,30 @@ const FollowBar:React.FC = () => {
     const r=Router()
   const url=r.asPath
 
-const {data:currentUser}=useCurrentUser()
+    const {data:currentUser}=useCurrentUser()
 
-const {data:users,mutate:mutatedUser}=useUsers()
-
-
+    const {data:users,mutate:mutatedUser}=useUsers()
 
 
-const onSearch=useCallback((event:React.FormEvent)=>{
-    event.preventDefault()
-    const encodedSearch=encodeURI(search)
-    router.push(`/search?q=${encodedSearch}`)
-   
 
-},[search])
 
-const onFollow=useCallback((userId:string)=>{
-   // event.preventDefault()
-    axios.post("/api/follow",{userId:userId})
-    toast.success("Followed")
-    mutatedUser()
-   
 
-},[currentUser?.user.id])
+    const onSearch=useCallback((event:React.FormEvent)=>{
+        event.preventDefault()
+        const encodedSearch=encodeURI(search)
+        router.push(`/search?q=${encodedSearch}`)
+    
+
+    },[search])
+
+    const onFollow=useCallback(async(userId:string)=>{
+    // event.preventDefault()
+        await axios.post("/api/follow",{userId:userId})
+        toast.success("Followed")
+        mutatedUser()
+    
+
+    },[currentUser?.user.id])
 
     return (
         <>
@@ -89,7 +91,7 @@ const onFollow=useCallback((userId:string)=>{
             {currentUser.user.id!==user.id && 
             < div className='mx-2'>
 
-                <button className='text-blue w-full border-2 border-solid  p-2  my-3 mr-3 border-blue-400  text-lg font-medium rounded-lg' onClick={()=>onFollow(user.id)}>Follow</button>  
+                <button className='text-blue w-full border-2 border-solid  p-1  my-3 mr-3 border-blue-400  text-lg font-medium rounded-full' onClick={()=>onFollow(user.id)}>Follow</button>  
             </div>
 }
                 </div>

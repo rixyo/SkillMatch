@@ -3,7 +3,7 @@ import fetcher from '@/libs/fetcher';
 
 const useGetProjects= (userId: string) => {
     const { data, error, isLoading, mutate } = useSWR<Project[]>(
-        `/api/users/project?userId=${userId}`,
+       userId? `/api/users/project?userId=${userId}`:"/api/users/project",
         fetcher
     );
     

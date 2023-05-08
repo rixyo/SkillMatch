@@ -12,9 +12,13 @@ import ReplayModal from '@/components/Modals/ReplayModal'
 import NestedModal from '@/components/Modals/NestedModal'
 import SkillModal from '@/components/Modals/SkillModal'
 import ProjectModal from '@/components/Modals/ProjectModal'
+import { Metadata } from 'next'
 
 
-
+export const metadata: Metadata = {
+  title: 'Skill Match',
+  description: 'Home Page',
+}
 
 
 export default function App({ Component, pageProps }: AppProps) {

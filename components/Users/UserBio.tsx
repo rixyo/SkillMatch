@@ -80,10 +80,10 @@ const UserBio:React.FC<UserBioProps> = ({userId}) => {
               {fetchUser?.bio && !linkRegex.test(fetchUser.bio) && <p className='text-gray-500'>{fetchUser?.bio}</p> }  
             {fetchUser?.bio?.match(linkRegex)&&(
                 <div className='mt-0'>
-                    <p>{fetchUser?.bio.replace(linkRegex,"").trim()}</p>
+                    <p className='break-all'>{fetchUser?.bio.replace(linkRegex,"").trim()}</p>
                   {Array.from(fetchUser?.bio.matchAll(linkRegex)).map((link,index)=>(
                        <li className='list-none'>
-                          <a href={link[0]} target='_blank' className='text-blue-500 hover:underline' key={index}>{link[0]}</a>
+                          <a href={link[0]} target='_blank' className='text-blue-500 hover:underline' key={index}>{link[0].split("https://")[1]}</a>
                        </li>
                   ))}
                 </div>

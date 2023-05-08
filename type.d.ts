@@ -23,7 +23,6 @@ type User={
     notifications: Notification[],
     replays: Replay[],
     nestedReplays: NestedReplay[],
-    skills: string[]
     skills: Skill[],
     projects: Project[],
 
@@ -102,6 +101,7 @@ type Project={
 type Skill={
     id: string,
     name: string,
+    level: string,
    userId: string,
 
 }

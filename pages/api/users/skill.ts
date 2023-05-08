@@ -1,3 +1,5 @@
+// Date: 08/05/23 modified by: @roixy
+// added: find skills by userId and without userId
 import { NextApiRequest,NextApiResponse } from "next";
 import {StatusCodes} from "http-status-codes"
 import prisma from "@/libs/prismadb"
@@ -8,71 +10,68 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     else{
         if(req.method==="GET"){
             const {userId}=req.query
+            let skills
 
             try {
-                if(!userId && typeof userId!="string") throw new Error("Invalid user id")
-                const skills=await prisma.skill.findMany({
-                    where:{
-                        userId:userId as string
-                    }
-                })
+                if(userId && typeof userId==="string"){
+                    skills=await prisma.skill.findMany({
+                        where:{
+                            userId:userId 
+                        }
+                    })
+                }
+                else{
+                    skills=await prisma.skill.findMany()
+                }
+                
+                    
+                
+               
                 return res.status(StatusCodes.OK).json(skills)
                 
                 
             } catch (error:any) {
-                return res.status(StatusCodes.BAD_REQUEST).json({error:error.message})
+                return res.status(StatusCodes.BAD_REQUEST).json(error.message)
                 
             }
         }
         else if(req.method==="POST"){
-            const {name}=req.body
+            const {name,level}=req.body
             const {currentUser}=await serverAuth(req,res)
             try {
-                if(!name) throw new Error("name is required")
+                if(!name && typeof name !="string" || !level && typeof level !="string") throw new Error("name is required")
                 else{
-                  if(currentUser.skill.includes(name)) throw new Error("Skill already exists")
-                  else{
-                    const skill=await prisma.skill.create({
-                        data:{
+                    const existingSkill=await prisma.skill.findFirst({
+                        where:{
                             name,
                             userId:currentUser.id
                         }
                     })
-                    const user=await prisma.user.findUnique({
-                        where:{
-                            id:currentUser.id
+                    
+                   
+                    if(existingSkill) throw new Error("Skill already exists")
+                  else{
+                 
+                    const skill=await prisma.skill.create({
+                        data:{
+                            name,
+                            level,
+                            userId:currentUser.id
                         }
                     })
-                    if(!user) throw new Error("User not found")
-                  
-
-                    let list=user.skill || []
-                 
-                     if (name.match(/[\s.]+/g)){
-                        list.push(name.replace(/[\s.]+/g, '').toLowerCase())
-                         
-                    } else{
-
-                        list.push(name.toLowerCase())
-                    }
+                   
                        
                     
                  
-                    await prisma.user.update({
-                        where:{
-                            id:currentUser.id
-                        },
-                        data:{
-                            skill:list
-                        }
-                    })
+                   
                     return res.status(StatusCodes.OK).json(skill)
                   }
                    
                     
                 }
             }catch (error:any) {
-                return res.status(StatusCodes.BAD_REQUEST).json({error:error.message})
+                console.log(error.message)
+                return res.status(StatusCodes.BAD_REQUEST).json(error.message)
                 
             }
         }
@@ -90,7 +89,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     
                 }
             } catch (error:any) {
-                return res.status(StatusCodes.BAD_REQUEST).json({error:error.message})
+                return res.status(StatusCodes.BAD_REQUEST).json(error.message)
                 
             }
         }

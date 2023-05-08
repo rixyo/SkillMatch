@@ -6,8 +6,23 @@ import useProjectModal from '@/hooks/projectModal';
 import useGetProjects from '@/hooks/useGetProjects';
 import Link from 'next/link';
 import {GoLinkExternal} from "react-icons/go"
-
-const Project:React.FC = () => {
+import { getSession } from 'next-auth/react';
+import { NextPageContext } from 'next';
+export async function getServerSideProps(context:NextPageContext) {
+    const session = await getSession(context)
+    if(!session){
+        return{
+            redirect:{
+            destination:"/",
+            permanent:false
+            }
+        }
+    }
+    return {
+        props: { session },
+    }
+  }
+const Projects:React.FC = () => {
     const router=useRouter()
     const {userId}=router.query
     const projectModal=useProjectModal()
@@ -26,34 +41,8 @@ const Project:React.FC = () => {
 
                 </div>
             </div>
-            {projects &&projects.length>3?  (
-                <>
-                {projects.slice(0,3).map(project=>(
-                       <div className='flex justify-between items-center  gap-2 w-auto  my-2 mx-1'>
-                       <div className=' flex flex-col p-2  cursor-pointer'>
-                          
-                           <h1 className='text-lg font-medium text-gray'>{project.name}</h1>
-                        
-                               <Link className='flex gap-2 border-2 rounded-full items-center border-gray-400 w-1/3 p-2 mt-2 hover:border-black' href={project.link} >
-   
-                               <p className='text-gray-500 ml-2'>Show project</p>
-                               <GoLinkExternal className='text-gray-500' size={20}/>
-                               </Link>
-   
-                          
-                         
-                           <p className='text text-md  text-gray-500'>{project.description}</p>
-                       </div>
-   
-                          
-                   </div>
-                ))}
-              
-                 <h1 className='text-lg text-black cursor-pointer hover:underline text-center' onClick={()=>router.push(`/user/${userId}/projects`)}>Show all {projects.length} more</h1>
-                </>
-              
-              )  :
-        (
+            {projects  &&
+        
             projects && projects.map(project=>(
                 <div className='flex justify-between items-center  gap-2 w-auto  my-2 mx-1'>
                     <div className=' flex flex-col p-2  cursor-pointer'>
@@ -74,9 +63,9 @@ const Project:React.FC = () => {
                        
                 </div>
             ))
-        )}
+        }
 
         </div>
     )
 }
-export default Project;
+export default Projects;

@@ -1,3 +1,5 @@
+// Date: 08/05/23
+// added: find projects by userId and without userId
 import { NextApiRequest,NextApiResponse } from "next";
 import {StatusCodes} from "http-status-codes"
 import prisma from "@/libs/prismadb"
@@ -11,15 +13,20 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         if(req.method==="GET"){
             const {userId}=req.query
             try {
-                
-                if(!userId && typeof userId!="string") throw new Error("Invalid user id")
-                
-                    const projects=await prisma.project.findMany({
+                let projects
+                if(userId && typeof userId==="string") {
+                    projects=await prisma.project.findMany({
                         where:{
-                            userId:userId as string
+                            userId
                         }
                     })
-                    res.status(StatusCodes.OK).json(projects)
+                   
+                }else{
+                    projects=await prisma.project.findMany()
+                }
+                res.status(StatusCodes.OK).json(projects)
+                
+                  
             } catch (error:any) {
                 res.status(StatusCodes.BAD_REQUEST).json({error:error.message})
                 

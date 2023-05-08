@@ -1,6 +1,7 @@
 import Avatar from '@/components/Avatar';
 import Form from '@/components/Form';
 import CommentsFeed from '@/components/posts/CommentsFeed';
+import PostIteam from '@/components/posts/PostIteam';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import usePostEditModal from '@/hooks/useEditPostModal';
 import useLike from '@/hooks/useLike';
@@ -12,6 +13,7 @@ import { formatDistanceToNowStrict } from 'date-fns';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
 import { CldImage } from 'next-cloudinary';
+import { Head } from 'next/document';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo } from 'react';
@@ -92,25 +94,35 @@ const postId:React.FC = () => {
 
         }
     },[post?.postSharedCreatedAt])
-    const handleShare=useCallback((event:any)=>{
+    const handleShare=useCallback(async(event:any)=>{
       event.stopPropagation()
       if(!currentUser){
           login()
           return
       }
       else{
-          axios.post('/api/posts/share',{postId:post?.id}).then(()=>{
+          await axios.post('/api/posts/share',{postId:post?.id}).then(()=>{
               mutate()
               toast.success("Post shared")
 
           }).catch((error:any)=>{
-              toast.error(error.response?.data?.error || error.message)
+              toast.error(error.response?.data || error.message)
           })
       }
   },[currentUser,post?.id,mutate])
     const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
     return(
+      
        <>
+       <Head>
+        <title>{post?.user.name}</title>
+        <meta name="description" content={post?.body} />
+        <meta property="og:title" content={post?.user.name!} />
+        <meta property="og:description" content={post?.body!} />
+       {post?.image && <meta property="og:image" content={post?.image} /> } 
+        <meta property="og:url" content="https://example.com/my-page" />
+        <meta property="og:type" content="website" />
+      </Head>
        {isLoading ? <div className="flex justify-center items-center h-full">
     <CircleLoader color="#3B82F6"  size={50} />
        </div> :

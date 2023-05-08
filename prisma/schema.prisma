@@ -31,8 +31,8 @@ model User {
   comments Comment[]
   replays Replay[]
  nustedReplays NestedReplay[]
- skill   String[]
- skills Skill[]
+
+ skills   Skill[]
   projects Project[]
  
 
@@ -111,7 +111,8 @@ model SearchQuery {
 }
 model Skill {
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
-  name               String
+  name               String 
+  level              String
   userId             String @db.ObjectId
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -119,7 +120,7 @@ model Skill {
 
 model Project{
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
-  name               String
+  name               String 
   description        String
   createdAt          DateTime @default(now())
   startDate          DateTime?

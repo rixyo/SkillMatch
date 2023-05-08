@@ -9,7 +9,7 @@ type CommentsFeedProps = {
 };
 
 const CommentsFeed:React.FC<CommentsFeedProps> = ({postId}) => {
-    const {data:comments,isLoading}=useGetComments(postId as string)
+    const {data:comments,isLoading,mutate:mutatedComment}=useGetComments(postId as string)
 
         
   
@@ -21,7 +21,7 @@ const CommentsFeed:React.FC<CommentsFeedProps> = ({postId}) => {
                 <>
                 {comments && comments.map((comment:comment)=>(
             <>
-                <CommentItem key={comment.id} comment={comment} />
+                <CommentItem key={comment.id} comment={comment} mutatedComment />
            
             </>
            ) )}

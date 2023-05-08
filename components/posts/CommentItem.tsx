@@ -19,10 +19,11 @@ import ReplayItem from '../Replay/ReplayItem';
 
 type CommentItemProps = {
     comment: comment
+    mutatedComment:any
    
 };
 
-const CommentItem:React.FC<CommentItemProps> = ({comment}) => {
+const CommentItem:React.FC<CommentItemProps> = ({comment,mutatedComment}) => {
     const {data:user}=useUser(comment.userId)
     const router=useRouter()
     const {data:loginUser}=currentUser()
@@ -40,15 +41,15 @@ const CommentItem:React.FC<CommentItemProps> = ({comment}) => {
     const gotoComment=useCallback((event:any)=>{
         event.stopPropagation()
         router.push(`/comment/${comment.id}`)
-    },[])
+    },[comment.id])
     const deleteComment=useCallback(async(event:React.MouseEvent<SVGElement,MouseEvent>)=>{
       event.stopPropagation()
         try {
             await axios.delete("/api/comment/comment/",{params:{commentId:comment.id}})
-           // commentMutate()
+            mutatedComment()
             toast.success('comment deleted')
         } catch (error:any) {
-            toast.error(error.response?.data?.error || error.message)
+            toast.error(error?.response?.data )
         }
     },[comment.id,])
     const isLiked=useMemo(()=>{
@@ -65,10 +66,10 @@ const CommentItem:React.FC<CommentItemProps> = ({comment}) => {
         try {
             if(isLiked){
                 await axios.delete("/api/comment/like/",{params:{commentId:comment.id}})
-                //commentMutate()
+                mutatedComment()
             }else{
                 await axios.post("/api/comment/like/",{commentId:comment.id})
-                //commentMutate()
+                mutatedComment()
                 toast.success('comment liked')
 
             }
