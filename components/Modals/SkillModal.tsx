@@ -59,14 +59,22 @@ const SkillModal:React.FC = () => {
       ]
     
     const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
+        e.preventDefault()
         if(e.target.value.length>100) return
         setName(e.target.value)
+    }
+    const handleChange2=(e:React.ChangeEvent<HTMLSelectElement>)=>{
+        e.preventDefault()
+        if(e.target.value.length>100) return
+        setLevel(e.target.value)
+        console.log(level)
     }
  
   
     const onSubmit=useCallback(async()=>{
       console.log(name)
-        console.log(level)
+      console.log(level)
+      
           if(!name || !level){
             setError('Please fill all the fields')
             return
@@ -99,23 +107,27 @@ const SkillModal:React.FC = () => {
     const handleClick=(language:string)=>{
         setName(language)
     }
-    const handle=(level:string)=>{
-        setLevel(level)
-   }
+  
     
     const bodyContent=(
         <div className='flex flex-col gap-3'>
             
             <div className='flex items-center  gap-5 w-full'>
-                <div className='w-1/2'>
+               
             <h1 className='text-md text-gray-500 mb-2'>Skill*</h1>
             <input type="text" value={name} onChange={handleChange} className='border-2 w-full border-gray-200 rounded-lg  p-2 focus:outline-none focus:ring-2 focus:ring-blue-500' placeholder={`${name}`}/>
 
-                </div>
-                <div className='w-1/2 '>
+                
+               
             <h1 className='text-md mb-2 text-gray-500'>Level*</h1>
-            <input type="text" value={level} onChange={(e)=>setLevel(e.target.value)} className='border-2 w-full border-gray-200 rounded-lg  p-2 focus:outline-none focus:ring-2 focus:ring-blue-500' placeholder={`${level}`}/>
-                </div>
+            <select name="level" id="level" value={level} onChange={handleChange2} className='border-2 w-full border-gray-200 rounded-lg  p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'>
+                <option value="">Select</option>
+                {skillLevel.map((skill,index)=>(
+                    <option key={index} value={skill}>{skill}</option>
+                ))}
+            </select>
+          
+               
             </div>
             {error && <p className='text-red-500 text-sm'>{error}</p>}
            <div className='mt-10'>
@@ -130,15 +142,8 @@ const SkillModal:React.FC = () => {
             </div>
             <div className='mt-10'>
 
-                <h1 className='text-md text-black font-bold'>Skill Level</h1>
-            <div className='flex  flex-wrap gap-2 mt-2 cursor-pointer'>
-                {skillLevel.map((skill:string,index)=>(
-                    <button key={index} className='bg-gray-200  rounded-lg p-2' onClick={()=>handle(skill)} >
-                     {skill} 
-                        </button>
-                ))}
-                
-            </div>
+               
+            
             </div>
            </div>
        

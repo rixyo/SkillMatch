@@ -12,13 +12,11 @@ import ReplayModal from '@/components/Modals/ReplayModal'
 import NestedModal from '@/components/Modals/NestedModal'
 import SkillModal from '@/components/Modals/SkillModal'
 import ProjectModal from '@/components/Modals/ProjectModal'
-import { Metadata } from 'next'
+import VerifyModal from '@/components/Modals/VerifyModal'
+import VerifyNumber from '@/components/Modals/VerifyNumber'
 
 
-export const metadata: Metadata = {
-  title: 'Skill Match',
-  description: 'Home Page',
-}
+
 
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -26,6 +24,8 @@ export default function App({ Component, pageProps }: AppProps) {
     <SessionProvider session={pageProps.session}>
     <Toaster/>
     <EditPostModal/>
+    <VerifyModal/>
+    <VerifyNumber/>
     <SkillModal/>
     <ProjectModal/>
     <NestedModal/>

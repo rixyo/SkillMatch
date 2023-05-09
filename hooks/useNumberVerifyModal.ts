@@ -1,6 +1,6 @@
 import {create} from "zustand"
 
-interface LoginModalState {
+interface VerifyModalState {
     isOpen: boolean,
     onOpen: () => void,
     onClose: () => void,
@@ -9,7 +9,7 @@ interface LoginModalState {
    
 
 }
-const useLoginModal = create<LoginModalState>(set => ({
+const useNumberVerify = create<VerifyModalState>(set => ({
     isOpen: false,
     onOpen: () => set({isOpen: true,}),
     onClose: () => set({isOpen: false}),
@@ -17,4 +17,4 @@ const useLoginModal = create<LoginModalState>(set => ({
    
     
 }))
-export default useLoginModal;
+export default useNumberVerify;

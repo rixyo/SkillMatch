@@ -28,7 +28,7 @@ const Skill:React.FC= () => {
     const {userId}=router.query
     const skillModal=useSkillModal()
     const {data:skills}=useGetSkill(userId as string)
-    console.log(skills)
+   
     
     return(
         <div className='w-full border-2 border-gray-300 rounded-lg my-1'>
@@ -48,10 +48,17 @@ const Skill:React.FC= () => {
         {
         
             skills && skills.map(skill=>(
-                <div className='flex items-center  gap-2 w-auto  my-2 mx-1'>
-                    <div className='flex justify-between p-3  cursor-pointer'>
+                <div className='flex justify-between p-1  items-center  gap-2 w-auto  my-2 mx-1'>
+                    
+                        <div>
                         <h1 className='text-lg font-bold text-black hover:underline '>{skill.name}</h1>
-                    </div>
+                     
+                        </div>
+                        <div>
+                        <p className='text text-md  text-gray-500'>{skill.level}</p>
+                        </div>
+                       
+                    
                 </div>
             ))
         }

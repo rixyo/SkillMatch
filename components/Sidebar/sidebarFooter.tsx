@@ -23,7 +23,7 @@ const sidebarFooter:React.FC = () => {
     return (
         <>
         {currentUser &&
-        <div className='flex items-center sm:justify-start mt-24 border-2 border-solid border-gray-200 rounded-md md:p-1  ' key={currentUser?.user.id}>
+        <div className='flex items-center sm:justify-start mt-24 border-2 border-solid border-gray-200 rounded-md md:p-1  ' key={"sideBarFooter-2"}>
      
          <Avatar userId={currentUser.user.id}/>
            

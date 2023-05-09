@@ -30,6 +30,7 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate,userId}) => {
     const {onOpen}=usePostEditModal()
     const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi
     const mentionRegex =  /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g;
+    const hintRegex = /\bhints\w*\b/gi;
     const [copied, setCopied] = useState<Boolean>(false);
     const {data:user}=useUser(post.fromSharedId as string)
     
@@ -192,14 +193,26 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate,userId}) => {
 
                 </>
                 <div>
-                {post.body.match(mentionRegex) && !linkRegex.test(post.body) && (
-                    <div className='flex items-center gap-2'>
+                {post?.body.match(mentionRegex)&&post.body.match(hintRegex)&&!linkRegex.test(post.body) && (
+                    <div className='flex flex-col p-1' >
                         {Array.from(post.body.matchAll(mentionRegex)).map((mention,index)=>(
-                            <li className='list-none'>
+                          <li className='list-none'>
                             <span className='text-blue-500 hover:underline' key={index}>{mention[0]}</span>
                           </li>
                         ))}
-                        <p className='text-lg font-bold text-gray-500'>{post.body.replace(mentionRegex,"").trim()}</p>
+                        <p className='text-gray-500 text-lg font-bold'>{post.body.replace(mentionRegex,"").trim().split("hints")[0]}</p>
+                        <p className='text-red-500 text-lg font-bold'>System: {post.body.replace(mentionRegex,"").trim().split("hints:")[1] }</p>
+                    </div>
+                )}
+                   {post?.body.match(mentionRegex)&&!hintRegex.test(post.body)&&!linkRegex.test(post.body) && (
+                    <div className='flex flex-col p-1' >
+                        {Array.from(post.body.matchAll(mentionRegex)).map((mention,index)=>(
+                          <li className='list-none'>
+                            <span className='text-blue-500 hover:underline' key={index}>{mention[0]}</span>
+                          </li>
+                        ))}
+                        <p className='text-gray-500 text-lg font-bold'>{post.body.replace(mentionRegex,"").trim()}</p>
+                       
                     </div>
                 )}
                  {post.body.match(mentionRegex) && post.body.match(linkRegex) && (

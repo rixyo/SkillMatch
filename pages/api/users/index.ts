@@ -45,7 +45,8 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                             not:{
                                 in:currentUser.followingId.map((id)=>id)
                             }
-                     }
+                     },
+                        isActived:true,
 
                     },
                
@@ -55,8 +56,22 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                    
                    
                 },
+                select:{
+                    id:true,
+                    name:true,
+                    email:true,
+                    bio:true,
+                    coverImage:true,
+                    customTag:true,
+                    isActived:true,
+                    isVarified:true,
+                    followerId:true,
+                    followingId:true,
+                    
+                },
                orderBy:{
                     isVarified:"desc",
+
                },
                take:10
             })
@@ -64,7 +79,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             
         } catch (error:any) {
         
-            res.status(StatusCodes.BAD_REQUEST).json({error:error.message})
+            res.status(StatusCodes.BAD_REQUEST).json(error.message)
             
         }
     }

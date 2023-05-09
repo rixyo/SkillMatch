@@ -23,14 +23,25 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     id:userId 
                 },
                 select:{
+                  
+                    
                     followerId:true,
+                    
+                    
                 }
                     
                 
             })
             const followerIds = user?.followerId || [];
             const followers=await prisma.user.findMany({
-              where:{id : {in:followerIds}},
+              where:{
+                AND:{
+                isActived:true,
+                id : 
+                {in:followerIds}
+                },
+               
+            },
             })
             res.status(StatusCodes.OK).json(followers)
           
@@ -38,7 +49,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             
         } catch (error:any) {
             console.log("geting user error",error.message)
-            res.status(StatusCodes.BAD_REQUEST).json({error:error.message})
+            res.status(StatusCodes.BAD_REQUEST).json(error.message)
             
         }
       

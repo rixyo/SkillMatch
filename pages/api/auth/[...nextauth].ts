@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import  { PrismaAdapter } from "@next-auth/prisma-adapter"
 import prisma from "@/libs/prismadb"
 
+
 export const  authOptions: NextAuthOptions=({
     adapter: PrismaAdapter(prisma),
      //This is a line of code that initializes a new adapter for the Prisma ORM library.
@@ -35,17 +36,33 @@ export const  authOptions: NextAuthOptions=({
                 if(!isValid){
                     throw new Error("Invalid password")
                 }
+                if(!user.isActived){
+                    await prisma.user.update({
+                        where:{
+                            id:user.id
+                        },
+                        data:{
+                            isActived:true
+                        }
+                    })
+                }
                 return user
             },
         }),
     ],
+    
+   
     debug:process.env.NODE_ENV === "development" ,
     session:{
         strategy:"jwt",
-        maxAge: 3600
+        maxAge: 3600,
+        
+        
         
 
     },
+   
+   
    
     jwt:{
         secret: process.env.NEXT_AUTH_JWT_SECRET,

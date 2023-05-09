@@ -63,6 +63,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
        
             else if (req.method ==="PATCH"){
                 try {
+                    const mentionRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g;
                     const {postid}=req.query
                     const {currentUser}=await serverAuth(req,res)
                     if(!postid || typeof postid!="string"){
@@ -84,17 +85,70 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         if(!body || typeof body!="string"){
                             throw new Error("body cannot be empty")
                         }
-                        const updatedPost=await prisma.post.update({
-                            where:{
-                                id:postid
-                            },
-                            data:{
-                                body
-                            }
-                        })
+                        const Mentioned = body.match(mentionRegex)
+                        if (Mentioned) {
+                            const user=await prisma.user.findUnique({
+                              where:{
+                                customTag:Mentioned[0]
+                       
+                              }
+                            })
+                          
+                              if(user){
+                               
+                               
+                     
+                               await prisma.notification.create({
+                                 data:{
+                                   userId:user?.id as string,
+                                   fromId:currentUser.id,
+                                   body:`${currentUser.name} mentioned you in a post`,
+                                   type:"mention",
+                                   link:`/post/${postid}`
+                                 },
+                               })
+                              
+                           
+                             
+                             await prisma.user.update({
+                               where:{
+                                 id:user.id as string
+                               },
+                               data:{
+                                 hasNotifications:true
+                               }
+                             })
+                           }
+                             }
+                             const hintRegex = /\bhints\w*\b/gi
+                             const hint = body.match(hintRegex)
+                             let updatedPost;
+                                if(hint){
+                                    updatedPost=await prisma.post.update({
+                                        where:{
+                                            id:postid
+                                        },
+                                        data:{
+                                            body:body.split("hints")[0]
+                                        }
+                                    })
+
+                                }
+                                else{
+
+                                    updatedPost=await prisma.post.update({
+                                          where:{
+                                              id:postid
+                                          },
+                                          data:{
+                                              body
+                                          }
+                                      })
+                                }
+
                         
                             
-                            res.status(StatusCodes.OK).json({updatedPost})
+                            res.status(StatusCodes.OK).json(updatedPost)
                         
                     }
                     

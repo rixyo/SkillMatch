@@ -43,6 +43,7 @@ const postId:React.FC = () => {
     const { postId } = router.query;
     const linkRegex = /((https?:\/\/)|(www\.))[^\s]+/gi;
     const mentionRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g;
+    const hintRegex = /\bhints\w*\b/gi;
     const {data:currentUser}=useCurrentUser()
     const {onOpen}=usePostEditModal()
     const {data:post, isLoading, mutate}=usePost(postId as string)
@@ -112,25 +113,20 @@ const postId:React.FC = () => {
   },[currentUser,post?.id,mutate])
     const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
     return(
-      
        <>
-       <Head>
-        <title>{post?.user.name}</title>
-        <meta name="description" content={post?.body} />
-        <meta property="og:title" content={post?.user.name!} />
-        <meta property="og:description" content={post?.body!} />
-       {post?.image && <meta property="og:image" content={post?.image} /> } 
-        <meta property="og:url" content="https://example.com/my-page" />
-        <meta property="og:type" content="website" />
-      </Head>
+       
+       
+    
        {isLoading ? <div className="flex justify-center items-center h-full">
     <CircleLoader color="#3B82F6"  size={50} />
        </div> :
-     
+   
+        
        <div
        className="flex flex-col border-2 border-solid border-gray-200 p-5 cursor-pointer rounded-lg   my-5 mx-2 hover:border-gray-200"
        key={post?.id}
        >
+        
      <div className='flex items-start gap-1' key={Math.random()}>
                <Avatar
                userId={post?.userId as string}
@@ -182,15 +178,27 @@ const postId:React.FC = () => {
                   ))}
                     </div>
                )}
-                 {post?.body.match(mentionRegex)&&!linkRegex.test(post.body) && (
-                    <>
-                        <p>{post.body.replace(mentionRegex,"").trim()}</p>
+                 {post?.body.match(mentionRegex)&&post.body.match(hintRegex)&&!linkRegex.test(post.body) && (
+                    <div className='flex flex-col p-1' >
                         {Array.from(post.body.matchAll(mentionRegex)).map((mention,index)=>(
                           <li className='list-none'>
                             <span className='text-blue-500 hover:underline' key={index}>{mention[0]}</span>
                           </li>
                         ))}
-                    </>
+                        <p className='text-gray-500 text-lg font-bold'>{post.body.replace(mentionRegex,"").trim().split("hints")[0]}</p>
+                        <p className='text-red-500 text-lg font-bold'>System: {post.body.replace(mentionRegex,"").trim().split("hints:")[1] }</p>
+                    </div>
+                )}
+                  {post?.body.match(mentionRegex)&&!hintRegex.test(post.body)&&!linkRegex.test(post.body) && (
+                    <div className='flex flex-col p-1' >
+                        {Array.from(post.body.matchAll(mentionRegex)).map((mention,index)=>(
+                          <li className='list-none'>
+                            <span className='text-blue-500 hover:underline' key={index}>{mention[0]}</span>
+                          </li>
+                        ))}
+                        <p className='text-gray-500 text-lg font-bold'>{post.body.replace(mentionRegex,"").trim()}</p>
+                       
+                    </div>
                 )}
                   {post?.body.match(mentionRegex) && post.body.match(linkRegex) && (
                     <>
@@ -263,6 +271,7 @@ const postId:React.FC = () => {
               {post?.comments && <CommentsFeed postId={post.id} /> } 
 
        </div>
+    
        }
         
         </>

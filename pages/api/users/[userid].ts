@@ -14,6 +14,20 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             const existingUser=await prisma.user.findUnique({
                 where:{
                     id:userid
+                },
+                select:{
+                    id:true,
+                    name:true,
+                    email:true,
+                    bio:true,
+                    coverImage:true,
+                    customTag:true,
+                    isActived:true,
+                    isVarified:true,
+                    followerId:true,
+                    followingId:true,
+                    profileImage:true,
+
                 }
             })
             

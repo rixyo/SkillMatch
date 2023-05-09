@@ -67,7 +67,7 @@ const Sidebar:React.FC= () => {
         <>
     <div className='col-span-1 xl:col-span-2 mr-5   mt-2  rounded-lg' >
         <div className='flex flex-col   items-center '>
-            <div className='space-y-2 lg:w-[230px] mx-5'>
+            <div className='space-y-2 lg:w-[230px] mx-5' key="tabItem">
 
             { Tabs.map((tab,index)=>(
                 <>
@@ -84,7 +84,7 @@ const Sidebar:React.FC= () => {
 }
            <div className='self-start'>
 
-        <SidebarFooter key={Math.random()}/>
+        <SidebarFooter key={"sidebarFooter+1"}/>
            </div>
 
         </div>

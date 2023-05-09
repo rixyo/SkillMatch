@@ -26,9 +26,9 @@ const Project:React.FC = () => {
 
                 </div>
             </div>
-            {projects &&projects.length>3?  (
+            {projects &&projects.length>2?  (
                 <>
-                {projects.slice(0,3).map(project=>(
+                {projects.slice(0,2).map(project=>(
                        <div className='flex justify-between items-center  gap-2 w-auto  my-2 mx-1'>
                        <div className=' flex flex-col p-2  cursor-pointer'>
                           

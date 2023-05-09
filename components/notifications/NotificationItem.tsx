@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import Avatar from '../Avatar';
 import Link from 'next/link';
 import { formatDistanceToNowStrict } from 'date-fns';
+import Head from 'next/head';
 type NotificationItemProps = {
     notification:notification
 };
@@ -16,6 +17,15 @@ const NotificationItem:React.FC<NotificationItemProps> = ({notification}) => {
     },[notification.createdAt])
     return (
         <div className='w-full p-2 '>
+            <Head>
+                <title>Notifications</title>
+                 <meta name="description" content={notification?.body} />
+        <meta property="og:title" content={notification?.body!} />
+        <meta property="og:description" content={notification?.body!} />
+        
+        <meta property="og:url" content="https://example.com/my-page" />
+        <meta property="og:type" content="website" />
+            </Head>
             <div className='flex gap-2 items-center '>
                 <Avatar
                 userId={notification?.fromId as string}

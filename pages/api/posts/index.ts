@@ -39,29 +39,42 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   
          }
        })
-       if(!user) throw new Error("User not found")
+       if(!user) {
+          await prisma.post.update({
+            where:{
+              id:post.id
+            },
+            data:{
+              body:`${body} hints: No user found with this tag.`,
+            }
+          })
+
+       }
+        else if(user){
+
+          await prisma.notification.create({
+            data:{
+              userId:user?.id as string,
+              fromId:currentUser.id,
+              body:`${currentUser.name} mentioned you in a post`,
+              type:"mention",
+              link:`/post/${post.id}`
+            },
+          })
+      
+        
+        await prisma.user.update({
+          where:{
+            id:user.id as string
+          },
+          data:{
+            hasNotifications:true
+          }
+        })
+      }
+        }
       
   
-         await prisma.notification.create({
-           data:{
-             userId:user?.id as string,
-             fromId:currentUser.id,
-             body:`${currentUser.name} mentioned you in a post`,
-             type:"mention",
-             link:`/post/${post.id}`
-           },
-         })
-     
-       
-       await prisma.user.update({
-         where:{
-           id:user.id as string
-         },
-         data:{
-           hasNotifications:true
-         }
-       })
-     }
    
     
   

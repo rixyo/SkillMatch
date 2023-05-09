@@ -1,20 +1,13 @@
 import {create} from "zustand"
-
-interface LoginModalState {
+interface DeactiveModalState {
     isOpen: boolean,
     onOpen: () => void,
     onClose: () => void,
-   
-   
-   
-
 }
-const useLoginModal = create<LoginModalState>(set => ({
+
+const useDeactiveModal = create<DeactiveModalState>(set => ({
     isOpen: false,
     onOpen: () => set({isOpen: true,}),
     onClose: () => set({isOpen: false}),
-  
-   
-    
 }))
-export default useLoginModal;
+module.exports = useDeactiveModal
