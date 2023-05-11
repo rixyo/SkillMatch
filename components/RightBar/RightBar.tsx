@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation'
 import { useRouter as Router } from 'next/router';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import usePosts from '@/hooks/usePosts';
 
 
 const FollowBar:React.FC = () => {
@@ -21,6 +22,7 @@ const FollowBar:React.FC = () => {
     const {data:currentUser}=useCurrentUser()
 
     const {data:users,mutate:mutatedUser}=useUsers()
+    const {mutate:mutatedPost}=usePosts()
 
 
 
@@ -39,6 +41,7 @@ const FollowBar:React.FC = () => {
         await axios.post("/api/follow",{userId:userId})
         toast.success("Followed")
         mutatedUser()
+        mutatedPost()
     
 
     },[currentUser?.user.id])

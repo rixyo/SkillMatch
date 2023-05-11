@@ -2,12 +2,26 @@ import Avatar from '@/components/Avatar';
 import Header from '@/components/Header/Heder';
 import currentUser from '@/hooks/useCurrentUser';
 import axios from 'axios';
-import {signOut} from "next-auth/react"
+import { NextPageContext } from 'next';
+import {getSession, signOut} from "next-auth/react"
 import { useRouter } from 'next/navigation';
 import React, { useCallback } from 'react';
 import toast from 'react-hot-toast';
 
-
+export async function getServerSideProps(context:NextPageContext) {
+    const session = await getSession(context)
+    if(!session){
+        return{
+            redirect:{
+            destination:"/",
+            permanent:false
+            }
+        }
+    }
+    return {
+        props: { session },
+    }
+  }
 
 const deactive:React.FC = () => {
     const router=useRouter()

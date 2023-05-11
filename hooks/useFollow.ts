@@ -6,12 +6,13 @@ import { toast } from "react-hot-toast";
 import useCurrentUser from "./useCurrentUser";
 import useLoginModal from "./useLoginModal";
 import useUser from "./useUser";
+import useUsers from "./useUsers";
 
 const useFollow = (userId: string) => {
 
   const { data: currentUser, mutate: mutateCurrentUser } = useCurrentUser();
   const {mutate: mutateFetchedUser } = useUser(userId);
-
+  const {mutate:mutatedUser}=useUsers()
 
   const loginModal = useLoginModal();
 
@@ -37,6 +38,8 @@ const useFollow = (userId: string) => {
       if (isFollowing ) {
         
         request = () => axios.delete('/api/follow',{params:{userId} } );
+    
+        
       }
       
       else {
@@ -49,6 +52,8 @@ const useFollow = (userId: string) => {
       toast.success('Success');
       mutateCurrentUser();
       mutateFetchedUser();
+      mutatedUser()
+      
   
 
 

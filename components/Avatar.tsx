@@ -1,9 +1,9 @@
-import Image from "next/image";
+
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 
 import useUser from "@/hooks/useUser";
-
+import Image from "next/image";
 type AvatarProps ={
   userId: string;
   isLarge?: boolean;

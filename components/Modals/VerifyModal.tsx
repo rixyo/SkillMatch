@@ -40,13 +40,12 @@ const VerifyModal:React.FC = () => {
                    
                 </div>
             </div>
-            <div className='w-1/2  ml-44 break-all p-2' >
+            <div className='w-1/2  ml-44  p-2' >
 
             <h1 className='mt-5 text-lg font-semibold'>Blue</h1>
-            <li>Prioritized rankings in conversations and search</li>
-            <li>See approximately twice as many Tweets between ads in your For You and Following timelines.</li>
-            <li>Add bold and italic text in your Tweets</li>
-            <li className=''>ll the existing Blue features, including Edit Tweet, Bookmark Folders and early access to new features</li>
+            <li className=''>Prioritized rankings in conversations and search</li>
+            <li className=''>Verified badge</li>
+            <li className=''>Share your code</li>
             </div>
             
    

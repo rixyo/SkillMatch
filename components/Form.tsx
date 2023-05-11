@@ -1,7 +1,6 @@
 
 import useCurrentUser from '@/hooks/useCurrentUser';
 import useGetComments from '@/hooks/useGetComments';
-import usePost from '@/hooks/usePost';
 import usePosts from '@/hooks/usePosts';
 import useToggle from '@/hooks/useToggle';
 import axios from 'axios';
@@ -69,14 +68,14 @@ const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,muta
     const {mutate:mutatedComment}=useGetComments(postId as string)
     const [body,setBody] = useState<string>('')
     const [loading,setLoading] = useState<boolean>(false)
-    const [characterRemaning,setCharacterRemaing]=useState<number>(140)
+    const [characterRemaning,setCharacterRemaing]=useState<number>(240)
     const [bodyLength,setBodyLength]=useState<number>(0)
     const [emoji, setEmoji] = useState(null);
     const [selectedTab,setSelectedTab]=useState<string>("")
     const [image,setImage]=useState<string>("")
   
     const handleChange= useCallback((e:React.ChangeEvent<HTMLTextAreaElement>)=>{
-        if(e.target.value.length > 140) return 
+        if(e.target.value.length > 240) return 
         setBody(e.target.value)
         setBodyLength(e.target.value.length)
         setCharacterRemaing(140 - e.target.value.length)
@@ -162,9 +161,9 @@ const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,muta
                 <div className='flex gap-2 items-center'>
                  
             {Tabs.map((tab,index)=>(
-              <>
+             
               <FormItem tab={tab} key={index}  selectedTab={tab.title===selectedTab} setSelectedTab={setSelectedTab} />
-              </>
+            
             ))}
            
                 
@@ -189,6 +188,8 @@ const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,muta
                     <FormImageUpload
                     value={image}
                     onChange={(value)=>setImage(value)}
+                    label="click here to upload image"
+                    isHome
                     />
               }
               {currentUser?.user && path==="/" &&

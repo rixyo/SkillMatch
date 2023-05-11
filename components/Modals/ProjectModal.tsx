@@ -17,10 +17,10 @@ const ProjectModal:React.FC= () => {
    const [name,setName]=useState<string>('')
    const [link,setLink]=useState<string>('')
     const [description,setDescription]=useState<string>('')
-    const [startMonth,setStartMonth]=useState<string>('')
-    const [startYear,setStartYear]=useState<string>('')
-    const [endMonth,setEndMonth]=useState<string>('')
-    const [endYear,setEndYear]=useState<string>('')
+    const [startMonth,setStartMonth]=useState<string>('Select Month')
+    const [startYear,setStartYear]=useState<string>('Select Year')
+    const [endMonth,setEndMonth]=useState<string>('Select Month')
+    const [endYear,setEndYear]=useState<string>('Select Year')
     const [error,setError]=useState<string>('')
    
 

@@ -8,7 +8,24 @@ import { useRouter } from 'next/router';
 import useVerifyModal from '@/hooks/useVerifyModal';
 import { AiOutlineMobile } from 'react-icons/ai';
 import useNumberVerify from '@/hooks/useNumberVerifyModal';
+import Head from 'next/head';
+import { getSession } from 'next-auth/react';
+import { NextPageContext } from 'next';
 
+export async function getServerSideProps(context:NextPageContext) {
+    const session = await getSession(context)
+    if(!session){
+        return{
+            redirect:{
+            destination:"/",
+            permanent:false
+            }
+        }
+    }
+    return {
+        props: { session },
+    }
+  }
 const index:React.FC = () => {
     const router=useRouter()
     const verifyModal=useVerifyModal();
@@ -16,6 +33,15 @@ const index:React.FC = () => {
     
     return (
         <div>
+              <Head>
+        <title>Your Account /SkillMatch</title>
+        <meta name="description" content="User setting page" />
+        <meta property="og:title" content="Your Account /SkillMatch" />
+        <meta property="og:description" content="User can change there setting from this page" />
+       
+        <meta property="og:url" content="https://example.com/my-page" />
+        <meta property="og:type" content="website" />
+      </Head>
             <Header
             label={"Settings"}
             showBackArrow

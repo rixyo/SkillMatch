@@ -48,14 +48,14 @@ const Skill:React.FC= () => {
         {
         
             skills && skills.map(skill=>(
-                <div className='flex justify-between p-1  items-center  gap-2 w-auto  my-2 mx-1'>
+                <div className='flex justify-between p-1  items-center  gap-2 w-auto  my-2 mx-1' key={`skill+ ${skill?.name}`}>
                     
                         <div>
                         <h1 className='text-lg font-bold text-black hover:underline '>{skill.name}</h1>
                      
                         </div>
                         <div>
-                        <p className='text text-md  text-gray-500'>{skill.level}</p>
+                        <p className='text text-md  text-gray-500'></p>
                         </div>
                        
                     

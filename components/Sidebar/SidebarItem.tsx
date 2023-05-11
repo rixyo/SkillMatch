@@ -17,7 +17,7 @@ const SidebarItem:React.FC<SidebarItemProps> = ({tab,selectedTab,setSelectedTab}
 
     }
     return (
-        <div className='flex items-center xl:justify-normal  cursor-pointer mt-2' key={tab.title} onClick={handleClick}>
+        <div className='flex items-center xl:justify-normal  cursor-pointer mt-2' key={`${tab.title+"tab"}`} onClick={handleClick}>
             <div  className='p-1
                rounded-full 
                h-14

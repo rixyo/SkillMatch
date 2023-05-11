@@ -49,6 +49,7 @@ model Post{
   isShared Boolean @default(false)
   fromSharedId String? @db.ObjectId
   postSharedCreatedAt DateTime?
+  hashTags   String[]
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
    comments          Comment[]
  
@@ -112,7 +113,6 @@ model SearchQuery {
 model Skill {
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
   name               String 
-  level              String
   userId             String @db.ObjectId
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -135,4 +135,10 @@ model Project{
  
 
 
+}
+model Verification{
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String @db.ObjectId
+  name               String
+  email              String
 }

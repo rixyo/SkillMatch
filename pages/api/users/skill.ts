@@ -36,10 +36,10 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             }
         }
         else if(req.method==="POST"){
-            const {name,level}=req.body
+            const {name}=req.body
             const {currentUser}=await serverAuth(req,res)
             try {
-                if(!name && typeof name !="string" || !level && typeof level !="string") throw new Error("name is required")
+                if(!name && typeof name !="string") throw new Error("name is required")
                 else{
                     const existingSkill=await prisma.skill.findFirst({
                         where:{
@@ -55,7 +55,6 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                     const skill=await prisma.skill.create({
                         data:{
                             name,
-                            level,
                             userId:currentUser.id
                         }
                     })

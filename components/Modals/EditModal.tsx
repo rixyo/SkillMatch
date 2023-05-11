@@ -4,6 +4,7 @@ import useUser from '@/hooks/useUser';
 import axios from 'axios';
 import React,{useState,useEffect, useCallback} from 'react';
 import {toast} from "react-hot-toast"
+import FormImageUpload from '../FormImageUpload';
 import ImageUpload from '../ImageUpload';
 import Input from '../Input';
 import Modal from './Modal';
@@ -51,21 +52,21 @@ const EditModal:React.FC= () => {
    },[name,bio,profileImage,coverImage,editUser,editModal.onClose])
 
    const bodyContent=(
-    <div className='flex flex-col gap-4'>
-           <ImageUpload
-         value={coverImage}
+    <div className='flex flex-col gap-4 '>
+      
+
+         <FormImageUpload
+            value={coverImage}
             onChange={(image)=>setCoverImage(image)}
-            label="Upload cover Image"
-            disabled={isLoading}
-
-       />
-       <ImageUpload
-         value={profileImage}
+            label="Cover Image"
+    
+         />
+      
+            <FormImageUpload
+            value={profileImage}
             onChange={(image)=>setProfileImage(image)}
-            label="Upload Profile Image"
-            disabled={isLoading}
-
-       />
+            label="Profile Image"
+            />
         <Input
         onChange={handleChange}
         value={name}

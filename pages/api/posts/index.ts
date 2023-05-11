@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-
 import serverAuth from "@/libs/serverAuth";
 import prisma from "@/libs/prismadb";
 import {StatusCodes} from "http-status-codes"
@@ -13,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const mentionRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9_]+)/g;
-    //const hashtagRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))#([A-Za-z]+[A-Za-z0-9_]+)/g;
+    const hashtagRegex = /(?<=^|(?<=[^a-zA-Z0-9-_\.]))#([A-Za-z]+[A-Za-z0-9_]+)/g;
    
 
     if (req.method === 'POST') {
@@ -22,8 +21,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      
 
       const Mentioned = body.match(mentionRegex)
+      const Hashtag = body.match(hashtagRegex)
    
-   
+      
     
      const post = await prisma.post.create({
        data: {
@@ -32,6 +32,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          userId: currentUser.id
        }
      })
+     if(Hashtag){
+      let list=post.hashTags||[]
+      Hashtag.forEach((tag:string)=>{
+        const withoutHash=tag.split("#")[1]
+        list.push(withoutHash)
+      })
+      await prisma.post.update({
+        where:{
+          id:post.id
+        },
+        data:{
+          hashTags:list
+        }
+      })
+     }
      if (Mentioned) {
        const user=await prisma.user.findUnique({
          where:{
@@ -72,6 +87,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
         })
       }
+        }
+        if (Hashtag) {
+          
         }
       
   
@@ -116,11 +134,55 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         });
       } else {
+        const skills=await prisma.skill.findMany({
+          where:{
+              userId:currentUser.id
+          }
+      })
+        
         posts = await prisma.post.findMany({
           where:{
-            userId:{
-              in:currentUser.followingId.map((id)=>id)
-            }
+            AND:[
+              {
+
+                OR:[
+                  {
+                    hashTags:{
+                      hasSome:skills.map((skill:any)=>skill.name.toLowerCase())
+                    },
+    
+                  },
+                  {
+                    userId:{
+                      in:currentUser.followingId.map((id)=>id)
+                    },
+                  }
+    
+                ]
+              },
+              {
+                userId:{not:currentUser.id}
+              }
+
+            ],
+
+           
+             
+           
+
+            
+            
+          
+             
+             
+              
+
+              
+
+          
+        
+        
+           
           },
           include: {
             user: {

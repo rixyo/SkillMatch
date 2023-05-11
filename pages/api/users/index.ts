@@ -31,9 +31,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                                         
                                         
                                     },
-                                    level:{
-                                        in:skills.map((skill)=>skill.level)
-                                    },
+                                   
                                     userId:{
                                         not:currentUser.id
                                     }

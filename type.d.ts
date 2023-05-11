@@ -43,6 +43,7 @@ type Post={
     isShared: boolean,
     fromSharedId: string?,
     postSharedCreatedAt: Date?,
+    hashTags: string[],
    
 }
 type comment={
@@ -101,7 +102,6 @@ type Project={
 type Skill={
     id: string,
     name: string,
-    level: string,
    userId: string,
 
 }

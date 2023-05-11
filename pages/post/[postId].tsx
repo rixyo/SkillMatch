@@ -114,14 +114,20 @@ const postId:React.FC = () => {
     const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
     return(
        <>
-       
+      
+    
        
     
-       {isLoading ? <div className="flex justify-center items-center h-full">
+       {isLoading && <div className="flex justify-center items-center h-full">
     <CircleLoader color="#3B82F6"  size={50} />
-       </div> :
+       </div> }
    
-        
+       {post &&
+       
+       
+        <>
+         
+     
        <div
        className="flex flex-col border-2 border-solid border-gray-200 p-5 cursor-pointer rounded-lg   my-5 mx-2 hover:border-gray-200"
        key={post?.id}
@@ -162,7 +168,7 @@ const postId:React.FC = () => {
                     </div>
                 )}
            <div className=' mx-5 p-1'>
-           {post?.body &&!linkRegex.test(post.body)&&!mentionRegex.test(post.body) && <p className="text-md text-black break-words">{post?.body}</p> }   
+           {post?.body &&!linkRegex.test(post.body)&&!mentionRegex.test(post.body)  && <p className="text-lg text-gray-500 font-bold break-words">{post?.body}</p> }   
            {post?.body.match(linkRegex) &&!mentionRegex.test(post.body) && (
                     <div className=" flex flex-col">
                         <p className='break-words text-black text-md'>{post.body.replace(linkRegex,"").trim()}</p>
@@ -224,10 +230,12 @@ const postId:React.FC = () => {
                          </Link>
                           </li>
                         ))}
+
                        
                         </>
                        
                 )}
+               
            </div>
            {post?.image && <CldImage src={post.image} alt="post" className='w-full h-96 object-cover mb-3'
             width={500}
@@ -271,7 +279,7 @@ const postId:React.FC = () => {
               {post?.comments && <CommentsFeed postId={post.id} /> } 
 
        </div>
-    
+    </>
        }
         
         </>

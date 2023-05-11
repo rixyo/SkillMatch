@@ -1,6 +1,6 @@
 import React,{useCallback} from 'react';
 import {CldUploadWidget,CldImage} from "next-cloudinary"
-import Image from 'next/image';
+import Image from "next/image"
 import {TbPhotoPlus}from "react-icons/tb"
 
 declare global {
@@ -9,28 +9,31 @@ declare global {
 type FormImageUploadProps = {
     value:string;
     onChange:(value:string)=>void;
+    label:string;
+    isHome?:boolean;
 
     
 };
-const FormImageUpload:React.FC<FormImageUploadProps> = ({onChange,value}) => {
+const FormImageUpload:React.FC<FormImageUploadProps> = ({onChange,value,label,isHome}) => {
     const uploadPreset = "tw9uaoam"
     const handleUplaoad=useCallback((result:any)=>{
         onChange(result.info.secure_url)
 
     },[onChange])
-    console.log(value)
+
     return (
         <CldUploadWidget 
       onUpload={handleUplaoad} 
       uploadPreset={uploadPreset}
       options={{
-        maxFiles: 1
+        maxFiles: 1,
+        maxFileSize: 1048576,
       }}
     >
       {({ open }) => {
         return (
           <div
-            onClick={() => open?.()}
+            onClick={() => open()}
             className="
               relative
               cursor-pointer
@@ -38,8 +41,8 @@ const FormImageUpload:React.FC<FormImageUploadProps> = ({onChange,value}) => {
               transition
               border-dashed 
               border-2 
-              p-20 
-              border-neutral-300
+              p-10
+              
               flex
               flex-col
               justify-center
@@ -50,21 +53,38 @@ const FormImageUpload:React.FC<FormImageUploadProps> = ({onChange,value}) => {
             "
           >
             <TbPhotoPlus
-              size={50}
+              size={isHome?50:20}
             />
             <div className="font-semibold text-lg">
-              Click to upload
+            {label}
             </div>
             {value && (
-              <div className="
-              absolute inset-0 w-full h-full">
-                <CldImage
-                  fill 
-                  style={{ objectFit: 'cover' }} 
+              <div className="absolute inset-0 w-full h-full "
+              >
+             {isHome?<CldImage
+                 fill
+
+              
+                  style={{ objectFit: 'cover', }} 
                   src={value}
-                  alt="post image" 
+                  alt="image" 
+                  className='rounded-md object-cover'
+                 
+               
                   
                 />
+              :(
+                <div className='flex item-center justify-center p-1'>
+                        <Image
+                         width={140}
+                         height={100}
+                         src={value}
+                     
+                        alt="cover"
+                        className='rounded-md object-cover'
+                        />
+                    </div>
+              )}
               </div>
             )}
           </div>

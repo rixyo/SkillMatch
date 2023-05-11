@@ -35,7 +35,8 @@ const ImageUpload:React.FC<ImageUploadProps> = ({onChange,value,label,disabled})
        accept:{
               image: ['image/jpeg', 'image/png', 'image/jpg'],
 
-       }
+       },
+       maxSize: 1048576,
 
 
     })

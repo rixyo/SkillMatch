@@ -247,8 +247,7 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate,userId}) => {
 
             </div>
             {post.image && <CldImage src={post.image} alt="post" className={` object-cover mb-3 ${post.isShared &&"mx-5 mt-0"}`}
-            width={post.isShared ? 300 : 500}
-            height={post.isShared ? 200 : 500}
+         width='500' height='500'
             />}
 
             <div className='flex items-center w-full gap-5 ml-2' >

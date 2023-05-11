@@ -48,7 +48,7 @@ const followers:React.FC = () => {
          }  
         
        
-            <div className='flex  flex-col sm:w-full lg:w-auto items-start'>
+            <div className='flex  flex-col sm:w-full lg:w-auto items-start' key={Math.random()/10}>
               {followers?.map((follower,index)=>(
                 <>
               

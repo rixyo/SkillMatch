@@ -25,7 +25,7 @@ export async function getServerSideProps(context:NextPageContext) {
 const following:React.FC = () => {
     const router=useRouter()
     const {userId}=router.query
-    const {data:following,isLoading}=useGetFollowing(userId as string)
+    const {data:following}=useGetFollowing(userId as string)
     const {data:user}=useUser(userId as string)
     
     return(
@@ -34,7 +34,7 @@ const following:React.FC = () => {
             {user && 
          <Header showBackArrow label={user?.name as string} sublebel={user?.customTag as string} />
          } 
-            <div className='flex  flex-col sm:w-full lg:w-auto items-start'>
+            <div className='flex  flex-col sm:w-full lg:w-auto items-start' key={`following+${Math.random()/2}`}>
                 {following?.map((following,index)=>(
                     <>
                     <FollowingItem key={index} following={following} />

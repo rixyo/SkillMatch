@@ -1,3 +1,4 @@
+import currentUser from '@/hooks/useCurrentUser';
 import useUsers from '@/hooks/useUsers';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -13,12 +14,14 @@ type FollowingItemProps = {
 const FollowingItem:React.FC<FollowingItemProps> = ({following}) => {
     const [follow,setfollowing]=useState<string>("Following")
     const {mutate:mutatedUser}=useUsers()
+    const {mutate:loginUser}=currentUser()
     
     const router=useRouter()
     const unFollow=useCallback(async()=>{
 
        await axios.delete('/api/follow',{params:{userId:following.id} } )
          mutatedUser()
+            loginUser()
        toast.success("Unfollow")
     },[following.id])
     
