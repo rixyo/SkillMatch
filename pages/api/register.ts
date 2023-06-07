@@ -1,3 +1,4 @@
+//emailbug
 import { NextApiRequest, NextApiResponse } from "next";
 import {StatusCodes} from "http-status-codes"
 import prisma from "@/libs/prismadb"
@@ -7,6 +8,7 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
     else{
         try {
             const {email,password,name}=req.body
+            let user
             if(!email||!password||!name){
                 throw new Error("Please enter all fields")
                
@@ -24,7 +26,9 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
                 
             }
             else if(name.length>50) throw new Error("Name canot be more than 50 characters")
-            const user=await prisma.user.create({
+           
+            
+           user=await prisma.user.create({
                 data:{
                     email,
                     hashedPassword,

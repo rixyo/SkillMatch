@@ -34,7 +34,6 @@ const Skill:React.FC= () => {
                      <div className='flex justify-between items-center  gap-2 w-auto  my-2 mx-1'>
                         <div className=' flex flex-col p-2  cursor-pointer'>
                             <h1 className='text-lg font-medium text-gray'>{skill.name}</h1>
-                            <p className='text text-md  text-gray-500'>{skill.level}</p>
                         </div>
                     </div>
             ))}
@@ -45,7 +44,7 @@ const Skill:React.FC= () => {
                 <div className='flex justify-between items-center  gap-2 w-auto  my-2 mx-1'>
                      <div className=' flex flex-col p-2  cursor-pointer'>
                             <h1 className='text-lg font-medium text-gray'>{skill.name}</h1>
-                            <p className='text text-md  text-gray-500'>{skill.level}</p>
+                          
                         </div>
                 </div>
             ))

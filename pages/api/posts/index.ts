@@ -1,7 +1,10 @@
+//hastag bug
+
 import { NextApiRequest, NextApiResponse } from "next";
 import serverAuth from "@/libs/serverAuth";
 import prisma from "@/libs/prismadb";
 import {StatusCodes} from "http-status-codes"
+import { Skill } from "@prisma/client";
 
 
 
@@ -148,7 +151,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 OR:[
                   {
                     hashTags:{
-                      hasSome:skills.map((skill:any)=>skill.name.toLowerCase())
+                      hasSome:skills.map((skill:Skill)=>skill.name.toLowerCase())
                     },
     
                   },

@@ -26,6 +26,7 @@ model User {
   followingId String [] @db.ObjectId
   hasNotifications Boolean @default(false)
   isActived Boolean @default(true)
+   accounts Account[]
   notifications Notification[]
   posts Post[]
   comments Comment[]
@@ -36,6 +37,24 @@ model User {
   projects Project[]
  
 
+}
+model Account {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @db.ObjectId
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.String
+  access_token       String?  @db.String
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.String
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
 }
 model Post{
   id String @id @default(auto()) @map("_id") @db.ObjectId

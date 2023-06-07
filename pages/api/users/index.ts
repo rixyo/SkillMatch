@@ -12,11 +12,14 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
        
         try {
             //const currentUserSkills = currentUser.skill.map((skill) => skill);
-            const skills=await prisma.skill.findMany({
+            let skills
+           skills=await prisma.skill.findMany({
                 where:{
                     userId:currentUser.id
                 }
             })
+            
+          
            
             
             const users=await prisma.user.findMany({
@@ -27,7 +30,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                                 AND:{
     
                                     name:{
-                                        in:skills.map((skill)=>skill.name),
+                                        in:skills.map((skill)=>skill.name)
                                         
                                         
                                     },
@@ -47,6 +50,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
                         isActived:true,
 
                     },
+
                
                 
                    

@@ -6,6 +6,9 @@ import Modal from './Modal';
 import {signIn} from "next-auth/react"
 import toast from 'react-hot-toast';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import AuthSocialButton from '../AuthSocialButton';
+import { BsGoogle } from 'react-icons/bs';
+import router from 'next/router';
 
 
 
@@ -52,6 +55,7 @@ const LoginModal:React.FC= () => {
         }
       }, [email, password, loginModal]);
 
+
       const togglePassword=useCallback(()=>{
         if(passwordType==="password")
         {
@@ -61,9 +65,31 @@ const LoginModal:React.FC= () => {
         setPasswordType("password")
       },[passwordType,setPasswordType])
     
+      const socialAction = (action:string) => {
+        setLoading(true);
+    
+        signIn(action, { redirect: false })
+          .then((callback) => {
+            if (callback?.error) {
+              console.log(callback?.error);
+              toast.error(callback?.error);
+            }
+    
+            else if (callback?.ok) {
+              toast.success("Logged in")
 
+              router.push('/')
+            }
+          })
+          .finally(() => setLoading(false));
+      } 
     const bodyContent=(
         <div className='flex flex-col gap-4 '>
+          <AuthSocialButton 
+            icon={BsGoogle}
+            onClick={() => socialAction("google")}
+          />
+          <span className='text-center text-neutral-400'>or</span>
             <Input
                placeholder="Email"
                 type="email"
