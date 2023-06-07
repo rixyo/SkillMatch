@@ -96,7 +96,7 @@ const Sidebar:React.FC= () => {
      {!currentUser && url==="/" &&  
         <div className='flex justify-center' key="new user">
      <div className='ml-5 w-auto hidden md:block' key={"follow user"}>
-     <h1 className='text-center mt-2 text-2xl font-semibold'>New To MatchMass</h1>
+     <h1 className='text-center mt-2 text-2xl font-semibold'>New To SkillMatch</h1>
        <div className='flex items-center mt-2 border-2   justify-center border-solid border-gray-400 mb-3 rounded-lg p-1  cursor-pointer ' onClick={register}>
         <FiLogIn className=' text-gray-500 text-md mr-2' title='SignUp/Login'/>
         <p className='text-md font-semibold text-gray-500' >SignUp</p>
