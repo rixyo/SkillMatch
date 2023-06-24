@@ -15,8 +15,8 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
         line_items:req.body.line_items,
         
         mode: 'payment',
-        success_url: "http://localhost:3000/success",
-        cancel_url: `${req.headers.origin}/?canceled=true`,
+        success_url: "https://skill-match-three.vercel.app/success",
+        cancel_url: `https://skill-match-three.vercel.app/`,
         payment_method_types: ['card'],
       })
       const user=await prisma.user.findUnique({
