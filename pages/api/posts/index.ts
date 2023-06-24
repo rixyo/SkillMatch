@@ -159,8 +159,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     userId:{
                       in:currentUser.followingId.map((id)=>id)
                     },
-                  }
-    
+                  },
                 ]
               },
               {

@@ -9,24 +9,21 @@ const VerifyModal:React.FC = () => {
     const {data:loginUser}= currentUser();
 
     const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string)
-    const  line_items = [
+    const  line_items= [
         {
-            price_data: {
-                currency: 'usd',
-                product_data: {
-                  name: loginUser?.user.name,
-
-               
-                },
-                unit_amount: 30 * 100 // because stripe interprets price in cents
-              },
-              quantity: 1
+          price_data: {
+            currency: 'BDT',
+            product_data: {
+              name: 'Registration fee',
             },
-
-    ]
+            unit_amount: 3000*100,
+          },
+          quantity: 1,
+        },
+      ]
     
     const submit=useCallback(async()=>{
-        const {data} = await axios.post('/api/payment', { line_items,userId:loginUser?.user.id}
+        const {data} = await axios.post('http://localhost:5000/payment/create-payment-intent/', {line_items, id:"9d1f51d8-538b-43f2-b093-47d0e7ba7f41"}
         )
         const stripe = await stripePromise;
         await stripe?.redirectToCheckout({sessionId: data.id})

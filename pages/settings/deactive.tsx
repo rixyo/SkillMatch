@@ -54,7 +54,7 @@ const deactive:React.FC = () => {
             <p className='text-sm text-gray-500'>You are about to start the process of deactivating your SkillMatch account. Your display name, @username, and public profile will no longer be viewable on SkillMatch.</p>
             <h1 className='text-xl text-black font-bold mt-5' >
             What else you should know</h1>
-            <p className='text-sm text-gray-500'>You can restore your Twitter account if it was accidentally or wrongfully deactivated for up to 30 days after deactivation.</p>
+            <p className='text-sm text-gray-500'>You can restore your  account if it was accidentally or wrongfully deactivated for up to 30 days after deactivation.</p>
             <button className='self-center mt-5 text-red-600 ' onClick={deactivated}>Deactive</button>
         </div>
         </>

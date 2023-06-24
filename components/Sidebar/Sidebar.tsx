@@ -66,7 +66,7 @@ const Sidebar:React.FC= () => {
     return( 
         <>
     <div className='col-span-1 xl:col-span-2 mr-5   mt-2  rounded-lg' >
-        <div className='flex flex-col   items-center '>
+        <div className='flex flex-col justify-center   items-center '>
             <>
 
             { Tabs.map((tab,index)=>(
@@ -77,7 +77,7 @@ const Sidebar:React.FC= () => {
         
               
             </>
-     {currentUser &&url==="/" &&        <div className='flex items-center self-start md:p-2  gap-4  cursor-pointer ' key={"Logout"} onClick={()=>signOut()}>
+     {currentUser &&url==="/" &&        <div className='flex items-center self-start p-2  gap-4  cursor-pointer ' key={"Logout"} onClick={()=>signOut()}>
         <MdLogout className=' text-gray-500 text-xl ' size={25} title='LogOut'/>
         <p className='text-md font-semibold text-gray-500 hidden md:block' >Logout</p>
         </div>

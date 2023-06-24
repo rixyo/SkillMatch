@@ -38,7 +38,7 @@ const Avatar: React.FC<AvatarProps> = ({ userId, isLarge, hasBorder }) => {
       `}
     >
       <Image
-       height={200}
+        height={200}
        width={200}
         style={{
           objectFit: 'cover',
