@@ -43,7 +43,7 @@ const FollowingItem:React.FC<FollowingItemProps> = ({following}) => {
            </div>
           
         </div>
-        <div>
+        <div className='hidden md:block'>
             <button className='rounded-full hover:text-red-500 border-2 border-gray-400 bg-white mx-2 p-2 text-lg text-gray-600' onClick={unFollow} onMouseOver={()=>setfollowing("UnFollow")} onMouseOut={()=>setfollowing("Following")}>{follow}</button>
         </div>
         </div>

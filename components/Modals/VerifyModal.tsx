@@ -9,7 +9,6 @@ const VerifyModal:React.FC = () => {
     const {data:loginUser}= currentUser();
 
     const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string)
-    console.log(loginUser)
     const getLineItems = () => { 
    
       return [

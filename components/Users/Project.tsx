@@ -30,11 +30,11 @@ const Project:React.FC = () => {
                 <>
                 {projects.slice(0,2).map(project=>(
                        <div className='flex justify-between items-center  gap-2 w-auto  my-2 mx-1'>
-                       <div className=' flex flex-col p-2  cursor-pointer'>
+                       <div className='flex flex-col items-center  p-2  cursor-pointer w-auto'>
                           
                            <h1 className='text-lg font-medium text-gray'>{project.name}</h1>
                         
-                               <Link className='flex gap-2 border-2 rounded-full items-center border-gray-400 w-1/3 p-2 mt-2 hover:border-black' href={project.link} >
+                               <Link className='flex gap-2 border-2 rounded-full items-center border-gray-400 w-auto p-2 mt-2 hover:border-black' href={project.link} >
    
                                <p className='text-gray-500 ml-2'>Show project</p>
                                <GoLinkExternal className='text-gray-500' size={20}/>
@@ -56,20 +56,20 @@ const Project:React.FC = () => {
         (
             projects && projects.map(project=>(
                 <div className='flex justify-between items-center  gap-2 w-auto  my-2 mx-1'>
-                    <div className=' flex flex-col p-2  cursor-pointer'>
+                   <div className='flex flex-col items-center  p-2  cursor-pointer w-auto'>
+                          
+                          <h1 className='text-lg font-medium text-gray'>{project.name}</h1>
                        
-                        <h1 className='text-lg font-medium text-gray'>{project.name}</h1>
-                     
-                            <Link className='flex gap-2 border-2 rounded-full items-center border-gray-400 w-1/3 p-2 mt-2 hover:border-black' href={project.link} >
-
-                            <p className='text-gray-500 ml-2'>Show project</p>
-                            <GoLinkExternal className='text-gray-500' size={20}/>
-                            </Link>
-
-                       
-                      
-                        <p className='text text-md  text-gray-500'>{project.description}</p>
-                    </div>
+                              <Link className='flex gap-2 border-2 rounded-full items-center border-gray-400 w-auto p-2 mt-2 hover:border-black' href={project.link} >
+  
+                              <p className='text-gray-500 ml-2'>Show project</p>
+                              <GoLinkExternal className='text-gray-500' size={20}/>
+                              </Link>
+  
+                         
+                        
+                          <p className='text text-md  text-gray-500'>{project.description}</p>
+                      </div>
 
                        
                 </div>

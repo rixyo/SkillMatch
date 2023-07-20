@@ -138,12 +138,12 @@ const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,muta
 
     }
     return (
-        <div className='flex gap-4 mt-2'>
-            <div>
+        <div className='flex gap-4 mt-2 mx-5 border-2  sm:p-2 lg:p-5 w-full'>
+            <div className='p-2'>
                 <Avatar userId={currentUser?.user?.id}/>
       
             </div>
-            <div className='w-full'>
+            <div className='w-screen p-2'>
                <textarea
                disabled={loading}
                 value={body}
@@ -158,7 +158,7 @@ const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,muta
                </textarea>
            {bodyLength>=130 && <p className='text-red-500 text-center mx-32 border-2 border-solid border-blue-400 rounded-full h-10 w-10'>{characterRemaning}</p> }    
                <hr className='opacity-0 peer-focous:oopacity-100 h-[1px] w-full border-gray-300 transition'/>
-                <div className='flex gap-2 items-center'>
+                <div className='flex  gap-2'>
                  
             {Tabs.map((tab,index)=>(
              
@@ -168,7 +168,7 @@ const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,muta
            
                 
                 </div>
-               <div className='flex justify-end'>
+               <div className='flex justify-end mr-5 p-2'>
                 <Button
                 label={isComment?"Replay":"Share"}
                 disabled={loading || !body}

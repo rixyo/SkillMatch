@@ -33,7 +33,7 @@ const FollowerItem:React.FC<FollowerItemProps> = ({follower}) => {
 
      },[follower.id])
     return (
-        <div className='flex w-11/12 items-center'>
+        <div className='flex w-full items-center'>
 
       
         <div className='flex  sm:w-auto lg:w-full    items-center p-5'>
@@ -49,7 +49,7 @@ const FollowerItem:React.FC<FollowerItemProps> = ({follower}) => {
                 
            </div>
         </div>
-        <div>
+        <div className='hidden md:block'>
         <button className={`rounded-full w-full  border-2 border-gray-400 ${isFollowing?"bg-white":" bg-black text-white"} mx-2 p-2 text-lg font-bold'  `} onClick={handleClick}  >{isFollowing?"UnFollow":"Follow"}</button>
         </div>
         </div>

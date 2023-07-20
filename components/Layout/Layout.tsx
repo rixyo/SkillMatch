@@ -1,6 +1,6 @@
 import React from 'react';
-import RightBar from '../RightBar/RightBar';
-import FollowBar from '../RightBar/RightBar';
+import RightBar from '../Followerbar/FollowerBar';
+import FollowBar from '../Followerbar/FollowerBar';
 import Sidebar from '../Sidebar/Sidebar';
 
 type LayoutProps = {
@@ -9,9 +9,9 @@ type LayoutProps = {
 
 const Layout:React.FC<LayoutProps> = ({children}) => {
     
-    return <div className='h-screen  bg-gray-100'>
+    return ( <div className='h-screen  bg-gray-100'>
         <div className='container h-full mx-auto xl:px-30 max-w-6xl'>
-            <div className='grid grid-cols-4  h-full xl:grid-cols-9 '>
+            <div className='grid grid-cols-4  h-full xl:grid-cols-9'>
              
 
                 <Sidebar/>
@@ -25,5 +25,6 @@ const Layout:React.FC<LayoutProps> = ({children}) => {
             </div>
         </div>
         </div>
+    )
 }
 export default Layout;

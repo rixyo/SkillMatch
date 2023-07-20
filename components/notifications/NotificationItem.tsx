@@ -23,7 +23,6 @@ const NotificationItem:React.FC<NotificationItemProps> = ({notification}) => {
         <meta property="og:title" content={notification?.body!} />
         <meta property="og:description" content={notification?.body!} />
         
-        <meta property="og:url" content="https://example.com/my-page" />
         <meta property="og:type" content="website" />
             </Head>
             <div className='flex gap-2 items-center '>

@@ -30,7 +30,7 @@ const Projects:React.FC = () => {
   
     
     return(
-        <div className='w-full border-2 border-gray-300 rounded-lg my-1'>
+        <div className='w-full border-2 border-gray-300 rounded-lg my-1 p-5'>
             <div className='flex flex-col gap-2 border-2 border-gray-200 rounded '>
                 <div className='flex justify-between p-2'>
                     <h1 className='text-lg font-bold text-gray-500'>Projects</h1>
@@ -45,17 +45,14 @@ const Projects:React.FC = () => {
         
             projects && projects.map(project=>(
                 <div className='flex justify-between items-center  gap-2 w-auto  my-2 mx-1'>
-                    <div className=' flex flex-col p-2  cursor-pointer'>
+                    <div className='flex flex-col items-center mb-2 p-2  cursor-pointer'>
                        
                         <h1 className='text-lg font-medium text-gray'>{project.name}</h1>
-                     
-                            <Link className='flex gap-2 border-2 rounded-full items-center border-gray-400 w-1/3 p-2 mt-2 hover:border-black' href={project.link} >
+                        <Link className='flex gap-2 border-2 rounded-full items-center border-gray-400 w-auto p-2 mt-2 hover:border-black' href={project.link} >
 
                             <p className='text-gray-500 ml-2'>Show project</p>
                             <GoLinkExternal className='text-gray-500' size={20}/>
                             </Link>
-
-                       
                       
                         <p className='text text-md  text-gray-500'>{project.description}</p>
                     </div>

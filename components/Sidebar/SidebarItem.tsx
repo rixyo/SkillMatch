@@ -11,14 +11,14 @@ type SidebarItemProps = {
 };
 
 const SidebarItem:React.FC<SidebarItemProps> = ({tab,selectedTab,setSelectedTab}) => {
-    const router=useRouter()
     const handleClick=()=>{
         setSelectedTab(tab.title)
       
 
     }
     return (
-        <div className='flex items-center xl:justify-normal  cursor-pointer mt-2' key={`${tab.title+"tab"}`} onClick={handleClick}>
+        <div className='flex items-center xl:justify-normal  cursor-pointer mt-2'  onClick={handleClick}>
+            <Link href={tab.href}>
             <div  className='p-1
                rounded-full 
                h-14
@@ -32,8 +32,9 @@ const SidebarItem:React.FC<SidebarItemProps> = ({tab,selectedTab,setSelectedTab}
                 <tab.icon className={`text-2xl ${selectedTab ? 'text-blck' : 'text-gray-500'} `}  title={tab.title} />
                 {tab.alert && <BsDot className='absolute text-red-500 text-2xl ' size={35} />}
             </div>
+                </Link>
             <div  >
-                <Link href={tab.href!}>
+                <Link href={tab.href}>
                 <p className={`text-sm ${selectedTab ? 'text-black' : 'text-gray-500'}  font-semibold hidden md:block `} >{tab.title}</p>
                 </Link>
             </div>

@@ -12,12 +12,13 @@ import {signOut} from "next-auth/react"
 import {FiLogIn} from "react-icons/fi"
 import SidebarFooter from './sidebarFooter';
 import { useRouter } from 'next/router';
+import { BsSearch } from 'react-icons/bs';
 
 
 export type Tab = {
     title: string;
     icon: IconType;
-    href?: string;
+    href: string;
     alert?: boolean;
     auth?:boolean
 }
@@ -43,9 +44,16 @@ const Sidebar:React.FC= () => {
             auth:true
         },
         {
+            title: 'Search',
+            icon: BsSearch,
+            href: '/finding'
+            
+
+        },
+        {
             title: 'Messages',
             icon: AiOutlineMessage,
-            href: ''
+            href: '/'
         },
         {
             title: 'Settings',
@@ -77,11 +85,12 @@ const Sidebar:React.FC= () => {
         
               
             </>
-     {currentUser &&url==="/" &&        <div className='flex items-center self-start p-2  gap-4  cursor-pointer ' key={"Logout"} onClick={()=>signOut()}>
+     {currentUser &&url==="/" &&        <div className='flex items-center self-start p-2  gap-4  cursor-pointer ' onClick={()=>signOut()}>
         <MdLogout className=' text-gray-500 text-xl ' size={25} title='LogOut'/>
         <p className='text-md font-semibold text-gray-500 hidden md:block' >Logout</p>
         </div>
 }
+
            <div className='self-start'>
 
         <SidebarFooter key={"sidebarFooter+1"}/>

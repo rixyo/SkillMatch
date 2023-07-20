@@ -1,3 +1,5 @@
+
+import MobileFollowerBar from "@/components/Followerbar/MobileFollowerBar";
 import Form from "@/components/Form";
 import Header from "@/components/Header/Heder";
 import PostFeed from "@/components/posts/postFeed";
@@ -15,15 +17,6 @@ export default function Home() {
   const {register}=useToggle()
   const {data:currentUser}=useCurrentUser()
   const {isLoading}=usePosts()
-
- 
- 
- 
-
-
-
-
- 
  return (
   <>
    <Head>
@@ -49,6 +42,10 @@ export default function Home() {
      
 }
 <Form placeholder="Share Your Ideas" />
+<div className="sm:block md:hidden">
+
+<MobileFollowerBar />
+</div>
 {isLoading?<div className="flex justify-center items-center h-full">
   <CircleLoader color="#3B82F6" className="" size={50} />
 </div> :  <PostFeed  />}

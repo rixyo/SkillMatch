@@ -32,7 +32,7 @@ const index:React.FC = () => {
     const verify=useNumberVerify()
     
     return (
-        <div>
+        <>
               <Head>
         <title>Your Account /SkillMatch</title>
         <meta name="description" content="User setting page" />
@@ -47,7 +47,7 @@ const index:React.FC = () => {
             showBackArrow
 
             />
-            <div className='grid grid-cols-2 gap-4 mt-2  divide-x divide-sky-500'>
+            <div className='hidden md:grid grid-cols-2 gap-4 mt-2  divide-x divide-sky-500 '>
                 <div className='col-span-1 gap-5 items-center p-2  '>
                   
 
@@ -67,24 +67,26 @@ const index:React.FC = () => {
                     
 
                     <div className='flex gap-3 items-center '>
-                    <CgProfile className='text-md text-gray-400 ml-1' size={20}/>
+                    <CgProfile className='hidden md:block text-md text-gray-400 ml-1' size={20}/>
                   
-                    <h1 className='text-md text-black font-medium'>Account Information</h1>
+                    <h1 className='hidden md:block text-md text-black font-medium'>Account Information</h1>
+               
 
                   
 
                     </div>
                     <p className='text-sm text-gray-500'>See your account information like your phone number email address </p>
                     <div className='flex gap-3 items-center'>
-                    <AiOutlineMobile className='text-md text-black ml-1 mt-5' size={20}/>
+                    <AiOutlineMobile className='hidden md:block  text-md text-black ml-1 mt-5' size={20}/>
                   
-                    <h1 className='text-md text-black font-medium mt-5 hover:underline' onClick={verify.onOpen}>Verify number</h1>
+                    <h1 className='hidden md:block text-md text-black font-medium mt-5 hover:underline' onClick={verify.onOpen}>Verify number</h1>
+                
                     </div>
                     <p className='text-sm text-gray-500'>Verify your phone number to get more features like verification </p>
                      <div className='p-2'>
 
                     <div className='flex gap-3 items-center'>
-                    <BsKey className='text-md text-gray-400' size={20} />
+                    <BsKey className='hidden md:block  text-md text-gray-400' size={20} />
                   
                     <h1 className='text-md text-black font-medium'>Change Password</h1>
 
@@ -96,7 +98,7 @@ const index:React.FC = () => {
                      <div className='p-2'>
 
                     <div className='flex gap-3 items-center'>
-                    <MdHeartBroken className='text-md text-gray-400' size={20}/>
+                    <MdHeartBroken className='hidden md:block  text-md text-gray-400' size={20}/>
                   
                     <h1 className='text-md text-black font-medium hover:underline' onClick={()=>router.push("/settings/deactive")}>Deactive your Account</h1>
 
@@ -107,7 +109,57 @@ const index:React.FC = () => {
                     </div>
                 </div>
             </div>
-        </div>
+            <>
+            <div className='sm:grid md:hidden  gap-4 mt-2 '>
+                <div className='col-span-1  hover:cursor-pointer p-2 '>
+                    
+
+                    <div className='flex gap-3 items-center '>
+                    <CgProfile className='block text-md text-gray-400 ml-1' size={20}/>
+                  
+                    <h1 className='block text-md text-black font-medium'>Account Information</h1>
+               
+
+                  
+
+                    </div>
+                    <p className='text-sm text-gray-500'>See your account information like your phone number email address </p>
+                    <div className='flex gap-3 items-center'>
+                    <AiOutlineMobile className='  text-md text-black ml-1 mt-5' size={20}/>
+
+                  
+                    <h1 className='text-md text-black font-medium mt-5 hover:underline' onClick={verify.onOpen}>Verify number</h1>
+                
+                    </div>
+                    <p className='text-sm text-gray-500'>Verify your phone number to get more features like verification </p>
+                     <div className='p-2'>
+
+                    <div className='flex gap-3 items-center'>
+                    <BsKey className='  text-md text-gray-400' size={20} />
+                  
+                    <h1 className='text-md text-black font-medium'>Change Password</h1>
+
+                  
+
+                    </div>
+                    <p className='text-sm text-gray-500'>Change your Password at anytime </p>
+                    </div>
+                     <div className='p-2'>
+
+                    <div className='flex gap-3 items-center'>
+                    <MdHeartBroken className=' text-md text-gray-400' size={20}/>
+                  
+                    <h1 className='text-md text-black font-medium hover:underline' onClick={()=>router.push("/settings/deactive")}>Deactive your Account</h1>
+
+                  
+
+                    </div>
+                    <p className='text-sm text-gray-500' >Find out how you can deactive your account </p>
+                    </div>
+                </div>
+            </div>
+            </>
+        </>
 
     )
 }

@@ -55,7 +55,6 @@ const Skill:React.FC= () => {
                      
                         </div>
                         <div>
-                        <p className='text text-md  text-gray-500'></p>
                         </div>
                        
                     

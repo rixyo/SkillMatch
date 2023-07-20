@@ -13,7 +13,7 @@ const FormItem:React.FC<FormItemProps> = ({tab,selectedTab,setSelectedTab}) => {
     }
     
     return(
-        <div className='flex items-center xl:justify-normal  cursor-pointer mt-2' key={tab.title}>
+        <div className='flex items-center xl:justify-normal  cursor-pointer mt-2 ' key={tab.title}>
         <div  className='p-1
            rounded-full 
            h-14
@@ -25,11 +25,8 @@ const FormItem:React.FC<FormItemProps> = ({tab,selectedTab,setSelectedTab}) => {
            cursor-pointer 
         ' key={Math.random()%10}>
             <tab.icon className={`text-2xl ${selectedTab ? 'text-sky-500' : 'text-gray-500'} `} onClick={handleClick}   />
-          
         </div>
-        <div  ></div>
        
-
     </div>
     )
 }

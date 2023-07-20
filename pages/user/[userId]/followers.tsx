@@ -40,7 +40,7 @@ const followers:React.FC = () => {
     )
     
     return (
-        <div className='flex flex-col sm:w-auto lg:w-full mx-5'>
+        <div className='flex flex-col s mx-5'>
           
         
          {user && 
