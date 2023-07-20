@@ -43,7 +43,7 @@ const index:React.FC = () => {
         <div>
           <Head>
               <title>Search</title>
-              
+
           </Head>
             
            { searchResult?.posts.length===0 && searchResult?.users.length===0 && <h1 className='text-center mt-5 text-xl'>No Result Found</h1>}
@@ -83,7 +83,7 @@ const index:React.FC = () => {
            <>
               {searchResult?.posts.length>0 && searchResult?.posts?.map((post:any)=>(
                 <div
-                onClick={() => router.push(`/posts/${post.id}`)}
+                onClick={() => router.push(`/post/${post.id}`)}
                 className="flex flex-col  border-2 border-solid border-gray-300 p-5 cursor-pointer rounded-lg   my-5 mx-2 hover:border-gray-200"
                 key={post.id}
                 >

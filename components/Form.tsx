@@ -20,6 +20,7 @@ import { BsEmojiSmile } from 'react-icons/bs';
 import FormItem from './FormItem';
 import FormImageUpload from './FormImageUpload';
 import {AiOutlineGif } from "react-icons/ai"
+import Head from 'next/head';
 
 
 type FormProps = {
@@ -78,7 +79,7 @@ const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,muta
         if(e.target.value.length > 240) return 
         setBody(e.target.value)
         setBodyLength(e.target.value.length)
-        setCharacterRemaing(140 - e.target.value.length)
+        setCharacterRemaing(240 - e.target.value.length)
     },[setBody,setBodyLength,setCharacterRemaing])
    
     
@@ -138,21 +139,18 @@ const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,muta
 
     }
     return (
-        <div className='flex gap-4 mt-2 mx-5 sm:p-2 lg:p-5 w-full'>
+        <div className='flex gap-4 mt-2 mx-5 sm:p-2 lg:p-5 '>
             <div className='p-2'>
                 <Avatar userId={currentUser?.user?.id}/>
       
             </div>
-            <div className='w-screen p-2'>
+            <div>
                <textarea
                disabled={loading}
                 value={body}
                 onChange={handleChange}
                 className='w-full h-20 disabled:opacity-80 peer resize-none mt-3  p-2 rounded-lg text-[20px] placeholder-gray-400 focus:outline-none ring-0 outline-none'
                 placeholder={placeholder}
-              
-             
-
                >
              
                </textarea>
@@ -160,7 +158,7 @@ const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,muta
                <hr className='opacity-0 peer-focous:oopacity-100 h-[1px] w-full border-gray-300 transition'/>
                 <div className='flex  gap-2'>
                  
-            {Tabs.map((tab,index)=>(
+            {!isComment &&Tabs.map((tab,index)=>(
              
               <FormItem tab={tab} key={index}  selectedTab={tab.title===selectedTab} setSelectedTab={setSelectedTab} />
             

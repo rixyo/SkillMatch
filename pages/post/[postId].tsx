@@ -1,7 +1,6 @@
 import Avatar from '@/components/Avatar';
 import Form from '@/components/Form';
 import CommentsFeed from '@/components/posts/CommentsFeed';
-import PostIteam from '@/components/posts/PostIteam';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import usePostEditModal from '@/hooks/useEditPostModal';
 import useLike from '@/hooks/useLike';
@@ -114,10 +113,6 @@ const postId:React.FC = () => {
     const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
     return(
        <>
-      
-    
-       
-    
        {isLoading && <div className="flex justify-center items-center h-full">
     <CircleLoader color="#3B82F6"  size={50} />
        </div> }
@@ -126,14 +121,14 @@ const postId:React.FC = () => {
        
        
         <>
-         
+    
      
        <div
        className="flex flex-col border-2 border-solid border-gray-200 p-5 cursor-pointer rounded-lg   my-5 mx-2 hover:border-gray-200"
        key={post?.id}
        >
         
-     <div className='flex items-start gap-1' key={Math.random()}>
+     <div className='flex items-start gap-1'>
                <Avatar
                userId={post?.userId as string}
                />
