@@ -109,7 +109,6 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate,userId}) => {
 
         
         } catch (error: any) {
-            console.log(error.message)
             toast.error(error.response?.data?.error || error.message)
         }
 
@@ -177,7 +176,7 @@ const PostIteam:React.FC<PostIteamProps> = ({post,mutate,userId}) => {
             <div className='mx-5 p-1'>
                 <>
 
-            {!linkRegex.test(post.body) && !mentionRegex.test(post.body) && <p className={`text-lg font-bold text-gray-500  ${post.isShared &&"mx-5 mt-0"}`}>{post.body}</p> }   
+            {!linkRegex.test(post.body) && !mentionRegex.test(post.body) && <p className={`text-lg  p-2 font-bold text-gray-500  ${post.isShared &&"mx-5 mt-0"}`}>{post.body}</p> }   
                {post.body.match(linkRegex) &&!mentionRegex.test(post.body) && (
                     <div className=" flex flex-col">
                         <p className=' text-gray-500 text-lg font-bold'>{post.body.replace(linkRegex,"").trim()}</p>

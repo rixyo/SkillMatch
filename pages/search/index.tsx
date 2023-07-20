@@ -3,6 +3,7 @@ import useSearch from '@/hooks/useSearch';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
@@ -38,7 +39,12 @@ const index:React.FC = () => {
   
    
     return (
+    
         <div>
+          <Head>
+              <title>Search</title>
+              
+          </Head>
             
            { searchResult?.posts.length===0 && searchResult?.users.length===0 && <h1 className='text-center mt-5 text-xl'>No Result Found</h1>}
            {searchResult?.users.length>0 &&searchResult?.users?.map((user:any)=>(

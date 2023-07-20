@@ -39,7 +39,7 @@ const UserBio:React.FC<UserBioProps> = ({userId}) => {
 
     
     return(
-        <div className='border-b-[1px]  border-gray-300 pb-4 '>
+        <div className='border-b-[1px]  border-gray-300 p-2 '>
             <div className='flex justify-end mt-3'>
                 { fetchUser && fetchUser.id ===currentUser?.user.id ? (
                     <>

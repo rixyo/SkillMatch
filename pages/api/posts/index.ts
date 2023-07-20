@@ -63,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               id:post.id
             },
             data:{
-              body:`${body} hints: No user found with this tag.`,
+              body:`${body}`,
             }
           })
 

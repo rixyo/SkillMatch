@@ -138,7 +138,7 @@ const Form:React.FC<FormProps> = ({placeholder,isComment,isReplay,commentId,muta
 
     }
     return (
-        <div className='flex gap-4 mt-2 mx-5 border-2  sm:p-2 lg:p-5 w-full'>
+        <div className='flex gap-4 mt-2 mx-5 sm:p-2 lg:p-5 w-full'>
             <div className='p-2'>
                 <Avatar userId={currentUser?.user?.id}/>
       

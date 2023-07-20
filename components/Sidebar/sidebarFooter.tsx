@@ -22,7 +22,7 @@ const sidebarFooter:React.FC = () => {
     return (
         <>
         {currentUser &&
-        <div className='flex items-center sm:justify-start mt-24 border-2 border-solid  rounded-md md:p-1  ' >
+        <div className='flex items-center sm:justify-start mt-24   rounded-md md:p-1' >
      
          <Avatar userId={currentUser.user.id}/>
            
